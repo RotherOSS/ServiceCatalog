@@ -6,6 +6,7 @@
     <Vendor>Rother OSS GmbH</Vendor>
     <URL>https://rother-oss.com/</URL>
     <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
+    <PackageRequired Version="10.0.3">ITSMCore</PackageRequired>
     <PackageMerge Name="RotherOSS-ServiceCatalog" TargetVersion="10.0.4"></PackageMerge>
     <Description Lang="en">A detailed service catalog.</Description>
     <Filelist>
@@ -30,7 +31,7 @@
     <DatabaseInstall Type="post">
         <TableCreate Type="post" Name="service_type">
             <Column Name="service_id" Required="true" Type="INTEGER"></Column>
-            <Column Name="ticket_type_id" Required="true" Type="SMALLINT"></Column>
+            <Column Name="ticket_type_id" Required="false" Type="SMALLINT"></Column>
             <Column Name="create_time" Required="true" Type="DATE"></Column>
             <Column Name="create_by" Required="true" Type="INTEGER"></Column>
             <ForeignKey ForeignTable="service">
