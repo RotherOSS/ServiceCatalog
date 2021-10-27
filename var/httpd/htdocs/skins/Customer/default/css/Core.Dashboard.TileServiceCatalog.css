@@ -1,0 +1,294 @@
+/* OTOBO is a web-based ticketing system for service organisations.
+Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+ul.oooParentServiceList > li, ul.oooChildServiceList > li {
+    display: inline-block;
+    background-color: #00023c;
+    min-width: 97px;
+    text-align: center;
+    color: #ffffff;
+    padding: 10px;
+    margin: 10px 10px 10px 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+ul.oooChildServiceList > li:not(:first-child) {
+    margin-left: 10px;
+}
+
+.oooServiceBreadcrumb {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.oooServiceBreadcrumbField .ooofo.ooofo-arrow_r::before {
+    font-weight: bold;
+}
+
+.oooServiceContainer {
+    display: grid;
+    grid-template-columns: 280px 50px;
+    grid-template-rows: 1fr 1fr 0.5fr 1fr;
+    border-radius: 15px;
+    margin: 0 20px 20px 0;
+    float: left;
+    padding: 20px 15px;
+    background: #ffffff;
+    width: 330px;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+}
+
+.oooServiceName {
+    text-align: center;
+    grid-area: 1 / 1 / 2 / 3;
+}
+
+.oooDescriptionShort { 
+    grid-area: 2 / 1 / 5 / 2;
+}
+
+.oooInformation { 
+    cursor: pointer;
+    grid-area: 2 / 2 / 3 / 3;
+}
+
+.oooCreate { 
+    grid-area: 4 / 2 / 5 / 3;
+}
+
+.oooCreate, .oooInformation {
+    color: #001bff;
+    background: #ffffff;
+    font-size: 36px;
+    box-shadow: 0 1px 4px 0 rgb(4 0 71 / 16%);
+    border-radius: 5px;
+}
+
+.oooCreate > i, .oooInformation > i {
+    left: 7px;
+    top: 2.5px;
+    position: relative;
+}
+
+.oooSubservices { 
+    grid-area: 4 / 1 / 5 / 2;
+    display: flex;
+    align-items: flex-end;
+}
+
+.oooDescriptionShort, .oooSubservices {
+    cursor: pointer;
+}
+
+.oooDetailedServiceContainer {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    grid-template-rows: 0.5fr 0.5fr 3fr 2fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    border-radius: 15px;
+    padding: 20px 15px;
+    background: #ffffff;
+}
+
+.oooDetailedServiceContainer h3 {
+    font-weight: bold;
+}
+
+.oooDetailedServiceName {
+    text-align: center;
+    grid-area: 1 / 1 / 2 / 3;
+}
+  
+.oooDetailedDescriptionShort {
+    margin: 15px 0;
+    grid-area: 2 / 1 / 3 / 3;
+}
+
+.oooDetailedDescriptionLong { 
+    grid-area: 3 / 1 / 5 / 2; 
+}
+
+.oooDetailedDescriptionLong > * {
+    max-width: 100%
+}
+
+.oooDetailedSLA { 
+    grid-area: 4 / 2 / 5 / 3; 
+}
+
+.oooDetailedTicketTypes {
+    font-weight: bold;
+    grid-area: 3 / 2 / 4 / 3; 
+}
+
+.oooDetailedTicketTypes > a > i::before {
+    /* width: 15px;
+    display: inline-block;
+    text-align: center; */
+    vertical-align: middle;
+}
+
+.oooDetailedTicketTypes > a {
+    top: -1px;
+    position: relative;
+}
+
+/* SLA fields */
+span.oooSLALabel {
+    display: flex;
+}
+
+span.oooSLAValue {
+    flex-basis: 40%;
+    margin-left: auto;
+}
+
+/* TODO: Could/Should be transfered to other CSS classes */
+/* Modal */
+#Overlay {
+    top: 0px;
+}
+
+.oooHidden {
+    display: none !important;
+}
+
+.oooColor-Red {
+    color: red;
+}
+
+.oooColor-Green {
+    color: green;
+}
+
+.oooColor-Blue {
+    color: blue;
+}
+
+.oooColor-Yellow {
+    color: yellow;
+}
+
+.ooofo-bang::before {
+    content: '\2757';
+} 
+
+.Dialog {
+    max-height: calc(100vh - 50px);
+    overflow-y: auto;
+    background-color: #f7f7f9;
+    background-color: var(--colBGLight);
+    width: 95%;
+    max-width: 1284px;
+}
+
+.Dialog > .Content {
+    padding: 0px 32px 16px 32px;
+}
+
+#oooTile01 {
+    grid-area: 5 / 9 / 5 / 13;
+}
+
+#oooTile04 {
+    grid-area: 5 / 5 / 5 / 9;
+}
+
+#oooTile07 {
+    grid-area: 1 / 13 / 5 / 5;
+    padding: 24px 32px;
+}
+
+@media only screen and (min-width: 1280px) {
+    #oooTile03 {
+        grid-area: 6 / 5 / 17 / 13;
+    }
+}
+
+@media only screen and (min-width: 880px) and (max-width: 1279px) {
+    #oooTile01 {
+        grid-area: 1 / 4 / 4 / 7;
+    }
+
+    #oooTile03 {
+        grid-area: 13 / 1 / 20 / 7;
+    }
+
+    #oooTile04 {
+        grid-area: 10 / 1 / 13 / 4;
+    }
+
+    #oooTile06 {
+        grid-area: 10 / 4 / 13 / 7;
+    }
+
+    #oooTile07 {
+        grid-area: 7 / 1 / 10 / 7;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 879px) {
+    #oooTile07 {
+        grid-area: 1 / 1 / 3 / 1;
+        padding: 24px 32px;
+    }
+
+    #oooTile04 {
+        grid-area: 3 / 1 / 4 / 2;
+    }
+
+    #oooTile02 {
+        grid-area: 4 / 1 / 6 / 2;
+    }
+
+    #oooTile05 {
+        grid-area: 6 / 1 / 7 / 2;
+    }
+
+    #oooTile06 {
+        grid-area: 7 / 1 / 8 / 2;
+    }
+
+    #oooTile03 {
+        grid-area: 8 / 1 / 11 / 2;
+    }
+}
+
+@media only screen and (min-width: 436px) and (max-width: 767px) {
+    #oooTile07 {
+        grid-area: 1 / 1 / 3 / 2;
+    }
+
+    #oooTile04 {
+        grid-area: 3 / 1 / 3 / 2;
+    }
+
+    #oooTile02 {
+        grid-area: 4 / 1 / 6 / 2;
+    }
+
+    #oooTile05 {
+        grid-area: 6 / 1 / 7 / 2;
+    }
+
+    #oooTile06 {
+        grid-area: 7 / 1 / 8 / 2;
+    }
+
+    #oooTile03 {
+        grid-area: 8 / 1 / 9 / 2;
+    }
+}

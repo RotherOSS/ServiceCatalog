@@ -1,0 +1,40 @@
+# --
+# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (GPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
+# --
+<div id="ServiceID{{ ID }}" class="oooDetailedServiceContainer">
+    <h2 class="oooDetailedServiceName">{{ Name }}</h2>
+    <div class="oooDetailedDescriptionShort">{{ DescriptionShort }}</div>
+    <div contenteditable="false" class="oooDetailedDescriptionLong">{{ DescriptionLong | safe }}</div>
+    <div class="oooDetailedTicketTypes">
+    {% if TypeList %}
+        {% for TypeName, Type in TypeList %}
+            <a title="{{ 'Create a new ticket of type %s.' | Translate(TypeName) }}" href="{{ Baselink }}Action=CustomerTicketMessage;ServiceID={{ ID }};TypeID={{ Type.ID }}"><i class="ooofo ooofo-add {{ Type.Classes }}"></i> {{ 'Create %s' | Translate(TypeName) }}</a><br>
+        {% endfor %}
+    {# {% else %}
+        <i class="ooofo ooofo-add"></i><a href="{{ Baselink }}Action=CustomerTicketMessage;ServiceID={{ ID }}"> {{ 'Create Ticket' | Translate }}</a><br> #}
+    {% endif %}
+    </div>
+    <div class="oooDetailedSLA">
+        <h3>{{ 'Service hours' | Translate }}:</h3>
+        {% if WorkingHours %}
+            <span class="oooSLALabel">{{ 'Timeframe' | Translate }}: 
+                <span class="oooSLAValue">
+                    {% for Run in WorkingHours %}
+                        {{ Run.StartDay | Translate(Run.StartDay) }}{% if Run.LastDay != Run.StartDay %}&#8211;{{ Run.LastDay | Translate(Run.LastDay) }}{% endif %} {{ Run.FirstHour }}&#8211;{{ Run.LastHour }} {{ "o'clock" | Translate }}
+                        <br>
+                    {% endfor %}
+                </span>
+            </span>
+        {% endif %}
+        {% if FirstResponseTime %}
+            <span class="oooSLALabel">{{ 'First Response Time' | Translate }}: <span class="oooSLAValue">{{ FirstResponseTime }} {{ 'hour(s)' | Translate }}</span></span>
+        {% endif %}
+        {% if SolutionTime %}
+            <span class="oooSLALabel">{{ 'Solution Time' | Translate }}: <span class="oooSLAValue">{{ SolutionTime }} {{ 'hour(s)' | Translate }}</span></span>
+        {% endif %}
+    </div>
+</div>
