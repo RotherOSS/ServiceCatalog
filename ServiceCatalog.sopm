@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otobo_package version="1.0">
+    <Name>ServiceCatalog</Name>
+    <Version>10.0.0</Version>
+    <Framework>10.0.x</Framework>
+    <Vendor>Rother OSS GmbH</Vendor>
+    <URL>https://rother-oss.com/</URL>
+    <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
+    <PackageMerge Name="RotherOSS-ServiceCatalog" TargetVersion="10.0.4"></PackageMerge>
+    <Description Lang="en">A detailed service catalog.</Description>
+    <Filelist>
+        <File Permission="660" Location="Custom/Kernel/Modules/AdminService.pm" />
+        <File Permission="660" Location="Custom/Kernel/Modules/AgentITSMServiceZoom.pm" />
+        <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminService.tt" />
+        <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentITSMService.tt" />
+        <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentITSMServiceZoom.tt" />
+        <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentITSMSLAZoom.tt" />
+        <File Permission="660" Location="Custom/Kernel/System/Service.pm" />
+        <File Permission="660" Location="Kernel/Config/Files/XML/ServiceCatalog.xml" />
+        <File Permission="660" Location="Kernel/Language/de_ServiceCatalog.pm" />
+        <File Permission="660" Location="Kernel/Output/HTML/CustomerDashboard/TileIFrame.pm" />
+        <File Permission="660" Location="Kernel/Output/HTML/CustomerDashboard/TileServiceCatalog.pm" />
+        <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/Dashboard/TileIFrame.tt" />
+        <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/Dashboard/TileServiceCatalog.tt" />
+        <File Permission="660" Location="Kernel/Output/JavaScript/Templates/Standard/Customer/TileServiceCatalogContainer.html.tmpl" />
+        <File Permission="660" Location="Kernel/Output/JavaScript/Templates/Standard/Customer/TileServiceCatalogDetailed.html.tmpl" />
+        <File Permission="660" Location="var/httpd/htdocs/js/Core.Customer.TileServiceCatalog.js" />
+        <File Permission="660" Location="var/httpd/htdocs/skins/Customer/default/css/Core.Dashboard.TileServiceCatalog.css" />
+    </Filelist>
+    <DatabaseInstall Type="post">
+        <TableCreate Type="post" Name="service_type">
+            <Column Name="service_id" Required="true" Type="INTEGER"></Column>
+            <Column Name="ticket_type_id" Required="true" Type="SMALLINT"></Column>
+            <Column Name="create_time" Required="true" Type="DATE"></Column>
+            <Column Name="create_by" Required="true" Type="INTEGER"></Column>
+            <ForeignKey ForeignTable="service">
+                <Reference Foreign="id" Local="service_id">
+                </Reference>
+            </ForeignKey>
+            <ForeignKey ForeignTable="ticket_type">
+                <Reference Foreign="id" Local="ticket_type_id">
+                </Reference>
+            </ForeignKey>
+            <ForeignKey ForeignTable="users">
+                <Reference Foreign="id" Local="create_by">
+                </Reference>
+            </ForeignKey>
+        </TableCreate>
+        <TableAlter Type="post" Name="service">
+            <ColumnAdd Name="description_short" Required="false" Size="191" Type="VARCHAR"></ColumnAdd>
+            <ColumnAdd Name="description_long" Required="false" Size="3000" Type="VARCHAR"></ColumnAdd>
+        </TableAlter>
+    </DatabaseInstall>
+    <DatabaseUninstall Type="pre">
+        <TableDrop Type="pre" Name="service_type">
+        </TableDrop>
+        <TableAlter Type="pre" Name="service">
+            <ColumnDrop Name="description_short"></ColumnDrop>
+            <ColumnDrop Name="description_long"></ColumnDrop>
+        </TableAlter>
+    </DatabaseUninstall>
+</otobo_package>
