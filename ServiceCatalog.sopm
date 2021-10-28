@@ -12,6 +12,7 @@
     <Filelist>
         <File Permission="660" Location="Custom/Kernel/Modules/AdminService.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AgentITSMServiceZoom.pm" />
+        <File Permission="660" Location="Custom/Kernel/Modules/CustomerTicketMessage.pm" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminService.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentITSMService.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentITSMServiceZoom.tt" />
@@ -26,6 +27,7 @@
         <File Permission="660" Location="Kernel/Output/JavaScript/Templates/Standard/Customer/TileServiceCatalogContainer.html.tmpl" />
         <File Permission="660" Location="Kernel/Output/JavaScript/Templates/Standard/Customer/TileServiceCatalogDetailed.html.tmpl" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Customer.TileServiceCatalog.js" />
+        <File Permission="660" Location="var/httpd/htdocs/js/Core.Form.js" />
         <File Permission="660" Location="var/httpd/htdocs/skins/Customer/default/css/Core.Dashboard.TileServiceCatalog.css" />
     </Filelist>
     <DatabaseInstall Type="post">
