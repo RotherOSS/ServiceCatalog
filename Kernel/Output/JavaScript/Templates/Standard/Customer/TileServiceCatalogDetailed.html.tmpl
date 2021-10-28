@@ -6,18 +6,21 @@
 # did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
 # --
 <div id="ServiceID{{ ID }}" class="oooDetailedServiceContainer">
-    <h2 class="oooDetailedServiceName">{{ Name }}</h2>
-    <div class="oooDetailedDescriptionShort">{{ DescriptionShort }}</div>
+    <div class="oooDetailedServiceName">
+        <h2>{{ Name }}</h2>
+        <p>{{ DescriptionShort }}</p>
+    </div>
     <div contenteditable="false" class="oooDetailedDescriptionLong">{{ DescriptionLong | safe }}</div>
     <div class="oooDetailedTicketTypes">
     {% if TypeList %}
         {% for TypeName, Type in TypeList %}
-            <a title="{{ 'Create a new ticket of type %s.' | Translate(TypeName) }}" href="{{ Baselink }}Action=CustomerTicketMessage;ServiceID={{ ID }};TypeID={{ Type.ID }}"><i class="ooofo ooofo-add {{ Type.Classes }}"></i> {{ 'Create %s' | Translate(TypeName) }}</a><br>
+            <a title="{{ 'Create a new ticket of type %s.' | Translate(TypeName) }}" href="{{ Baselink }}Action=CustomerTicketMessage;ServiceID={{ ID }};TypeID={{ Type.ID }}"><i class="ooofo ooofo-add {{ Type.Classes }}"></i> {{ 'Create %s' | Translate(TypeName) }}</a>
         {% endfor %}
     {# {% else %}
         <i class="ooofo ooofo-add"></i><a href="{{ Baselink }}Action=CustomerTicketMessage;ServiceID={{ ID }}"> {{ 'Create Ticket' | Translate }}</a><br> #}
     {% endif %}
     </div>
+    {% if WorkingHours or FirstResponseTime or SolutionTime %}
     <div class="oooDetailedSLA">
         <h3>{{ 'Service hours' | Translate }}:</h3>
         {% if WorkingHours %}
@@ -37,4 +40,5 @@
             <span class="oooSLALabel">{{ 'Solution Time' | Translate }}: <span class="oooSLAValue">{{ SolutionTime }} {{ 'hour(s)' | Translate }}</span></span>
         {% endif %}
     </div>
+    {% endif %}
 </div>

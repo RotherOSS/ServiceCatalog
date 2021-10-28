@@ -12,9 +12,9 @@
                         <Item Key="HeaderText">Service Catalog</Item>
                         <Item Key="MainText" ValueType="Textarea">Erstellen Sie ein Ticket über den Service-Katalog.</Item>
                         <Item Key="TextColor">#00023c</Item>
-                        <Item Key="BackgroundColor">#ffffff</Item>
-                        <Item Key="ServiceColor">#ffffff</Item>
-                        <Item Key="ServiceBackgroundColor">#00023c</Item>
+                        <Item Key="BackgroundColor">#fff</Item>
+                        <Item Key="ServiceColor">#001bff</Item>
+                        <Item Key="ServiceBackgroundColor">#fff</Item>
                     </Hash>
                 </Item>
             </Hash>

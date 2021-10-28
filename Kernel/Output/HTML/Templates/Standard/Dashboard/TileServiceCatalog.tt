@@ -34,4 +34,7 @@ ul.oooParentServiceList > li, ul.oooChildServiceList > li {
     background-color: [% Data.ServiceBackgroundColor | html %];
     color: [% Data.ServiceColor | html %];
 }
+ul.oooBreadcrumbServiceList > li {
+    color: [% Data.ServiceColor | html %];
+}
 </style>

@@ -145,7 +145,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
             LiString = '<li data-service-id="' + SelectedService.ServiceID + '" class="oooServiceIDAvailable">' + SelectedService.NameShort + '</li><i class="ooofo ooofo-arrow_r"></i>' + LiString;
         }
 
-        $('.Dialog .oooServiceBreadcrumbField').html('<ul class="oooChildServiceList">' + LiString + '</ul>');
+        $('.Dialog .oooServiceBreadcrumbField').html('<ul class="oooBreadcrumbServiceList">' + LiString + '</ul>');
     }
 
     TargetNS.GetAllSubservices = function(ServiceID) {
