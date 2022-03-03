@@ -22,8 +22,8 @@
         <File Permission="660" Location="Kernel/Language/de_ServiceCatalog.pm" />
         <File Permission="660" Location="Kernel/Modules/CustomerTileServiceCatalog.pm" />
         <File Permission="660" Location="Kernel/Output/HTML/CustomerDashboard/TileServiceCatalog.pm" />
-        <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/Dashboard/TileIFrame.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/Dashboard/TileServiceCatalog.tt" />
+        <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/Dashboard/TileServiceCatalogDynamicFields.tt" />
         <File Permission="660" Location="Kernel/Output/JavaScript/Templates/Standard/Customer/TileServiceCatalogContainer.html.tmpl" />
         <File Permission="660" Location="Kernel/Output/JavaScript/Templates/Standard/Customer/TileServiceCatalogDetailed.html.tmpl" />
         <File Permission="660" Location="Kernel/System/DynamicField/ObjectType/Service.pm" />
