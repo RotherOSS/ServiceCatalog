@@ -146,6 +146,7 @@ sub Run {
 
     # Get all service IDs of the customer.
     my %ServiceIDs = $Kernel::OM->Get('Kernel::System::Ticket')->TicketServiceList(
+        Action         => 'CustomerDashboard',
         CustomerUserID => $Param{UserID},
         QueueID        => 1,
     );
