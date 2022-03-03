@@ -20,6 +20,7 @@
             </Hash>
         </Value>
     </Setting>
+    <!-- FIXME: This could be renamed; would probably break existing configs on installed systems -->
     <Setting Name="CustomerDashboard::Configuration::ServiceCatalog" Required="0" Valid="1">
         <Description Translatable="1">Additional settings for the service catalog.</Description>
         <Navigation>Frontend::Customer::View::Dashboard::Configuration</Navigation>
@@ -31,6 +32,25 @@
                 <Item Key="Problem"></Item>
                 <Item Key="RfC"></Item>
             </Hash>
+        </Value>
+    </Setting>
+    <Setting Name="CustomerDashboard::Configuration::ServiceCatalog###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the service catalog screen of the customer interface.</Description>
+        <Navigation>Frontend::Customer::View::Dashboard::Configuration</Navigation>
+        <Value>
+            <Hash>
+                <DefaultItem ValueType="Select">
+                    <Item ValueType="Option" Value="0" Translatable="1">0 - Disabled</Item>
+                    <Item ValueType="Option" Value="1" Translatable="1">1 - Enabled</Item>
+                </DefaultItem>
+            </Hash>
+        </Value>
+    </Setting>
+    <Setting Name="CustomerDashboard::Configuration::ServiceCatalog###SortByTicketType" Required="0" Valid="0">
+        <Description Translatable="1">Show services with the following ticket type last.</Description>
+        <Navigation>Frontend::Customer::View::Dashboard::Configuration</Navigation>
+        <Value>
+            <Item ValueType="String" ValueRegex="">Incident</Item>
         </Value>
     </Setting>
     <Setting Name="Loader::Module::CustomerDashboard###003-CustomerDashboard" Required="0" Valid="1">
@@ -50,6 +70,39 @@
                         <Item>Core.Customer.TileServiceCatalog.js</Item>
                     </Array>
                 </Item>
+            </Hash>
+        </Value>
+    </Setting>
+    <Setting Name="CustomerFrontend::Module###CustomerTileServiceCatalog" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the customer interface.</Description>
+        <Navigation>Frontend::Customer::ModuleRegistration</Navigation>
+        <Value>
+            <Item ValueType="FrontendRegistration">
+                <Hash>
+                    <Item Key="Group">
+                        <Array>
+                        </Array>
+                    </Item>
+                    <Item Key="GroupRo">
+                        <Array>
+                        </Array>
+                    </Item>
+                    <Item Key="Title"></Item>
+                    <Item Key="Description" Translatable="1">CustomerTileServiceCatalog AJAX Module.</Item>
+                    <Item Key="NavBarName">Service Catalog</Item>
+                </Hash>
+            </Item>
+        </Value>
+    </Setting>
+    <Setting Name="DynamicFields::ObjectType###Service" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField object registration.</Description>
+        <Navigation>Core::DynamicFields::ObjectTypeRegistration</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">Service</Item>
+                <Item Key="Module">Kernel::System::DynamicField::ObjectType::Service</Item>
+                <Item Key="Prio">140</Item>
+                <Item Key="UseObjectName">1</Item>
             </Hash>
         </Value>
     </Setting>
@@ -73,33 +126,4 @@
             </Hash>
         </Value>
     </Setting>
-    <Setting Name="CustomerDashboard::Tiles###IFrame-01" Required="0" Valid="1">
-        <Description Translatable="1">Tile registration for the CustomerDashboard. Module is required.</Description>
-        <Navigation>Frontend::Customer::View::Dashboard::Tiles</Navigation>
-        <Value>
-            <Hash>
-                <Item Key="Order">2</Item>
-                <Item Key="Template">Dashboard/TileIFrame</Item>
-                <Item Key="Config">
-                    <Hash>
-                        <Item Key="Link">https://stats.uptimerobot.com/GX0mOcBp6Y</Item>
-                        <Item Key="FallbackText">IFrame error</Item>
-                        <Item Key="FallbackTitle">FHTW Services</Item>
-                    </Hash>
-                </Item>
-            </Hash>
-        </Value>
-    </Setting>
-    <!-- <Setting Name="DynamicFields::ObjectType###Service" Required="0" Valid="1">
-        <Description Translatable="1">DynamicField object registration.</Description>
-        <Navigation>Core::DynamicFields::ObjectTypeRegistration</Navigation>
-        <Value>
-            <Hash>
-                <Item Key="DisplayName" Translatable="1">Service</Item>
-                <Item Key="Module">Kernel::System::DynamicField::ObjectType::Service</Item>
-                <Item Key="Prio">140</Item>
-                <Item Key="UseObjectName">1</Item>
-            </Hash>
-        </Value>
-    </Setting> -->
 </otobo_config>

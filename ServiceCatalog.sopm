@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<otobo_package version="1.0">
+<otobo_package version="1.1">
     <Name>ServiceCatalog</Name>
-    <Version>10.0.0</Version>
-    <Framework>10.0.x</Framework>
+    <Version>10.1.0</Version>
+    <Framework>10.1.x</Framework>
     <Vendor>Rother OSS GmbH</Vendor>
     <URL>https://rother-oss.com/</URL>
     <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
-    <PackageRequired Version="10.0.3">ITSMCore</PackageRequired>
+    <PackageRequired Version="10.1.1">ITSMCore</PackageRequired>
     <PackageMerge Name="RotherOSS-ServiceCatalog" TargetVersion="10.0.4"></PackageMerge>
     <Description Lang="en">A detailed service catalog.</Description>
     <Filelist>
@@ -20,14 +20,14 @@
         <File Permission="660" Location="Custom/Kernel/System/Service.pm" />
         <File Permission="660" Location="Kernel/Config/Files/XML/ServiceCatalog.xml" />
         <File Permission="660" Location="Kernel/Language/de_ServiceCatalog.pm" />
-        <File Permission="660" Location="Kernel/Output/HTML/CustomerDashboard/TileIFrame.pm" />
+        <File Permission="660" Location="Kernel/Modules/CustomerTileServiceCatalog.pm" />
         <File Permission="660" Location="Kernel/Output/HTML/CustomerDashboard/TileServiceCatalog.pm" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/Dashboard/TileIFrame.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/Dashboard/TileServiceCatalog.tt" />
         <File Permission="660" Location="Kernel/Output/JavaScript/Templates/Standard/Customer/TileServiceCatalogContainer.html.tmpl" />
         <File Permission="660" Location="Kernel/Output/JavaScript/Templates/Standard/Customer/TileServiceCatalogDetailed.html.tmpl" />
+        <File Permission="660" Location="Kernel/System/DynamicField/ObjectType/Service.pm" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Customer.TileServiceCatalog.js" />
-        <File Permission="660" Location="var/httpd/htdocs/js/Core.Form.js" />
         <File Permission="660" Location="var/httpd/htdocs/skins/Customer/default/css/Core.Dashboard.TileServiceCatalog.css" />
     </Filelist>
     <DatabaseInstall Type="post">
@@ -49,11 +49,47 @@
                 </Reference>
             </ForeignKey>
         </TableCreate>
+        <TableCreate Type="post" Name="service_attachment">
+            <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="BIGINT"></Column>
+            <Column Name="service_id" Required="true" Size="11" Type="INTEGER"></Column>
+            <Column Name="filename" Required="false" Size="250" Type="VARCHAR"></Column>
+            <Column Name="content_size" Required="false" Size="30" Type="VARCHAR"></Column>
+            <Column Name="content_type" Required="false" Size="250" Type="VARCHAR"></Column>
+            <Column Name="content" Required="true" Type="LONGBLOB"></Column>
+            <Column Default="0" Name="inlineattachment" Required="true" Type="SMALLINT"></Column>
+            <Column Name="created" Required="true" Type="DATE"></Column>
+            <Column Name="created_by" Required="true" Type="INTEGER"></Column>
+            <Column Name="changed" Required="true" Type="DATE"></Column>
+            <Column Name="changed_by" Required="true" Type="INTEGER"></Column>
+            <Index Name="service_attachment_service_id">
+                <IndexColumn Name="service_id">
+                </IndexColumn>
+            </Index>
+        </TableCreate>
         <TableAlter Type="post" Name="service">
             <ColumnAdd Name="description_short" Required="false" Size="191" Type="VARCHAR"></ColumnAdd>
             <ColumnAdd Name="description_long" Required="false" Size="3000" Type="VARCHAR"></ColumnAdd>
         </TableAlter>
     </DatabaseInstall>
+    <DatabaseUpgrade>
+        <TableCreate Type="post" Name="service_attachment" Version="10.0.2">
+            <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="BIGINT"></Column>
+            <Column Name="service_id" Required="true" Size="11" Type="INTEGER"></Column>
+            <Column Name="filename" Required="false" Size="250" Type="VARCHAR"></Column>
+            <Column Name="content_size" Required="false" Size="30" Type="VARCHAR"></Column>
+            <Column Name="content_type" Required="false" Size="250" Type="VARCHAR"></Column>
+            <Column Name="content" Required="true" Type="LONGBLOB"></Column>
+            <Column Default="0" Name="inlineattachment" Required="true" Type="SMALLINT"></Column>
+            <Column Name="created" Required="true" Type="DATE"></Column>
+            <Column Name="created_by" Required="true" Type="INTEGER"></Column>
+            <Column Name="changed" Required="true" Type="DATE"></Column>
+            <Column Name="changed_by" Required="true" Type="INTEGER"></Column>
+            <Index Name="service_attachment_service_id">
+                <IndexColumn Name="service_id">
+                </IndexColumn>
+            </Index>
+        </TableCreate>
+    </DatabaseUpgrade>
     <DatabaseUninstall Type="pre">
         <TableDrop Type="pre" Name="service_type">
         </TableDrop>

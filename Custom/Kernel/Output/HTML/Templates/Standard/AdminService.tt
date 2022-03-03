@@ -131,6 +131,11 @@
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="ServiceSave"/>
                     <input type="hidden" name="ServiceID" value="[% Data.ServiceID | html %]"/>
+# ---
+# RotherOSS
+# ---
+                    <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
+# ---
                     [% IF Data.ServiceID != 'NEW' %]
                         <input type="hidden" name="ContinueAfterSave" id="ContinueAfterSave" value=""/>
                     [% END %]
@@ -178,11 +183,15 @@
                         </div>
                         <div class="Clear"></div>
 
-#                        <label for="DescriptionLong">[% Translate("Description (long)") | html %]:</label>
-#                        <div class="RichTextField">
-#                            <textarea id="DescriptionLong" class="RichText" rows="10" cols="60" name="DescriptionLong">[% Data.DescriptionLong | html %]</textarea>
-#                        </div>
-#                        <div class="Clear"></div>
+[% RenderBlockStart("DynamicField") %]
+                    <div class="Row Row_DynamicField_[% Data.Name | html %]">
+                        [% Data.Label %]
+                        <div class="Field">
+                            [% Data.Field %]
+                        </div>
+                        <div class="Clear"></div>
+                    </div>
+[% RenderBlockEnd("DynamicField") %]
 # ---
 
 # ---

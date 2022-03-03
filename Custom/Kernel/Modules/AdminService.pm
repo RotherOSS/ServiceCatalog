@@ -4,7 +4,7 @@
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
 # --
-# $origin: otobo itsm core - 734da46f4d87076e659f043ed406e5d91767f7b0 - Kernel/Modules/AdminService.pm
+# $origin: otobo - 866ca7d0103f52a61cedf7c5b10cac6b9cb56991 - Kernel/Modules/AdminService.pm
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -35,6 +35,22 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
+    # ---
+    # RotherOSS
+    # ---
+    # get form id
+    $Self->{FormID} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'FormID' );
+
+    # create form id
+    if ( !$Self->{FormID} ) {
+        $Self->{FormID} = $Kernel::OM->Get('Kernel::System::Web::UploadCache')->FormIDCreate();
+    }
+
+    $Self->{DynamicFieldLookup} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+        ObjectType => 'Service',
+    );
+    # ---
+
     return $Self;
 }
 
@@ -44,6 +60,13 @@ sub Run {
     my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
     my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
+
+# ---
+# RotherOSS
+# ---
+    my $UploadCacheObject = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
+# ---
+
 # ---
 # ITSMCore
 # ---
@@ -130,6 +153,18 @@ sub Run {
         $GetParam{ContentType} = 'text/plain';
         if ( $LayoutObject->{BrowserRichText} ) {
             $GetParam{ContentType} = 'text/html';
+        }
+
+        # get dynamic field values
+        my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+
+        for my $DynamicField ( @{ $Self->{DynamicFieldLookup} }) {
+
+            $GetParam{ 'DynamicField_' . $DynamicField->{Name} } = $DynamicFieldBackendObject->EditFieldValueGet(
+                DynamicFieldConfig => $DynamicField,
+                ParamObject        => $ParamObject,
+                LayoutObject       => $LayoutObject,
+            );
         }
 # ---
 
@@ -239,6 +274,151 @@ sub Run {
                     }
                 }
 
+# ---
+# RotherOSS
+# ---
+                # get all attachments
+                my @Attachments = $UploadCacheObject->FormIDGetAllFilesData(
+                    FormID => $Self->{FormID},
+                );
+
+                # Get all existing attachments.
+                my @ExistingAttachments = $ServiceObject->AttachmentIndex(
+                    ServiceID  => $GetParam{ServiceID},
+                    ShowInline => 1,
+                    UserID     => $Self->{UserID},
+                );
+
+                # Lookup old inline attachments (initially loaded to AdminService.pm screen)
+                # and push to Attachments array if they still exist in the form.
+                ATTACHMENT:
+                for my $Attachment (@ExistingAttachments) {
+                    if (
+                        $ServiceData{DescriptionLong}
+                        =~ m{ Action=AgentITSMServiceZoom;Subaction=DownloadAttachment;ServiceID=$GetParam{ServiceID};FileID=$Attachment->{FileID} }msx
+                        )
+                    {
+                        # Get the existing inline attachment data.
+                        my %File = $ServiceObject->AttachmentGet(
+                            ServiceID => $GetParam{ServiceID},
+                            FileID    => $Attachment->{FileID},
+                            UserID    => $Self->{UserID},
+                        );
+
+                        push @Attachments, {
+                            Content     => $File{Content},
+                            ContentType => $File{ContentType},
+                            Filename    => $File{Filename},
+                            Filesize    => $File{Filesize},
+                            Disposition => 'inline',
+                            FileID      => $Attachment->{FileID},
+                        };
+                    }
+                }
+
+                # Build a lookup hash of the new attachments.
+                my %NewAttachment;
+                for my $Attachment (@Attachments) {
+
+                    # The key is the filename + filesize + content type.
+                    my $Key = $Attachment->{Filename}
+                        . $Attachment->{Filesize}
+                        . $Attachment->{ContentType};
+
+                    # Append content id if available (for new inline images).
+                    if ( $Attachment->{ContentID} ) {
+                        $Key .= $Attachment->{ContentID};
+                    }
+
+                    # Store all of the new attachment data.
+                    $NewAttachment{$Key} = $Attachment;
+                }
+
+                # Check the existing attachments.
+                ATTACHMENT:
+                for my $Attachment (@ExistingAttachments) {
+
+                # The key is the filename + filesizeraw + content type (no content id, as existing attachments don't have it).
+                    my $Key = $Attachment->{Filename}
+                        . $Attachment->{FilesizeRaw}
+                        . $Attachment->{ContentType};
+
+                    # Attachment is already existing, we can delete it from the new attachment hash.
+                    if ( $NewAttachment{$Key} ) {
+                        delete $NewAttachment{$Key};
+                    }
+
+                    # Existing attachment is no longer in new attachments hash.
+                    else {
+
+                        # Delete the existing attachment.
+                        my $DeleteSuccessful = $ServiceObject->AttachmentDelete(
+                            ServiceID => $GetParam{ServiceID},
+                            FileID    => $Attachment->{FileID},
+                            UserID    => $Self->{UserID},
+                        );
+                        if ( !$DeleteSuccessful ) {
+                            return $LayoutObject->FatalError();
+                        }
+                    }
+                }
+
+                for my $Attachment (@Attachments) {
+                    # Upload attachments.
+                    my $FileID = $ServiceObject->AttachmentAdd(
+                        ServiceID   => $GetParam{ServiceID},
+                        FileName    => $Attachment->{Filename},
+                        ContentSize => $Attachment->{Filesize},
+                        ContentType => $Attachment->{ContentType},
+                        Content     => $Attachment->{Content},
+                        Inline      => 1,
+                        UserID      => $Self->{UserID},
+                    );
+
+                    if ( !$FileID ) {
+                        return $LayoutObject->FatalError();
+                    }
+
+                    # Rewrite the URLs of the inline images for the uploaded pictures.
+                    my $Success = $ServiceObject->ServiceInlineAttachmentURLUpdate(
+                        Attachment => $Attachment,
+                        FormID     => $Self->{FormID},
+                        ServiceID  => $GetParam{ServiceID},
+                        FileID     => $FileID,
+                        UserID     => $Self->{UserID},
+                    );
+                    if ( !$Success ) {
+                        $Kernel::OM->Get('Kernel::System::Log')->Log(
+                            Priority => 'error',
+                            Message  => "Could not update the inline image URLs "
+                                . "for ServiceID '$GetParam{ServiceID}'!",
+                        );
+                    }
+                }
+
+                $UploadCacheObject->FormIDRemove( FormID => $Self->{FormID} );
+
+                for my $DynamicField ( @{ $Self->{DynamicFieldLookup} } ) {
+                    my $ValueSet = $DynamicFieldBackendObject->ValueSet(
+                        DynamicFieldConfig => $DynamicField,
+                        ObjectID           => $GetParam{ServiceID},
+                        Value              => $GetParam{ 'DynamicField_' . $DynamicField->{Name} },
+                        UserID             => $Self->{UserID},
+                    );
+
+                    if ( !$ValueSet ) {
+                        $Kernel::OM->Get('Kernel::System::Log')->Log(
+                            Priority => 'error',
+                            Message  => $LayoutObject->{LanguageObject}->Translate(
+                                'Unable to set value for dynamic field %s!',
+                                $DynamicField->{Name},
+                            ),
+                        );
+                        next;
+                    }
+                }
+# ---
+
                 # if the user would like to continue editing the service, just redirect to the edit screen
                 if (
                     defined $ParamObject->GetParam( Param => 'ContinueAfterSave' )
@@ -263,8 +443,8 @@ sub Run {
         $Output .= $LayoutObject->NavigationBar();
         $Output .= $Error{Message}
             ? $LayoutObject->Notify(
-            Priority => 'Error',
-            Info     => $Error{Message},
+                Priority => 'Error',
+                Info     => $Error{Message},
             )
             : '';
 
@@ -293,7 +473,7 @@ sub Run {
             $Output .= $LayoutObject->Notify(
                 Priority => 'Error',
                 Data     => $LayoutObject->{LanguageObject}->Translate( "Please activate %s first!", "Service" ),
-                Link =>
+                Link     =>
                     $LayoutObject->{Baselink}
                     . 'Action=AdminSystemConfiguration;Subaction=View;Setting=Ticket%3A%3AService;',
             );
@@ -383,6 +563,8 @@ sub _MaskNew {
     # ---
     # RotherOSS
     # ---
+    $Param{FormID} = $Self->{FormID};
+
     my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
     # ---
 
@@ -511,6 +693,46 @@ sub _MaskNew {
         Name => 'ServiceEdit',
         Data => { %Param, %ServiceData, },
     );
+
+# ---
+# RotherOSS
+# ---
+    # Get dynamic field backend object.
+    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $ParamObject               = $Kernel::OM->Get('Kernel::System::Web::Request');
+
+    for my $DynamicField ( @{ $Self->{DynamicFieldLookup} } ) {
+
+        my $ValueGet = $DynamicFieldBackendObject->ValueGet(
+            DynamicFieldConfig => $DynamicField,
+            ObjectID           => $ServiceData{ServiceID},
+            UserID             => $Self->{UserID},
+        );
+
+        # Get HTML for dynamic field
+        my $DynamicFieldHTML = $DynamicFieldBackendObject->EditFieldRender(
+            DynamicFieldConfig => $DynamicField,
+            Value              => $ValueGet,
+            # Mandatory          => 0,
+            LayoutObject       => $LayoutObject,
+            ParamObject        => $ParamObject,
+
+            # Server error, if any
+            # %{ $Param{Errors}->{ $Entry->[0] } },
+        );
+
+        next if !IsHashRefWithData($DynamicFieldHTML);
+
+        $LayoutObject->Block(
+            Name => 'DynamicField',
+            Data => {
+                Name  => $DynamicField->{Name},
+                Label => $DynamicFieldHTML->{Label},
+                Field => $DynamicFieldHTML->{Field},
+            },
+        );
+    }
+# ---
 
     # show each preferences setting
     my %Preferences = ();

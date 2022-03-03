@@ -5,16 +5,22 @@
 # the enclosed file COPYING for license information (GPL). If you
 # did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
 # --
-<div id="ServiceID{{ ID }}" class="oooServiceContainer">
+<div data-service-id="{{ ID }}" class="oooServiceContainer">
     <h2 class="oooServiceName" title="{{ Name }}">{{ Name }}</h2>
     <div class="oooDescriptionShort">{{ DescriptionShort }}</div>
-    <a title="{{ 'Show details of this service.' | Translate }}" class="oooInformation">
-        <i class="ooofo ooofo-info"></i>
-    </a>
-    {% if TicketType %}
-        <a title="{{ 'Create a new ticket for this service.' | Translate }}" href="{{ Baselink }}Action=CustomerTicketMessage;ServiceID={{ ID }}" class="oooCreate">
-            <i class="ooofo ooofo-add"></i>
+    
+    {% if not NotSelectable %}
+        <a title="{{ 'Show details of this service.' | Translate }}" class="oooInformation">
+            <i class="ooofo ooofo-info"></i>
         </a>
+    {% endif %}
+
+    {% if ( TicketType | length ) == 1 %}
+        {% for TypeName, Type in TicketType %}
+            <a title="{{ 'Create a new ticket for this service.' | Translate }}" href="{{ Baselink }}Action=CustomerTicketMessage;ServiceID={{ ID }};TypeID={{ Type.ID }}" class="oooCreate">
+                <i class="ooofo ooofo-add {{ Type.Classes }}"></i>
+            </a>
+        {% endfor %}
     {% endif %}
     {% if NumberOfSubservices %}
         <div class="oooSubservices ooo12g">{{ NumberOfSubservices }} {{ 'sub-service(s) available' | Translate }}</div>

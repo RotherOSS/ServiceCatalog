@@ -22,6 +22,9 @@ use utf8;
 sub Data {
     my $Self = shift;
 
+    # System configuration.
+    $Self->{Translation}->{'Show services with the following ticket type last.'} = 'Zeige Services mit folgendem Ticket-Typen als Letztes an.';
+
     # AdminService.tt
     # $Self->{Translation}->{'Only show services for ticket types'} = 'Services nur anzeigen bei Ticket-Typen';
     $Self->{Translation}->{'Ticket types for the customer portal (direct link)'} = 'Ticket-Typen für das Kundenportal (Direktlink)';
@@ -40,7 +43,7 @@ sub Data {
     $Self->{Translation}->{'Show details of this service.'} = 'Details zu diesem Service anzeigen.';
     $Self->{Translation}->{'Create a new ticket for this service.'} = 'Ein neues Ticket für diesen Service erstellen.';
 
-    $Self->{JavaScriptStrings} = [
+    push @{ $Self->{JavaScriptStrings} // [] }, (
         'Service Catalog',
         'sub-service(s) available',
         'Create %s',
@@ -62,7 +65,7 @@ sub Data {
         'Fri',
         'Sat',
         'Sun',
-    ];
+    );
 
     return;
 }

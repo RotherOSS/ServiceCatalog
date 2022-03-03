@@ -115,13 +115,75 @@
                             [% Translate(Data.Criticality) | html %]
                         </div>
                         <div class="Clear"></div>
-
+# ---
+# RotherOSS
+# ---
                         <label title="[% Translate("Description (short)") | html %]">[% Translate("Description (short)") | html %]: </label>
                         <div class="Field">
                             [% Translate(Data.DescriptionShort) | html %]
                         </div>
                         <div class="Clear"></div>
 
+                        <label title="[% Translate("Description (long)") | html %]">[% Translate("Description (long)") | html %]: </label>
+                        <div class="Field">
+                            <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" width="100%" frameborder="0" id="ServiceID[% Data.ServiceID | html %]" onload="ResizeIframe(this);" src="[% Env("Baselink") %]Action=AgentITSMServiceZoom;Subaction=HTMLView;ServiceID=[% Data.ServiceID | html %][% IF !Config("SessionUseCookie") %][% Env("SessionName") | html %]=[% Env("SessionID") | html %][% END %]"></iframe>
+                        </div>
+                        <div class="Clear"></div>
+
+# Load JavaScript here. Otherwise our API could not be loaded yet.
+<script>
+    function ResizeIframe(Iframe) {
+        Iframe = isJQueryObject(Iframe) ? Iframe.get(0) : Iframe;
+
+        var $IframeContent = $(Iframe.contentDocument || Iframe.contentWindow.document),
+            NewHeight = $IframeContent.height();
+        if (!NewHeight || isNaN(NewHeight)) {
+            NewHeight = 100;
+        }
+        else {
+            if (NewHeight > 600) {
+                NewHeight = 600;
+            }
+        }
+
+        NewHeight = parseInt(NewHeight, 10);
+        $(Iframe).height(NewHeight + 'px');
+    }
+</script>
+
+# ToDo: Move this to a custom CSS when porting into the core.
+<style>
+    .MainBox .ContentColumn .Content > fieldset.TableLike.FixedLabelSmall > label {
+        width: 140px !important;
+    }
+
+    .ContentColumn > .WidgetBox > .Content > fieldset.TableLike.FixedLabelSmall > .Field,
+    .ContentColumn > .WidgetBox > .Content > fieldset.TableLike.FixedLabelSmall > .Row > .Field,
+    .ContentColumn > .WidgetBox > .Content > fieldset.TableLike.FixedLabelSmall > .Value,
+    .ContentColumn > .WidgetBox > .Content > fieldset.TableLike.FixedLabelSmall > .Row > .Value {
+        margin-left: 140px !important;
+    }
+</style>
+
+
+[% RenderBlockStart("ServiceDynamicField") %]
+[% IF Data.TitleField %]
+                        <p title="[% Data.Text | html %]" style="[% Data.Style | html %]">[% Data.Text | html %]</p>
+[% ELSE %]
+                        <label>[% Translate(Data.Label) | html %]:</label>
+                        <p class="Value">
+[% RenderBlockStart("ServiceDynamicFieldLink") %]
+                            <span title="[% Data.Title %]"><a href="[% Data.Link | Interpolate %]"[% IF Data.LinkPreview %] data-trigger="floater" data-floater-url="[% Data.LinkPreview | Interpolate %]"[% END %] target="_blank" class="DynamicFieldLink">[% Data.Value %]</a></span>
+[% RenderBlockEnd("ServiceDynamicFieldLink") %]
+[% RenderBlockStart("ServiceDynamicFieldPlain") %]
+                            <span title="[% Data.Title %]">[% Data.Value %]</span>
+[% RenderBlockEnd("ServiceDynamicFieldPlain") %]
+                        </p>
+                        <div class="Clear"></div>
+[% END %]
+[% RenderBlockEnd("ServiceDynamicField") %]
+
+# ---
                         <label title="[% Translate("Comment") | html %]">[% Translate("Comment") | html %]: </label>
                         <div class="Field">
                             [% Translate(Data.Comment) | html %]

@@ -22,6 +22,7 @@ use strict;
 use warnings;
 
 use Kernel::System::VariableCheck (qw(:all));
+use MIME::Base64 qw();  # RotherOSS
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -1911,5 +1912,407 @@ sub _ServiceGetCurrentIncidentState {
 }
 
 # ---
+
+
+# --- 
+# RotherOSS
+# ---
+=head2 AttachmentAdd()
+add article attachments, returns the attachment id
+    my $AttachmentID = $ServiceObject->AttachmentAdd(
+        ServiceID   => $123,
+        FileName    => 'image.png',
+        ContentSize => '123',
+        ContentType => 'image/png;',
+        Content     => $Content,
+        Inline      => 1,   (0|1, default 0)
+        UserID      => 1,
+    );
+Returns:
+    $AttachmentID = 123 ;               # or undef if can't add the attachment
+=cut
+
+sub AttachmentAdd {
+    my ( $Self, %Param ) = @_;
+
+    for my $Argument (qw(ServiceID FileName ContentSize ContentType Content UserID)) {
+        if ( !$Param{$Argument} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Argument!",
+            );
+
+            return;
+        }
+    }
+
+    # set default
+    if ( !$Param{Inline} ) {
+        $Param{Inline} = 0;
+    }
+
+    # get all existing attachments
+    my @Index = $Self->AttachmentIndex(
+        ServiceID => $Param{ServiceID},
+        UserID    => $Param{UserID},
+    );
+
+    # get the filename
+    my $NewFileName = $Param{FileName};
+
+    # build a lookup hash of all existing file names
+    my %UsedFile;
+    for my $File (@Index) {
+        if ( $File->{FileName} ) {
+            $UsedFile{ $File->{FileName} } = 1;
+        }
+    }
+
+    # try to modify the the file name by adding a number if it exists already
+    my $Count = 0;
+    while ( $Count < 50 ) {
+
+        # increase counter
+        $Count++;
+
+        # if the file name exists
+        if ( exists $UsedFile{$NewFileName} ) {
+
+            # filename has a file name extension (e.g. test.jpg)
+            if ( $Param{FileName} =~ m{ \A (.*) \. (.+?) \z }xms ) {
+                $NewFileName = "$1-$Count.$2";
+            }
+            else {
+                $NewFileName = "$Param{FileName}-$Count";
+            }
+        }
+    }
+
+    # store the new filename
+    $Param{FileName} = $NewFileName;
+
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
+    # encode attachment if it's a postgresql backend
+    if ( !$DBObject->GetDatabaseFunction('DirectBlob') ) {
+
+        $Kernel::OM->Get('Kernel::System::Encode')->EncodeOutput( \$Param{Content} );
+
+        $Param{Content} = MIME::Base64::encode_base64( $Param{Content} );
+    }
+
+    # write attachment to db
+    return if !$DBObject->Do(
+        SQL => 'INSERT INTO service_attachment ' .
+            ' (service_id, filename, content_size, content_type, content, inlineattachment, ' .
+            ' created, created_by, changed, changed_by) VALUES ' .
+            ' (?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        Bind => [
+            \$Param{ServiceID}, \$Param{FileName}, \$Param{ContentSize}, \$Param{ContentType},
+            \$Param{Content}, \$Param{Inline}, \$Param{UserID}, \$Param{UserID},
+        ],
+    );
+
+    # get the attachment id
+    return if !$DBObject->Prepare(
+        SQL => 'SELECT id '
+            . 'FROM service_attachment '
+            . 'WHERE service_id = ? AND filename = ? '
+            . 'AND content_size = ? AND  content_type = ? '
+            . 'AND inlineattachment = ? '
+            . 'AND created_by = ? AND changed_by = ?',
+        Bind => [
+            \$Param{ServiceID}, \$Param{FileName}, \$Param{ContentSize}, \$Param{ContentType},
+            \$Param{Inline}, \$Param{UserID}, \$Param{UserID},
+        ],
+        Limit => 1,
+    );
+
+    my $AttachmentID;
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+        $AttachmentID = $Row[0];
+    }
+
+    return $AttachmentID;
+}
+
+=head2 ServiceInlineAttachmentURLUpdate()
+Updates the URLs of uploaded inline attachments.
+    my $Success = $ServiceObject->ServiceInlineAttachmentURLUpdate(
+        ServiceID  => 12,
+        FormID     => 456,
+        FileID     => 5,
+        Attachment => \%Attachment,
+        UserID     => 1,
+    );
+Returns:
+    $Success = 1;               # of undef if attachment URL could not be updated
+=cut
+
+sub ServiceInlineAttachmentURLUpdate {
+    my ( $Self, %Param ) = @_;
+
+    for my $Argument (qw(ServiceID Attachment FormID FileID UserID)) {
+        if ( !$Param{$Argument} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Argument!",
+            );
+
+            return;
+        }
+    }
+
+    # check if attachment is a hash reference
+    if ( ref $Param{Attachment} ne 'HASH' && !%{ $Param{Attachment} } ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "Attachment must be a hash reference!",
+        );
+
+        return;
+    }
+
+    # only consider inline attachments here (they have a content id)
+    return 1 if !$Param{Attachment}->{ContentID};
+
+    my %ServiceData = $Self->ServiceGet(
+        ServiceID  => $Param{ServiceID},
+        UserID     => $Param{UserID},
+    );
+
+    # picture URL in upload cache
+    my $Search = "Action=PictureUpload . FormID=\Q$Param{FormID}\E . "
+        . "ContentID=\Q$Param{Attachment}->{ContentID}\E";
+
+    # picture URL in Service attachment
+    my $Replace = "Action=AgentITSMServiceZoom;Subaction=DownloadAttachment;"
+        . "ServiceID=$Param{ServiceID};FileID=$Param{FileID}";
+
+    # rewrite picture URLs
+    if ( $ServiceData{DescriptionLong} ) {
+        # remove newlines
+        # $ServiceData{DescriptionLong} =~ s{ [\n\r]+ }{}gxms;
+
+        # replace URL
+        $ServiceData{DescriptionLong} =~ s{$Search}{$Replace}xms;
+    }
+
+    # Cut off sub services from service name
+    $ServiceData{Name} = (split '::', $ServiceData{Name})[-1];
+
+    # update service
+    my $Success = $Self->ServiceUpdate(
+        %ServiceData,
+        UserID => $Param{UserID},
+    );
+
+    # check if update was successful
+    if ( !$Success ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "Could not update ServiceID'$Param{ServiceID}'!",
+        );
+
+        return;
+    }
+
+    return 1;
+}
+
+=head2 AttachmentGet()
+get attachment of service ID
+    my %File = $ServiceObject->AttachmentGet(
+        ServiceID => 123,
+        FileID    => 1,
+        UserID    => 1,
+    );
+Returns:
+    %File = (
+        Filesize    => '540286',                # file size in bytes
+        ContentType => 'image/jpeg',
+        Filename    => 'Error.jpg',
+        Content     => '...'                    # file binary content
+    );
+=cut
+
+sub AttachmentGet {
+    my ( $Self, %Param ) = @_;
+
+    for my $Argument (qw(ServiceID FileID UserID)) {
+        if ( !defined $Param{$Argument} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Argument!",
+            );
+
+            return;
+        }
+    }
+
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
+    return if !$DBObject->Prepare(
+        SQL => 'SELECT filename, content_type, content_size, content '
+            . 'FROM service_attachment '
+            . 'WHERE id = ? AND service_id = ? '
+            . 'ORDER BY created',
+        Bind   => [ \$Param{FileID}, \$Param{ServiceID} ],
+        Encode => [ 1, 1, 1, 0 ],
+        Limit  => 1,
+    );
+
+    my %File;
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+
+        # decode attachment if it's a postgresql backend and not BLOB
+        if ( !$DBObject->GetDatabaseFunction('DirectBlob') ) {
+            $Row[3] = MIME::Base64::decode_base64( $Row[3] );
+        }
+
+        $File{Filename}    = $Row[0];
+        $File{ContentType} = $Row[1];
+        $File{Filesize}    = $Row[2];
+        $File{Content}     = $Row[3];
+    }
+
+    return %File;
+}
+# ---
+
+=head2 AttachmentIndex()
+return an attachment index of an service id
+    my @Index = $ServiceObject->AttachmentIndex(
+        ServiceID  => 123,
+        ShowInline => 0,   ( 0|1, default 1)
+        UserID     => 1,
+    );
+Returns:
+    @Index = (
+        {
+            Filesize    => '527.6 KBytes',
+            ContentType => 'image/jpeg',
+            Filename    => 'Error.jpg',
+            FilesizeRaw => 540286,
+            FileID      => 6,
+            Inline      => 0,
+        },
+        {,
+            Filesize => '430.0 KBytes',
+            ContentType => 'image/jpeg',
+            Filename => 'Solution.jpg',
+            FilesizeRaw => 440286,
+            FileID => 5,
+            Inline => 1,
+        },
+        {
+            Filesize => '296 Bytes',
+            ContentType => 'text/plain',
+            Filename => 'AdditionalComments.txt',
+            FilesizeRaw => 296,
+            FileID => 7,
+            Inline => 0,
+        },
+    );
+=cut
+
+sub AttachmentIndex {
+    my ( $Self, %Param ) = @_;
+
+    for my $Argument (qw(ServiceID UserID)) {
+        if ( !$Param{$Argument} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Argument!",
+            );
+            return;
+        }
+    }
+
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
+    return if !$DBObject->Prepare(
+        SQL => 'SELECT id, filename, content_type, content_size, inlineattachment '
+            . 'FROM service_attachment '
+            . 'WHERE service_id = ? '
+            . 'ORDER BY filename',
+        Bind  => [ \$Param{ServiceID} ],
+        Limit => 100,
+    );
+
+    my @Index;
+    ATTACHMENT:
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+
+        my $ID          = $Row[0];
+        my $Filename    = $Row[1];
+        my $ContentType = $Row[2];
+        my $Filesize    = $Row[3];
+        my $Inline      = $Row[4];
+
+        # do not show inline attachments
+        if ( defined $Param{ShowInline} && !$Param{ShowInline} && $Inline ) {
+            next ATTACHMENT;
+        }
+
+        # convert to human readable file size
+        my $FileSizeRaw = $Filesize;
+        if ($Filesize) {
+            if ( $Filesize > ( 1024 * 1024 ) ) {
+                $Filesize = sprintf "%.1f MBytes", ( $Filesize / ( 1024 * 1024 ) );
+            }
+            elsif ( $Filesize > 1024 ) {
+                $Filesize = sprintf "%.1f KBytes", ( ( $Filesize / 1024 ) );
+            }
+            else {
+                $Filesize = $Filesize . ' Bytes';
+            }
+        }
+
+        push @Index, {
+            FileID      => $ID,
+            Filename    => $Filename,
+            ContentType => $ContentType,
+            Filesize    => $Filesize,
+            FilesizeRaw => $FileSizeRaw,
+            Inline      => $Inline,
+        };
+    }
+
+    return @Index;
+}
+
+=head2 AttachmentDelete()
+delete attachment of article
+    my $Success = $ServiceObject->AttachmentDelete(
+        ServiceID => 123,
+        FileID    => 1,
+        UserID    => 1,
+    );
+Returns:
+    $Success = 1 ;              # or undef if attachment could not be deleted
+=cut
+
+sub AttachmentDelete {
+    my ( $Self, %Param ) = @_;
+
+    for my $Argument (qw(ServiceID FileID UserID)) {
+        if ( !defined $Param{$Argument} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Argument!",
+            );
+
+            return;
+        }
+    }
+
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
+        SQL  => 'DELETE FROM service_attachment WHERE id = ? AND service_id = ? ',
+        Bind => [ \$Param{FileID}, \$Param{ServiceID} ],
+    );
+
+    return 1;
+}
 
 1;

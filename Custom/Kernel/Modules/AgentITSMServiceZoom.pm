@@ -21,6 +21,7 @@ use strict;
 use warnings;
 
 use Kernel::Language qw(Translatable);
+use Kernel::System::VariableCheck qw(IsHashRefWithData);
 
 our $ObjectManagerDisabled = 1;
 
@@ -66,6 +67,180 @@ sub Run {
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+# ---
+# RotherOSS
+# ---
+   # ---------------------------------------------------------- #
+    # HTMLView Subaction
+    # ---------------------------------------------------------- #
+    if ( $Self->{Subaction} eq 'HTMLView' ) {
+
+        my %HTMLFile = $LayoutObject->RichTextDocumentServe(
+            Data => {
+                Content     => $Service{DescriptionLong},
+                ContentType => 'text/html; charset="utf-8"',
+            },
+            URL                => 'Action=AgentITSMServiceZoom;Subaction=HTMLView;ServiceID=' . $ServiceID,
+            Attachments        => {},
+            LoadInlineContent  => 1,
+            LoadExternalImages => 1,
+        );
+
+        # add needed HTML headers
+        $Service{DescriptionLong} = $Kernel::OM->Get('Kernel::System::HTMLUtils')->DocumentComplete(
+            String  => $Service{DescriptionLong},
+            Charset => 'utf-8',
+        );
+
+        # return complete HTML as an attachment
+        return $LayoutObject->Attachment(
+            Type        => 'inline',
+            ContentType => 'text/html',
+            Content     => $Service{DescriptionLong},
+        );
+    }
+    # ---------------------------------------------------------- #
+    # DownloadAttachment Subaction
+    # ---------------------------------------------------------- #
+    elsif ( $Self->{Subaction} eq 'DownloadAttachment' ) {
+
+        my $FileID = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'FileID' );
+
+        if ( !defined $FileID ) {
+            return $LayoutObject->FatalError(
+                Message => Translatable('Need FileID!'),
+            );
+        }
+
+        # Get attachments.
+        my %File = $Kernel::OM->Get('Kernel::System::Service')->AttachmentGet(
+            ServiceID => $ServiceID,
+            FileID    => $FileID,
+            UserID    => $Self->{UserID},
+        );
+        if (%File) {
+            return $LayoutObject->Attachment(%File);
+        }
+        else {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Message  => "No such attachment ($FileID)! May be an attack!!!",
+                Priority => 'error',
+            );
+            return $LayoutObject->ErrorScreen();
+        }
+    }
+
+    # build dynamic fields.
+    my @DynamicFieldList;
+    my $DynamicFieldLookup = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+        ObjectType => 'Service',
+    );
+
+    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+
+    DYNAMICFIELD:
+    for my $DynamicField ( @{$DynamicFieldLookup} ) {
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicField);
+
+        my $ValueGet = $DynamicFieldBackendObject->ValueGet(
+            DynamicFieldConfig => $DynamicField,
+            ObjectID           => $ServiceID,
+            UserID             => $Self->{UserID},
+        );
+
+        next DYNAMICFIELD if !$ValueGet;
+
+        # use translation here to be able to reduce the character length in the template
+        my $Label = $LayoutObject->{LanguageObject}->Translate( $DynamicField->{Label} );
+
+        my $ValueStrg = $DynamicFieldBackendObject->DisplayValueRender(
+            DynamicFieldConfig => $DynamicField,
+            Value              => $ValueGet,
+            LayoutObject       => $LayoutObject,
+            ValueMaxChars      => 130,
+        );
+
+        push @DynamicFieldList, {
+            $DynamicField->{Name} => $ValueStrg->{Title},
+            Name                  => $DynamicField->{Name},
+            Title                 => $ValueStrg->{Title},
+            Value                 => $ValueStrg->{Value},
+            Label                 => $Label,
+            Link                  => $ValueStrg->{Link},
+            LinkPreview           => $ValueStrg->{LinkPreview},
+            TitleFieldConfig      => ( $DynamicField->{FieldType} eq 'Title' ) ? $DynamicField->{Config} : undef,
+
+            # Include unique parameter with dynamic field name in case of collision with others.
+            #   Please see bug#13362 for more information.
+            "DynamicField_$DynamicField->{Name}" => $ValueStrg->{Title},
+        };
+    }
+
+    # output dynamic fields
+    FIELD:
+    for my $Field (@DynamicFieldList) {
+
+        # handle titles separately
+        if ( $Field->{TitleFieldConfig} ) {
+            my $Style = "padding-left:4px;font-size:$Field->{TitleFieldConfig}{FontSize}px;color:$Field->{TitleFieldConfig}{FontColor};";
+
+            if ( $Field->{TitleFieldConfig}{CBFontStyleUnderLineValue} ) {
+                $Style .= "text-decoration:underline;";
+            }
+            if ( $Field->{TitleFieldConfig}{CBFontStyleItalicValue} ) {
+                $Style .= "font-style:italic;";
+            }
+            if ( $Field->{TitleFieldConfig}{CBFontStyleBoldValue} ) {
+                $Style .= "font-weight:bold;";
+            }
+
+            $LayoutObject->Block(
+                Name => 'TicketDynamicField',
+                Data => {
+                    Text       => $Field->{Label},
+                    Style      => $Style,
+                    TitleField => 1,
+                },
+            );
+
+            next FIELD;
+        }
+
+        $LayoutObject->Block(
+            Name => 'ServiceDynamicField',
+            Data => {
+                Label => $Field->{Label},
+            },
+        );
+
+        if ( $Field->{Link} ) {
+            $LayoutObject->Block(
+                Name => 'ServiceDynamicFieldLink',
+                Data => {
+                    $Field->{Name} => $Field->{Title},
+                    Value          => $Field->{Value},
+                    Title          => $Field->{Title},
+                    Link           => $Field->{Link},
+                    LinkPreview    => $Field->{LinkPreview},
+
+                    # Include unique parameter with dynamic field name in case of collision with others.
+                    #   Please see bug#13362 for more information.
+                    "DynamicField_$Field->{Name}" => $Field->{Title},
+                },
+            );
+        }
+        else {
+            $LayoutObject->Block(
+                Name => 'ServiceDynamicFieldPlain',
+                Data => {
+                    Value => $Field->{Value},
+                    Title => $Field->{Title},
+                },
+            );
+        }
+    }
+# ---
 
     # run config item menu modules
     if ( ref $ConfigObject->Get('ITSMService::Frontend::MenuModule') eq 'HASH' ) {
@@ -212,4 +387,3 @@ sub Run {
 }
 
 1;
-

@@ -4,7 +4,7 @@
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
 # --
-# $origin: otobo - 22723fd9f77f245c5e33ebb8a053b0fec2cebef0 - Kernel/Modules/CustomerTicketMessage.pm
+# $origin: otobo - 0761a23d58502b249fba443fc6894137a6d19e3e - Kernel/Modules/CustomerTicketMessage.pm
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -442,6 +442,30 @@ sub Run {
 
         }
 
+        my $ACLResultStd = $TicketObject->TicketAcl(
+            %GetParam,
+            CustomerUserID => $Self->{UserID},
+            Action         => $Self->{Action},
+            ReturnType     => 'FormStd',
+            ReturnSubType  => '-',
+            Data           => {
+                Article => 'Article',
+            },
+        );
+
+        my %VisibilityStd;
+
+        if ($ACLResultStd) {
+            my %AclData = $TicketObject->TicketAclData();
+            for my $Field ( sort keys %AclData ) {
+                $VisibilityStd{$Field} = 1;
+            }
+        }
+
+        else {
+            $VisibilityStd{Article} = 1;
+        }
+
         # create html strings for all dynamic fields
         my %DynamicFieldHTML;
 
@@ -471,13 +495,13 @@ sub Run {
                 PossibleValuesFilter => defined $DynFieldStates{Fields}{$i}
                 ? $DynFieldStates{Fields}{$i}{PossibleValues}
                 : undef,
-                Value           => $GetParam{DynamicField}{"DynamicField_$DynamicFieldConfig->{Name}"},
-                LayoutObject    => $LayoutObject,
-                ParamObject     => $ParamObject,
-                AJAXUpdate      => 1,
-                UpdatableFields => $Self->_GetFieldsToUpdate(),
-                Mandatory       => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                CustomerLabel   => 1,
+                Value             => $GetParam{DynamicField}{"DynamicField_$DynamicFieldConfig->{Name}"},
+                LayoutObject      => $LayoutObject,
+                ParamObject       => $ParamObject,
+                AJAXUpdate        => 1,
+                UpdatableFields   => $Self->_GetFieldsToUpdate(),
+                Mandatory         => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                CustomerInterface => 1,
                 %UseDefault,
             );
         }
@@ -492,6 +516,7 @@ sub Run {
             FromChatID       => $GetParam{FromChatID} || '',
             HideAutoselected => $HideAutoselectedJSON,
             Visibility       => $DynFieldStates{Visibility},
+            VisibilityStd    => \%VisibilityStd,
         );
         $Output .= $LayoutObject->CustomerNavigationBar();
         $Output .= $LayoutObject->CustomerFooter();
@@ -668,13 +693,13 @@ sub Run {
                     PossibleValuesFilter => $PossibleValuesFilter,
                     Mandatory            =>
                     $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                    ServerError     => $ValidationResult->{ServerError}  || '',
-                    ErrorMessage    => $ValidationResult->{ErrorMessage} || '',
-                    LayoutObject    => $LayoutObject,
-                    ParamObject     => $ParamObject,
-                    AJAXUpdate      => 1,
-                    UpdatableFields => $Self->_GetFieldsToUpdate(),
-                    CustomerLabel   => 1,
+                    ServerError       => $ValidationResult->{ServerError}  || '',
+                    ErrorMessage      => $ValidationResult->{ErrorMessage} || '',
+                    LayoutObject      => $LayoutObject,
+                    ParamObject       => $ParamObject,
+                    AJAXUpdate        => 1,
+                    UpdatableFields   => $Self->_GetFieldsToUpdate(),
+                    CustomerInterface => 1,
                 );
         }
 
@@ -734,14 +759,41 @@ sub Run {
             }
         }
 
-        # check subject
-        if ( !$GetParam{Subject} ) {
-            $Error{SubjectInvalid} = 'ServerError';
+        my $ACLResultStd = $TicketObject->TicketAcl(
+            %GetParam,
+            CustomerUserID => $Self->{UserID},
+            Action         => $Self->{Action},
+            ReturnType     => 'FormStd',
+            ReturnSubType  => '-',
+            Data           => {
+                Article => 'Article',
+            },
+        );
+
+        my %VisibilityStd;
+
+        if ($ACLResultStd) {
+            my %AclData = $TicketObject->TicketAclData();
+            for my $Field ( sort keys %AclData ) {
+                $VisibilityStd{$Field} = 1;
+            }
         }
 
-        # check body
-        if ( !$GetParam{Body} ) {
-            $Error{BodyInvalid} = 'ServerError';
+        else {
+            $VisibilityStd{Article} = 1;
+        }
+
+        if ( $VisibilityStd{Article} ) {
+
+            # check subject
+            if ( !$GetParam{Subject} ) {
+                $Error{SubjectInvalid} = 'ServerError';
+            }
+
+            # check body
+            if ( !$GetParam{Body} ) {
+                $Error{BodyInvalid} = 'ServerError';
+            }
         }
 
         # check mandatory service
@@ -792,6 +844,7 @@ sub Run {
                 DynamicFieldHTML => \%DynamicFieldHTML,
                 Errors           => \%Error,
                 Visibility       => \%Visibility,
+                VisibilityStd    => \%VisibilityStd,
             );
             $Output .= $LayoutObject->CustomerNavigationBar();
             $Output .= $LayoutObject->CustomerFooter();
@@ -839,6 +892,24 @@ sub Run {
                 ObjectID           => $TicketID,
                 Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
                 UserID             => $ConfigObject->Get('CustomerPanelUserID'),
+            );
+        }
+
+        # if no article has to be created clean up and return
+        if ( !$VisibilityStd{Article} ) {
+
+            # remove pre submitted attachments
+            $UploadCacheObject->FormIDRemove( FormID => $Self->{FormID} );
+
+            # delete hidden fields cache
+            $Kernel::OM->Get('Kernel::System::Cache')->Delete(
+                Type => 'HiddenFields',
+                Key  => $Self->{FormID},
+            );
+
+            # redirect
+            return $LayoutObject->Redirect(
+                OP => "Action=$NextScreen;TicketID=$TicketID",
             );
         }
 
@@ -1286,6 +1357,37 @@ sub Run {
             };
         }
 
+        my $ACLResultStd = $TicketObject->TicketAcl(
+            %GetParam,
+            CustomerUserID => $Self->{UserID},
+            Action         => $Self->{Action},
+            ReturnType     => 'FormStd',
+            ReturnSubType  => '-',
+            Data           => {
+                Article => 'Article',
+            },
+        );
+
+        my %VisibilityStd = (
+            Article => 0,
+        );
+
+        if ($ACLResultStd) {
+            my %AclData = $TicketObject->TicketAclData();
+            for my $Field ( sort keys %AclData ) {
+                $VisibilityStd{$Field} = 1;
+            }
+        }
+
+        else {
+            $VisibilityStd{Article} = 1;
+        }
+
+        push @DynamicFieldAJAX, {
+            Name => 'Restrictions_Visibility_Std',
+            Data => \%VisibilityStd,
+        };
+
         # build AJAX return for the standard fields
         my @StdFieldAJAX;
         my %Attributes = (
@@ -1535,6 +1637,7 @@ sub _MaskNew {
                 delete $NewTos{$_};
             }
         }
+
         $Param{ToStrg} = $LayoutObject->AgentQueueListOption(
             Data       => \%NewTos,
             Multiple   => 0,
@@ -1546,6 +1649,7 @@ sub _MaskNew {
             SelectedID => $Param{ToSelected} || $Param{QueueID},
             TreeView   => $TreeView,
         );
+
         $LayoutObject->Block(
             Name => 'Queue',
             Data => {
@@ -1600,6 +1704,7 @@ sub _MaskNew {
             my %ReverseType = reverse %Type;
             $Param{TypeID} = $ReverseType{ $Config->{'TicketTypeDefault'} };
         }
+
 # Rother OSS / ServiceCatalog
         elsif ( !IsHashRefWithData($Param{Errors}) && $Param{TypeID} && $Type{ $Param{TypeID} } ) {
             %Type = (
@@ -1643,7 +1748,7 @@ sub _MaskNew {
 # Rother OSS / ServiceCatalog
         if ( !IsHashRefWithData($Param{Errors}) && $Param{ServiceID} && $Services{ $Param{ServiceID} } ) {
             %Services = (
-                $Param{ServiceID} => $Services{ $Param{TypeID} },
+                $Param{ServiceID} => $Services{ $Param{ServiceID} },
             );
         }
 # EO ServiceCatalog
@@ -1677,8 +1782,10 @@ sub _MaskNew {
         if ( $Config->{SLA} ) {
             if ( $Param{ServiceID} ) {
                 %SLA = $TicketObject->TicketSLAList(
-                    QueueID        => 1, 
                     %Param,
+# Rother OSS / ServiceCatalog
+                    QueueID        => $Param{QueueID} || 1,    # use default QueueID if none is provided in %Param
+# EO ServiceCatalog
                     Action         => $Self->{Action},
                     CustomerUserID => $Self->{UserID},
                 );
@@ -1757,7 +1864,7 @@ sub _MaskNew {
         # hide field
         if ( !$Param{Visibility}{"DynamicField_$DynamicFieldConfig->{Name}"} ) {
             %Hidden = (
-                HiddenClass => ' ooo.ACLHidden',
+                HiddenClass => ' oooACLHidden',
                 HiddenStyle => 'style=display:none;',
             );
 
@@ -1771,9 +1878,10 @@ sub _MaskNew {
             $LayoutObject->Block(
                 Name => 'DynamicField_' . $DynamicFieldConfig->{Name},
                 Data => {
-                    Name  => $DynamicFieldConfig->{Name},
-                    Label => $DynamicFieldHTML->{Label},
-                    Field => $DynamicFieldHTML->{Field},
+                    Name    => $DynamicFieldConfig->{Name},
+                    Tooltip => $DynamicFieldConfig->{Config}{Tooltip},
+                    Label   => $DynamicFieldHTML->{Label},
+                    Field   => $DynamicFieldHTML->{Field},
                     %Hidden,
                 },
             );
@@ -1782,13 +1890,27 @@ sub _MaskNew {
             $LayoutObject->Block(
                 Name => 'DynamicField',
                 Data => {
-                    Name  => $DynamicFieldConfig->{Name},
-                    Label => $DynamicFieldHTML->{Label},
-                    Field => $DynamicFieldHTML->{Field},
+                    Name    => $DynamicFieldConfig->{Name},
+                    Tooltip => $DynamicFieldConfig->{Config}{Tooltip},
+                    Label   => $DynamicFieldHTML->{Label},
+                    Field   => $DynamicFieldHTML->{Field},
                     %Hidden,
                 },
             );
         }
+    }
+
+    if ( !$Param{VisibilityStd}{Article} ) {
+        $Param{SubjectValidate}        = 'Validate_Required_IfVisible';
+        $Param{BodyValidate}           = 'Validate_Required_IfVisible';
+        $Param{SubjectHiddenClass}     = ' oooACLHidden';
+        $Param{BodyHiddenClass}        = ' oooACLHidden';
+        $Param{AttachmentsHiddenClass} = ' oooACLHidden';
+    }
+
+    else {
+        $Param{SubjectValidate} = 'Validate_Required_IfVisible';
+        $Param{BodyValidate}    = 'Validate_Required_IfVisible';
     }
 
     # show attachments

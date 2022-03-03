@@ -27,6 +27,7 @@ our @ObjectDependencies = (
     'Kernel::Language',
     'Kernel::Output::HTML::Layout',
     'Kernel::System::DateTime',
+    'Kernel::System::HTMLUtils',
     'Kernel::System::Service',
     'Kernel::System::SLA',
     'Kernel::System::Ticket',
@@ -82,7 +83,7 @@ sub Run {
             my $Calendar = $ConfigObject->Get( 'TimeWorkingHours::Calendar' . $SLAData{Calendar} );
             $Calendar->{TimeZone} = $ConfigObject->Get( 'TimeZone::Calendar' . $SLAData{Calendar} ) || $DefaultTimeZone;
 
-            # Get the working days and hours for the week. E.g.: Mo-Fr 12–19, Sat 13–19.
+            # Get working days and hours for the week. E.g.: Mo-Fr 12–19, Sat 13–19.
             my %Run;
             for my $Index ( 0 .. ( scalar @WeekDays - 1 ) ) {
                 my $Day = $Calendar->{ $WeekDays[$Index] };
@@ -108,7 +109,7 @@ sub Run {
                         $Run{StartDay}  = $WeekDays[$Index];
                         $Run{FirstHour} = $FirstHour;
                         $Run{LastHour}  = $LastHour;
-                        }
+                    }
                 } else {
                     # No data for the day. Check if the run needs to be stopped.
                     if ( $Run{StartDay} ) {
@@ -132,10 +133,12 @@ sub Run {
     }
 
     # Iterate through all avaliable services and filter out the sevices and parameters we need.
-    my $ServiceListRef = $Kernel::OM->Get('Kernel::System::Service')->ServiceListGet(
+    my $ServiceListRefArray = $Kernel::OM->Get('Kernel::System::Service')->ServiceListGet(
         Valid  => 1,
         UserID => 1,
     );
+
+    my %ServiceListRef;
 
     my %TypeList = $Kernel::OM->Get('Kernel::System::Type')->TypeList(
         Valid => 1,
@@ -147,8 +150,10 @@ sub Run {
         QueueID        => 1,
     );
 
-    my $TypeClasses = $ConfigObject->Get( 'CustomerDashboard::Configuration::ServiceCatalog' ) || {}; 
-    for my $ServiceRef ( @{$ServiceListRef} ) {
+    my $Settings = $ConfigObject->Get( 'CustomerDashboard::Configuration::ServiceCatalog' ) || {}; 
+    for my $ServiceRef ( @{$ServiceListRefArray} ) {
+        $ServiceListRef{ $ServiceRef->{ServiceID} } = $ServiceRef;
+
         # Check if the customer has permission on this service.
         next if !$ServiceIDs{ $ServiceRef->{ServiceID} };
         my %Service = ();
@@ -164,7 +169,7 @@ sub Run {
                         if ($TypeName) {
                             $Service{TicketType}{$TypeName} = {
                                 ID      => $TypeID,
-                                Classes => $TypeClasses->{ $TypeList{$TypeID} },
+                                Classes => $Settings->{ $TypeList{$TypeID} },
                             };
                         }
                     }
@@ -213,7 +218,7 @@ sub Run {
 
             # This service is linked to at least two different calendars.
             if ( $Service{WorkingHours} ) {
-                # Check if the working hours are the same.
+                # Check if working hours are the same.
                 for my $Index ( 0 .. ( scalar @{ $Service{WorkingHours} } - 1 ) ) {
                     if (
                         !$Service{WorkingHours}[$Index] || !$Calendar->{WorkingHours}[$Index] # Check if runs exist.
@@ -236,14 +241,59 @@ sub Run {
 
         # Save the service in a list.
         $ServiceList{ $Service{ServiceID} } = \%Service;
+    }
+
+    # Get the basic information for every parent Service, even if the the customer user does not have permission to see it.
+    for my $ServiceID ( keys %ServiceList ) {
+        my $ParentID = $ServiceList{$ServiceID}{ParentID};
+        next if !$ParentID;
+
+        if ( $ServiceList{$ParentID} && $ServiceList{$ParentID}{ServiceID} ) {
+            next;
+        }
+
+        # Get sure that we can select every subservice of this service.
+        while (1) {
+            my %Service = ();
+
+            for my $Needed ( qw(ServiceID NameShort DescriptionShort DescriptionLong ParentID) ) {
+                if ( $ServiceListRef{$ParentID}{$Needed} ) {
+                    $Service{$Needed} = $ServiceListRef{$ParentID}{$Needed};
+                }
+            }
+
+            $Service{NotSelectable} = 1;
+            $ServiceList{ $Service{ServiceID} } = \%Service;
+            $ParentID = $Service{ParentID};
+
+            # Parent reached.
+            if ( !$Service{ParentID} || ( $ServiceList{$ParentID} && $ServiceList{$ParentID}{ServiceID} ) ) {
+                last;
+            }
+        }
+    }
+
+    # Show all first level services, sorted by the name.
+    my %ParentIDs;
+    for my $ServiceID ( keys %ServiceList ) {
+        next if $ServiceList{$ServiceID}{ParentID};
+        # One of these can be undef if the parent service is disabled.
+        next if !$ServiceList{$ServiceID};
+        next if !$ServiceList{$ServiceID}{NameShort};
+
+        $ParentIDs{$ServiceID} = $ServiceList{$ServiceID}{NameShort};
+    }
+
+    my %ReversedParentIDs = reverse %ParentIDs;
+    for my $ServiceName (sort values %ParentIDs) {
+        my $ServiceID = $ReversedParentIDs{$ServiceName};
+        next if !$ServiceID;
 
         # Create the parent list.
-        if ( !$Service{ParentID} ) {
-            $LayoutObject->Block(
-                Name => 'ParentService',
-                Data => \%Service,
-            );
-        }
+        $LayoutObject->Block(
+            Name => 'ParentService',
+            Data => $ServiceList{$ServiceID},
+        );
     }
 
     $LayoutObject->AddJSData(
@@ -252,6 +302,13 @@ sub Run {
             Data => \%ServiceList,
         ),
     );
+
+    if ( $Settings->{SortByTicketType} ) {
+        $LayoutObject->AddJSData(
+            Key   => 'SortByTicketType',
+            Value => $LanguageObject->Translate( $Settings->{SortByTicketType} ),
+        );
+    }
 
     my $Content = $LayoutObject->Output(
         TemplateFile => 'Dashboard/TileServiceCatalog',

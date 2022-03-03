@@ -5,12 +5,17 @@
 # the enclosed file COPYING for license information (GPL). If you
 # did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
 # --
-<div id="ServiceID{{ ID }}" class="oooDetailedServiceContainer">
+{% if NumberOfSubservices %}
+    <span class="oooSubservices ooo12g" data-service-id="{{ ID }}">{{ NumberOfSubservices }} {{ 'sub-service(s) available' | Translate }}</span>
+{% endif %}
+<div data-service-id="{{ ID }}" class="oooDetailedServiceContainer">
     <div class="oooDetailedServiceName">
         <h2>{{ Name }}</h2>
         <p>{{ DescriptionShort }}</p>
     </div>
-    <div contenteditable="false" class="oooDetailedDescriptionLong">{{ DescriptionLong | safe }}</div>
+    <div class="oooDetailedDescriptionLong">
+        <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" title="about:blank" frameborder="0" class="VisibleFrame" src="{{ IframeLink }}"></iframe>
+    </div>
     <div class="oooDetailedTicketTypes">
     {% if TypeList %}
         {% for TypeName, Type in TypeList %}
