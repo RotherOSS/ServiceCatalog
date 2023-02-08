@@ -20,18 +20,21 @@ use strict;
 use warnings;
 
 use Kernel::Language qw(Translatable);
-use Kernel::System::VariableCheck qw(IsArrayRefWithData);
+use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::Language',
     'Kernel::Output::HTML::Layout',
+    'Kernel::System::CustomerUser',
     'Kernel::System::DateTime',
+    'Kernel::System::FAQ',
     'Kernel::System::HTMLUtils',
     'Kernel::System::Service',
     'Kernel::System::SLA',
     'Kernel::System::Ticket',
     'Kernel::System::Type',
+    'Kernel::System::Valid',
 );
 
 sub new {
@@ -51,8 +54,14 @@ sub Run {
     my $LanguageObject = $Kernel::OM->Get('Kernel::Language');
     my $LayoutObject   = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $SLAObject      = $Kernel::OM->Get('Kernel::System::SLA');
+    my $FAQObject      = $Kernel::OM->Get('Kernel::System::FAQ');
 
     my $DefaultTimeZone = $Kernel::OM->Create('Kernel::System::DateTime')->OTOBOTimeZoneGet();
+
+    # Get customer user.
+    $Param{CustomerUser} = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
+        User => $Param{UserID},
+    );
 
     # Only get information of SLAs or calendars once and save them in hashes.
     my %SLAIDs = $SLAObject->SLAList(
@@ -151,6 +160,12 @@ sub Run {
         QueueID        => 1,
     );
 
+    # Get FAQ interface state list
+    my $InterfaceStates = $FAQObject->StateTypeList(
+        Types  => $ConfigObject->Get('FAQ::Customer::StateTypes'),
+        UserID => $Param{UserID},
+    );
+
     my $Settings = $ConfigObject->Get( 'CustomerDashboard::Configuration::ServiceCatalog' ) || {}; 
     for my $ServiceRef ( @{$ServiceListRefArray} ) {
         $ServiceListRef{ $ServiceRef->{ServiceID} } = $ServiceRef;
@@ -240,8 +255,119 @@ sub Run {
             }
         }
 
+        # Get all linked FAQ articles.
+        my %LinkKeyList = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkKeyList(
+            Object1   => 'Service',
+            Key1      => $Service{ServiceID},
+            Object2   => 'FAQ',
+            State     => 'Valid',
+            UserID    => 1,
+        );
+
+        # For each LinkKeyList, get the FAQ article.
+        for my $LinkKey ( keys %LinkKeyList ) {
+            my %FAQData = $FAQObject->FAQGet(
+                ItemID     => $LinkKey,
+                ItemFields => 1,
+                UserID     => $Param{UserID},
+            );
+
+            # Check if the user has permission to see this FAQ.
+            my @ValidIDs      = $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
+            my %ValidIDLookup = map { $_ => 1 } @ValidIDs;
+
+            # Check user permission
+            my $Permission = $FAQObject->CheckCategoryCustomerPermission(
+                CustomerUser => $Param{CustomerUser},
+                CategoryID   => $FAQData{CategoryID},
+                UserID       => $Param{UserID},
+            );
+
+            # Permission check
+            if (
+                $Permission
+                && $FAQData{Approved}
+                && $ValidIDLookup{ $FAQData{ValidID} }
+                && $InterfaceStates->{ $FAQData{StateTypeID} }
+                )
+            {
+                # Filter out information we don't need.
+                my %FilteredFAQData = ();
+                # Get the config for the FAQ fields we want to display.
+                my $DescriptionFieldToDisplay = $Settings->{FAQDescriptionField} || 'Field1';
+                for my $Key ( ( 'ItemID', 'Title', $DescriptionFieldToDisplay, 'CategoryName' ) ) {
+                    next if !$FAQData{$Key};
+
+                    if ( $Key eq $DescriptionFieldToDisplay ) {
+                        # Remove HTML tags.
+                        $FilteredFAQData{Description} = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii(
+                            String => $FAQData{$Key},
+                        );
+
+                        # If the field is longer than 70 characters, add an ellipsis.
+                        if ( length( $FilteredFAQData{Description} ) > 45 ) {
+                            $FilteredFAQData{Description} = substr( $FilteredFAQData{Description}, 0, 45 ) . '...';
+                        }
+                    } else {
+                        $FilteredFAQData{$Key} = $FAQData{$Key};
+                    }
+                }
+                push @{ $Service{FAQs} }, \%FilteredFAQData;
+            }
+        }
+
         # Save the service in a list.
         $ServiceList{ $Service{ServiceID} } = \%Service;
+    }
+
+    # Add support for dynamic fields.
+    my @DynamicFieldList;
+    my $DynamicFieldFilter = {
+        %{ $ConfigObject->Get("CustomerDashboard::Configuration::ServiceCatalog")->{DynamicField} || {} },
+    };
+
+    # Get dynamic fields for service object.
+    my $DynamicFieldLookup = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+        Valid       => 1,
+        ObjectType  => ['Service'],
+        FieldFilter => $DynamicFieldFilter || {},
+    );
+    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+
+    # Get the dynamic field values for every service.
+    for my $ServiceID ( keys %ServiceList ) {
+        my %DynamicFieldList; 
+
+        # # Get the dynamic field values for this service.
+        for my $DynamicFieldConfig ( @{$DynamicFieldLookup} ) {
+            next if !IsHashRefWithData($DynamicFieldConfig);
+
+            # Get the label;
+            my $Label = $DynamicFieldConfig->{Label};
+
+            # Get field value.
+            my $Value = $DynamicFieldBackendObject->ValueGet(
+                DynamicFieldConfig => $DynamicFieldConfig,
+                ObjectID           => $ServiceID,
+            );
+
+            my $ValueStrg = $DynamicFieldBackendObject->DisplayValueRender(
+                DynamicFieldConfig => $DynamicFieldConfig,
+                Value              => $Value,
+                LayoutObject       => $LayoutObject,
+                ValueMaxChars      => 130,
+            );
+
+            # Set field value.
+            if ( $Label && $ValueStrg->{Value} ) {
+                $DynamicFieldList{ $Label } = $ValueStrg->{Value};
+            }
+        }
+
+        # Add the dynamic field values to the service.
+        if ( IsHashRefWithData( \%DynamicFieldList ) ) {
+            $ServiceList{$ServiceID}->{DynamicField} = \%DynamicFieldList;
+        }
     }
 
     # Get the basic information for every parent Service, even if the the customer user does not have permission to see it.
@@ -286,21 +412,54 @@ sub Run {
     }
 
     my %ReversedParentIDs = reverse %ParentIDs;
+    my $NumberOfServices = 0;
     for my $ServiceName (sort values %ParentIDs) {
         my $ServiceID = $ReversedParentIDs{$ServiceName};
         next if !$ServiceID;
+        $NumberOfServices ++;
 
-        # Create the parent list.
+        if ( $NumberOfServices <= 3 ) {
+            # Create the parent list.
+            $LayoutObject->Block(
+                Name => 'ParentService',
+                Data => $ServiceList{$ServiceID},
+            );
+        }
+    }
+
+    if ( $NumberOfServices >= 4 ) {
         $LayoutObject->Block(
-            Name => 'ParentService',
-            Data => $ServiceList{$ServiceID},
+            Name => 'ParentServiceMore',
+            Data => {
+                NumberOfServices => $NumberOfServices - 3,
+            },
         );
     }
+
+    # Create navigation field for services.
+    $ServiceIDs{'All'} = $LayoutObject->{LanguageObject}->Translate('All');
+    my $ServiceStrg = $LayoutObject->BuildSelection(
+        Data       => \%ServiceIDs,
+        Name       => 'ServiceID',
+        Class      => 'Modernize ',
+        PossibleNone => 1,
+        TreeView     => 1,
+        Sort         => 'TreeView',
+        Translation  => 0,
+        Max          => 200,
+    );
 
     $LayoutObject->AddJSData(
         Key   => 'ServiceList',
         Value => $LayoutObject->JSONEncode(
             Data => \%ServiceList,
+        ),
+    );
+
+    $LayoutObject->AddJSData(
+        Key   => 'ServiceStrg',
+        Value => $LayoutObject->JSONEncode(
+            Data => $ServiceStrg,
         ),
     );
 

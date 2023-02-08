@@ -26,11 +26,14 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         $(document).on('click', '.oooServiceIDAvailable', function() {
             var ServiceID = $(this).attr('data-service-id');
 
-            // Show the dialog if not open.
+            // Show the dialog if not already open.
             if (!$('.Dialog.Modal').length) {
+                var ModalContainer = Core.Template.Render('Customer/TileServiceCatalogModal', {
+                    ServiceStrg: JSON.parse(Core.Config.Get('ServiceStrg')),
+                });
+
                 Core.UI.Dialog.ShowDialog({
-                    HTML: $('.oooServiceCatalogWrapper').clone(),
-                    Title: Core.Language.Translate('Service Catalog'),
+                    HTML: ModalContainer,
                     Modal: true,
                     CloseOnClickOutside: true,
                     CloseOnEscape: true,
@@ -39,35 +42,91 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
                     AllowAutoGrow: false
                 });
 
-                $('.Dialog.Modal .oooServiceCatalog.oooHidden').removeClass('oooHidden');
+                $('.Dialog.Modal').addClass('oooServiceCatalogModal');
+                // The search field is not needed anymore
+                // $('.Dialog.Modal .oooServiceField').appendTo('.Dialog.Modal > .Header').find('select').attr('id', 'ModalServiceID');
+                $('.oooServiceField').addClass('oooHidden');
+                $('.Dialog.Modal .oooServiceFieldSearch').appendTo('.Dialog.Modal > .Header').find('select').attr('id', 'ModalSearch');
+                $('.oooServiceBreadcrumb').appendTo('.Dialog.Modal > .Header');
+                // Core.UI.InputFields.Init();
+                $('#ModalServiceID').val(ServiceID).trigger('redraw.InputField');
             }
 
             TargetNS.DisplayServiceList(ServiceID);
-        });
-
-        // Show the detailed view.
-        $(document).on('click', '.oooInformation', function() {
-            var ServiceID = $(this).parent().attr('data-service-id');
-            TargetNS.DisplayDetailedService(ServiceID);
         });
 
         // Show subservices.
         $(document).on('click', '.Dialog .oooServiceContainer', function(Event) {
-            if ($(Event.target).hasClass('ooofo-info') || $(Event.target).hasClass('ooofo-add')) {
+            if (
+                $(Event.target).hasClass('ooofo-info') || $(Event.target).hasClass('ooofo-add') || $(Event.target).hasClass('oooServiceInformation')
+                || $(Event.target).hasClass('oooServiceActions') || $(Event.target).hasClass('oooServiceActionDetails') ||  $(Event.target).hasClass('oooServiceBottom') || $(Event.target).hasClass('ooofo-arrow_r') 
+                ) {
                 return;
             }
             var ServiceID = $(this).attr('data-service-id');
+            $('#ModalServiceID').val(ServiceID).trigger('redraw.InputField');
             TargetNS.DisplayServiceList(ServiceID);
         });
-        
+
+        // Show the detailed view.
+        $(document).on('click', '.oooServiceBottom, .oooServiceActionDetails', function() {
+            var ServiceID = $(this).parent().attr('data-service-id');
+            if (!ServiceID) return;
+            TargetNS.DisplayDetailedService(ServiceID);
+            return;
+        });
+
+        // Show or hide service actions.
+        $(document).on('click', '.oooDesciptionHeader > .ooofo', function() {
+            if ($(this).next().hasClass('oooServiceActions')) {
+                if ($(this).next().hasClass('oooHidden')) {
+                    $(this).next().removeClass('oooHidden');
+                } else {
+                    $(this).next().addClass('oooHidden');
+                }
+            }
+
+        });
+
         $(document).on('click', '.Dialog span.oooSubservices', function(Event) {
             var ServiceID = $(this).attr('data-service-id');
             TargetNS.DisplayServiceList(ServiceID);
         });
+
+        // Select a service when navbar field is changed.
+        $(document).on('change', '#ModalServiceID', function() {
+            var ServiceID = $(this).val();
+            TargetNS.DisplayServiceList(ServiceID);
+        });
+
+        // Enable the search function.
+        $(document).on('keyup', '.Dialog > .Header > .oooServiceFieldSearch > input', function() {
+            var SearchString = $(this).val().toLowerCase();
+            $('.Dialog .oooServiceContainer').each(function() {
+                var ServiceName = $(this).find('.oooServiceName').text();
+                if (ServiceName.toLowerCase().indexOf(SearchString.toLowerCase()) > -1) {
+                    $(this).removeClass('oooHidden');
+                } else {
+                    $(this).addClass('oooHidden');
+                }
+            });
+
+            // If no SearchString is given, hide all subservices with the class oooInitialHidden.
+            if (SearchString == '') {
+                $('.Dialog .oooInitialHidden').addClass('oooHidden');
+            }
+
+            // TODO Rebuild the breadcrumb. Show original breadcrumb if no search string is given.
+        });
+
+        // Show the quick action view for a service.
+        $(document).on('click', '.oooDesciptionHeader > i', function(e) {
+            return false;
+        });
     }
 
     TargetNS.DisplayServiceList = function(ServiceID) {
-        var Subservices = TargetNS.GetAllSubservices(ServiceID);
+        var Subservices = TargetNS.GetSubservices(ServiceID);
 
         // If there is only one subservice, jump straight into that list.
         if (Subservices.length == 1) {
@@ -82,36 +141,53 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
             return TargetNS.DisplayDetailedService(ServiceID);
         }
 
-        TargetNS.ClearServices();
-        for (var SubserviceID of Subservices) {
-            TargetNS.DisplayService(SubserviceID);
-        }
+        $('.oooServiceWrapper').html('');
+        $('.oooServiceResult').removeClass('oooHidden');
+        // $('.oooServiceBreadcrumb').addClass('oooHidden');
+        $('.oooServiceFieldSearch > input').focus(); // Autofocus the search field.
+        // $('.oooServiceField').removeClass('oooHidden');
+        $('.oooServiceFieldSearch').removeClass('oooHidden');
+        $('.Dialog').removeClass('oooDetailedView');
+
+        // Get all subservices for the search function.
+        var AllSubservices = TargetNS.GetAllSubservices(ServiceID);
+        for (var SubserviceID of AllSubservices) {
+            // If the SubserviceID is not within the Subservices array, add the class 'oooHidden'.
+            var Class = '';
+            if (Subservices.indexOf(SubserviceID) == -1) {
+                Class = 'oooHidden oooInitialHidden';
+            }
+            var DisplayServiceHTML = TargetNS.DisplayService(SubserviceID, Class);
+            $(DisplayServiceHTML).appendTo('.oooServiceWrapper');
+        } 
 
         TargetNS.CreateBreadcrumb(ServiceID);
     }
 
-    TargetNS.DisplayService = function(ServiceID) {
+    TargetNS.DisplayService = function(ServiceID, Class = '') {
         var Service = JSON.parse(Core.Config.Get('ServiceList'))[ServiceID];
         var Baselink = Core.Config.Get('Baselink');
-
         var Container = Core.Template.Render('Customer/TileServiceCatalogContainer', {
             ID: ServiceID,
             Name:  Service.NameShort,
             DescriptionShort: Service.DescriptionShort,
-            NumberOfSubservices: TargetNS.GetAllSubservices(ServiceID).length,
+            NumberOfSubservices: TargetNS.GetSubservices(ServiceID).length,
             TicketType: Service.TicketType,
             Baselink: Baselink,
             NotSelectable: Service.NotSelectable,
+            Class: Class,
         });
 
-        $(Container).appendTo('.Dialog .oooServiceWrapper');
+        return Container;
     }
 
     TargetNS.DisplayDetailedService = function(ServiceID) {
-        TargetNS.ClearServices();
+        $('.oooServiceWrapper').html('');
         var Service = JSON.parse(Core.Config.Get('ServiceList'))[ServiceID];
         var Baselink = Core.Config.Get('Baselink');
         var IframeLink = Baselink + 'Action=CustomerTileServiceCatalog;Subaction=HTMLView;ServiceID=' + ServiceID + ';' + Core.Config.Get('SessionName') + '=' + Core.Config.Get('SessionID')
+        // TODO: Refactor/remove this.
+        var IframeLinkDynamicField = Baselink + 'Action=CustomerTileServiceCatalog;Subaction=DynamicFieldView;ServiceID=' + ServiceID + ';' + Core.Config.Get('SessionName') + '=' + Core.Config.Get('SessionID')
 
         // Convert minutes to hours and round to the first decimal place.
         var SolutionTime, FirstResponseTime;
@@ -125,57 +201,112 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
             FirstResponseTime = Math.round(FirstResponseTime * 10) / 10;
         }
 
+        // Get all subservices.
+        var Subservices = TargetNS.GetSubservices(ServiceID);
+
+        // For each Subservice, get the HTML.
+        var SubservicesHTML = [];
+        for (var SubserviceID of Subservices) {
+            SubservicesHTML.push(TargetNS.DisplayService(SubserviceID));
+        }
+
         var Detailed = Core.Template.Render('Customer/TileServiceCatalogDetailed', {
             ID: ServiceID,
             Name:  Service.NameShort,
             DescriptionShort: Service.DescriptionShort,
             IframeLink: IframeLink,
+            IframeLinkDynamicField: IframeLinkDynamicField,  // TODO: Delete this.
+            DynamicFieldList: Service.DynamicField,
             WorkingHours: Service.WorkingHours,
             SolutionTime: SolutionTime,
             FirstResponseTime: FirstResponseTime,
             TypeList: Service.TicketType,
             Baselink: Baselink,
-            NumberOfSubservices: TargetNS.GetAllSubservices(ServiceID).length,
+            FAQArticleList: Service.FAQs,
+            NumberOfSubservices: TargetNS.GetSubservices(ServiceID).length,
+            SubservicesHTML: SubservicesHTML,
         });
         
-        $(Detailed).appendTo('.Dialog .oooServiceWrapper');
+        $(Detailed).appendTo('.oooServiceWrapper');
 
         // Resize iFrame.
-        var IFrame = $('.Dialog .oooServiceWrapper').find('[data-service-id="' + ServiceID + '"]').find('iframe');
+        var IFrame = $('.oooServiceWrapper').find('[data-service-id="' + ServiceID + '"]').find('iframe');
         ResizeIframe(IFrame);
+        Core.UI.Init();
 
         TargetNS.CreateBreadcrumb(ServiceID);
-    }
 
-    // Empty the wrapping. TODO: Remove as a function?
-    TargetNS.ClearServices = function() {
-        $('.oooServiceWrapper').html('');
+        $('.Dialog').addClass('oooDetailedView');
+        $('.oooServiceResult').addClass('oooHidden');
+        // $('.oooServiceBreadcrumb').removeClass('oooHidden').appendTo('.Dialog > .Header');
+        // $('.Dialog > .Content .oooDetailedTicketTypeList').appendTo('.Dialog > .Header');
+        $('.oooServiceField').addClass('oooHidden');
+        $('.oooServiceFieldSearch').addClass('oooHidden');
     }
 
     TargetNS.CreateBreadcrumb = function(ServiceID) {
         var Service = JSON.parse(Core.Config.Get('ServiceList'));
         var SelectedService = Service[ServiceID];
 
-        var LiString = '<li data-service-id="' + SelectedService.ServiceID + '" class="oooServiceIDAvailable">' + SelectedService.NameShort + '</li>';
-        // Limit the number of shown parents.
-        for (var i = 0; i < 10; i++) {
-            var ParentID = SelectedService.ParentID;
-            if (!ParentID) break;
+        // Show the number of displayed services.
+        var NumberOfServices = $('.oooServiceContainer:not(.oooHidden)').length;
 
-            SelectedService = Service[ParentID];
-            LiString = '<li data-service-id="' + SelectedService.ServiceID + '" class="oooServiceIDAvailable">' + SelectedService.NameShort + '</li><i class="ooofo ooofo-arrow_r"></i>' + LiString;
+        if (SelectedService) {
+            $('.oooServiceResult').text(Core.Language.Translate('%s results for %s', NumberOfServices, SelectedService.NameShort));
+        } else {
+            $('.oooServiceResult').text(Core.Language.Translate('%s results', NumberOfServices));
         }
 
-        $('.Dialog .oooServiceBreadcrumbField').html('<ul class="oooBreadcrumbServiceList">' + LiString + '</ul>');
+        var LiString = '';
+ 
+        // Add the current service to the list.
+        if (ServiceID != 'All') {
+            LiString += '<li data-service-id="' + SelectedService.ServiceID + '" class="oooServiceIDAvailable oooServiceIDSelected">' + SelectedService.NameShort + '</li>';
+        }
+
+        // Add 'All' to the list.
+        LiString += '<li data-service-id="All" class="oooServiceIDAvailable ' + ( ServiceID == 'All'  ? 'oooServiceIDSelected' : '') + '">' + Core.Language.Translate('All') + '</li>';
+
+        // Get all main level services.
+        for (var ServiceIDLoop in Service) {
+            if (Service[ServiceIDLoop].ParentID) continue;  // Skip if the service has a parent.
+            if (ServiceIDLoop == ServiceID) continue;  // Don't show the current service twice.
+            
+            LiString += '<li data-service-id="' + ServiceIDLoop + '" class="oooServiceIDAvailable">' + Service[ServiceIDLoop].NameShort + '</li>';
+        }
+
+        // var LiString = '<li data-service-id="' + SelectedService.ServiceID + '" class="oooServiceIDAvailable">' + SelectedService.NameShort + '</li>';
+        // Limit the number of shown parents.
+        // for (var i = 0; i < 10; i++) {
+        //     var ParentID = SelectedService.ParentID;
+        //     if (!ParentID) break;
+
+        //     SelectedService = Service[ParentID];
+        //     LiString = '<li data-service-id="' + SelectedService.ServiceID + '" class="oooServiceIDAvailable">' + SelectedService.NameShort + '</li><i class="ooofo ooofo-arrow_r"></i>' + LiString;
+        // }
+
+        $('.oooBreadcrumbServiceList').html(LiString);
     }
 
-    TargetNS.GetAllSubservices = function(ServiceID) {
+    /**
+     * @private
+     * @name GetSubservices
+     * @memberof Core.Customer.TileServiceCatalog
+     * @function
+     * @param {String} ServiceID - ID of the service
+     * @description
+     *     Get the subservices of a service.
+     */
+    TargetNS.GetSubservices = function(ServiceID) {
         var Service = JSON.parse(Core.Config.Get('ServiceList'));
 
         // Iterate through all services and get all subservices of ServiceID.
         var UnorderedSubservices = {};
         for (var ChildID in Service) {
             if (ServiceID == Service[ChildID].ParentID) {
+                UnorderedSubservices[Service[ChildID].NameShort] = ChildID;
+            } else if (ServiceID == 'All') {
+                // If the all filter is set, get all services.
                 UnorderedSubservices[Service[ChildID].NameShort] = ChildID;
             }
         }
@@ -188,7 +319,6 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
             }, {}
         );
 
-        
         // Push services of a specific ticket type to the end of the list.
         var TicketTypeFilter = Core.Config.Get('SortByTicketType');
         if (TicketTypeFilter) {
@@ -216,6 +346,41 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
 
     /**
      * @private
+     * @name GetAllSubservices
+     * @memberof Core.Customer.TileServiceCatalog
+     * @function
+     * @param {String} ServiceID - ID of the service
+     * @description
+     *     Get all subservices recursively of a service.
+     */
+    TargetNS.GetAllSubservices = function(ServiceID) {
+        var Service = JSON.parse(Core.Config.Get('ServiceList'));
+        
+        // Get all subservices of ServiceID.
+        var Subservices = TargetNS.GetSubservices(ServiceID);
+        var AllSubservices = Subservices;
+
+        // While there are still subservices, get all subservices of the current subservices.
+        while (Subservices.length > 0) {
+            var NewSubservices = [];
+            $.each(Subservices, function(Index, SubserviceID) {
+                var SubSubservices = TargetNS.GetSubservices(SubserviceID);
+                NewSubservices = NewSubservices.concat(SubSubservices);
+            });
+            Subservices = NewSubservices;
+            AllSubservices = AllSubservices.concat(Subservices);
+        }
+
+        // Remove all duplicates (important for the 'All' filter).
+        AllSubservices = AllSubservices.filter(function (Item, Index, Array) {
+            return Array.indexOf(Item) === Index;
+        });
+
+        return AllSubservices;
+    }
+
+    /**
+     * @private
      * @name CalculateHeight
      * @memberof Core.Customer.TileServiceCatalog
      * @function
@@ -223,10 +388,10 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
      * @description
      *      Resizes Iframe to its max inner height.
      */
-    function ResizeIframe(Iframe){
+    function ResizeIframe(Iframe) {
         Iframe = isJQueryObject(Iframe) ? Iframe.get(0) : Iframe;
 
-        $(Iframe).on("load", function() {
+        $(Iframe).on('load', function() {
             var $IframeContent = $(Iframe.contentDocument || Iframe.contentWindow.document),
                 NewHeight = $IframeContent.height();
             if (!NewHeight || isNaN(NewHeight)) {

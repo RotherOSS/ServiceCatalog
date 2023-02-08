@@ -1,28 +1,52 @@
 # --
-# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (GPL). If you
 # did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
 # --
-<div data-service-id="{{ ID }}" class="oooServiceContainer">
-    <h2 class="oooServiceName" title="{{ Name }}">{{ Name }}</h2>
-    <div class="oooDescriptionShort">{{ DescriptionShort }}</div>
+<div data-service-id="{{ ID }}" class="oooServiceContainer {{ Class }}">
     
-    {% if not NotSelectable %}
-        <a title="{{ 'Show details of this service.' | Translate }}" class="oooInformation">
-            <i class="ooofo ooofo-info"></i>
-        </a>
-    {% endif %}
+    <div class="oooDesciptionHeader">
+        <h2 class="oooServiceName" title="{{ Name }}">{{ Name }}</h2>
+        {% if ( TicketType | length ) >= 1 %}
+            <i class="ooofo ooofo-more_v"></i>
+            <div class="oooServiceActions oooHidden">
+                <div class="oooServiceActionTypes" data-service-id="{{ ID }}">
+                    {% for TypeName, Type in TicketType %}
+                        <a title="{{ 'Create a new ticket for this service.' | Translate }}" href="{{ Baselink }}Action=CustomerTicketMessage;ServiceID={{ ID }};TypeID={{ Type.ID }}" class="oooServiceActionEntry">
+                            <i class="ooofo ooofo-faq {{ Type.Classes }}"></i>
+                            <span>{{ 'Create %s' | Translate(TypeName) }}</span>
+                        </a>
+                    {% endfor %}
+                    {% if NumberOfSubservices %}
+                        <div data-service-id="{{ ID }}" class="oooServiceActionEntry oooServiceActionSubservices">
+                            <i class="ooofo ooofo-loupe"></i>
+                            <span>{{ 'Show %s sub-service(s)' | Translate(NumberOfSubservices) }}</span>
+                        </div>
+                    {% endif %}
+                    <div class="oooServiceActionEntry oooServiceActionDetails">
+                        <i class="ooofo ooofo-subscription"></i>
+                        <span>{{ 'More details' | Translate }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
 
-    {% if ( TicketType | length ) == 1 %}
-        {% for TypeName, Type in TicketType %}
-            <a title="{{ 'Create a new ticket for this service.' | Translate }}" href="{{ Baselink }}Action=CustomerTicketMessage;ServiceID={{ ID }};TypeID={{ Type.ID }}" class="oooCreate">
-                <i class="ooofo ooofo-add {{ Type.Classes }}"></i>
-            </a>
-        {% endfor %}
-    {% endif %}
-    {% if NumberOfSubservices %}
-        <div class="oooSubservices ooo12g">{{ NumberOfSubservices }} {{ 'sub-service(s) available' | Translate }}</div>
+    <div class="oooDescriptionBody">
+        {% if NumberOfSubservices %}
+            <div class="oooSubservices ooo12g">{{ NumberOfSubservices }} {{ 'Sub-Service(s)' | Translate }}</div>
+        {% endif %}
+        <span class="oooDescriptionShort">{{ DescriptionShort }}</span>
+    </div>
+
+    {% if not NotSelectable %}
+    <div class="oooServiceBottom">
+        <p title="{{ 'Show details of this service.' | Translate }}" class="oooServiceInformation">
+            {{ 'Details' | Translate }}
+        </p>
+        <i class="ooofo ooofo-arrow_r"></i>
+    </div>
     {% endif %}
 </div>

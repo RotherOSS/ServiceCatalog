@@ -6,44 +6,126 @@
 # did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
 # --
 {% if NumberOfSubservices %}
-    <span class="oooSubservices ooo12g" data-service-id="{{ ID }}">{{ NumberOfSubservices }} {{ 'sub-service(s) available' | Translate }}</span>
+   <!-- <span class="oooSubservices ooo12g" data-service-id="{{ ID }}">{{ NumberOfSubservices }} {{ 'sub-service(s) available' | Translate }}</span> -->
 {% endif %}
 <div data-service-id="{{ ID }}" class="oooDetailedServiceContainer">
-    <div class="oooDetailedServiceName">
-        <h2>{{ Name }}</h2>
-        <p>{{ DescriptionShort }}</p>
+    <div class="oooDetailedLeft">
+        <div class="oooDetailedServiceName">
+            <h2>{{ Name }}</h2>
+            <!-- <p>{{ DescriptionShort }}</p> -->
+        </div>
+        <div class="oooDetailedDescriptionLong">
+            <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" title="about:blank" frameborder="0" class="VisibleFrame" src="{{ IframeLink }}"></iframe>
+        </div>
     </div>
-    <div class="oooDetailedDescriptionLong">
-        <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" title="about:blank" frameborder="0" class="VisibleFrame" src="{{ IframeLink }}"></iframe>
-    </div>
-    <div class="oooDetailedTicketTypes">
-    {% if TypeList %}
-        {% for TypeName, Type in TypeList %}
-            <a title="{{ 'Create a new ticket of type %s.' | Translate(TypeName) }}" href="{{ Baselink }}Action=CustomerTicketMessage;ServiceID={{ ID }};TypeID={{ Type.ID }}"><i class="ooofo ooofo-add {{ Type.Classes }}"></i> {{ 'Create %s' | Translate(TypeName) }}</a>
-        {% endfor %}
-    {# {% else %}
-        <i class="ooofo ooofo-add"></i><a href="{{ Baselink }}Action=CustomerTicketMessage;ServiceID={{ ID }}"> {{ 'Create Ticket' | Translate }}</a><br> #}
-    {% endif %}
-    </div>
-    {% if WorkingHours or FirstResponseTime or SolutionTime %}
-    <div class="oooDetailedSLA">
-        <h3>{{ 'Service hours' | Translate }}:</h3>
-        {% if WorkingHours %}
-            <span class="oooSLALabel">{{ 'Timeframe' | Translate }}: 
-                <span class="oooSLAValue">
-                    {% for Run in WorkingHours %}
-                        {{ Run.StartDay | Translate(Run.StartDay) }}{% if Run.LastDay != Run.StartDay %}&#8211;{{ Run.LastDay | Translate(Run.LastDay) }}{% endif %} {{ Run.FirstHour }}&#8211;{{ Run.LastHour }} {{ "o'clock" | Translate }}
-                        <br>
+    <div class="oooDetailedRight">
+        <div class="oooDetailedTicketTypeList">
+            {% if TypeList %}
+                {% for TypeName, Type in TypeList %}
+                    {% if loop.index0 < 3 %}    
+                        <a title="{{ 'Create a new ticket of type %s.' | Translate(TypeName) }}" href="{{ Baselink }}Action=CustomerTicketMessage;ServiceID={{ ID }};TypeID={{ Type.ID }}"><i class="ooofo ooofo-faq {{ Type.Classes }}"></i> 
+                            <span>{{ 'Create %s' | Translate(TypeName) }}</span>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            {# {% else %}
+                <i class="ooofo ooofo-faq"></i><a href="{{ Baselink }}Action=CustomerTicketMessage;ServiceID={{ ID }}"> {{ 'Create Ticket' | Translate }}</a><br> #}
+            {% endif %}
+        </div>
+
+        <div class="oooDetailedAccordionList">
+
+        {% if FAQArticleList %}
+            <div class="oooDetailedAccordion WidgetSimple Collapsed Animate">
+                <div class="Header">
+                    <div class="WidgetAction Toggle">
+                        <a href="#" title="{{ 'Show or hide the content' | Translate }}">
+                            <h3>{{ 'FAQ article on this topic' | Translate }}</h3>
+                            <i class="ooofo ooofo-arrow_u"></i>
+                            <i class="ooofo ooofo-arrow_d"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="oooDetailedFAQ Content" style="display: none;">
+                    {% for FAQArticle in FAQArticleList %}
+                            <a href="{{ Baselink }}Action=CustomerFAQZoom;ItemID={{ FAQArticle.ItemID }}" title="{{ FAQArticle.Title }}">
+                                <div class="oooDetailedFAQItem">
+                                    <p class="oooDetailedAccordionCaption">{{ FAQArticle.Title }}</p>
+                                    <div class="oooFAQDescription">{{ FAQArticle.Description }}</div>
+                                    <span class="oooFAQDetailsHint oooHidden">{{ 'Details' | Translate }}</span>
+                                </div>
+                            </a>
                     {% endfor %}
-                </span>
-            </span>
+                </div>
+            </div>
         {% endif %}
-        {% if FirstResponseTime %}
-            <span class="oooSLALabel">{{ 'First Response Time' | Translate }}: <span class="oooSLAValue">{{ FirstResponseTime }} {{ 'hour(s)' | Translate }}</span></span>
+
+        {% if WorkingHours or FirstResponseTime or SolutionTime or DynamicFieldList %}
+            <div class="oooDetailedAccordion WidgetSimple Collapsed Animate">
+                <div class="Header">
+                    <div class="WidgetAction Toggle">
+                        <a href="#" title="{{ 'Show or hide the content' | Translate }}">
+                            <h3>{{ 'Additional information' | Translate }}</h3>
+                            <i class="ooofo ooofo-arrow_u"></i>
+                            <i class="ooofo ooofo-arrow_d"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="oooDetailedAdditionalInformation Content" style="display: none;">
+                    <div>
+                        {% if WorkingHours or FirstResponseTime or SolutionTime %}
+                            <p class="oooDetailedAccordionCaption oooDetailedSubtitle">{{ 'Service hours' | Translate }}</p>
+                            {% if WorkingHours %}
+                                <p class="oooSLALabel"> 
+                                    <span class="ooo12">
+                                        {% for Run in WorkingHours %}
+                                            {{ Run.StartDay | Translate(Run.StartDay) }}{% if Run.LastDay != Run.StartDay %}&#8211;{{ Run.LastDay | Translate(Run.LastDay) }}{% endif %} {{ Run.FirstHour }}&#8211;{{ Run.LastHour }} {{ "o'clock" | Translate }}
+                                            <br>
+                                        {% endfor %}
+                                    </span>
+                                </span>
+                            {% endif %}
+                            {% if FirstResponseTime %}
+                                <p class="ooo12">{{ 'First Response Time' | Translate }}: {{ FirstResponseTime }} {{ 'hour(s)' | Translate }}</p>
+                            {% endif %}
+                            {% if SolutionTime %}
+                                <p class="ooo12">{{ 'Solution Time' | Translate }}: {{ SolutionTime }} {{ 'hour(s)' | Translate }}</p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div>
+                        {% if DynamicFieldList %}
+                            <p class="oooDetailedAccordionCaption oooDetailedSubtitle">{{ 'Service Information' | Translate }}</p>
+                            {% for DFLabel, DFValue in DynamicFieldList %}
+                                <p class="ooo12"><span>{{ DFLabel }}:</span> {{ DFValue }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {# <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" title="about:blank" frameborder="0" class="VisibleFrame" src="{{ IframeLinkDynamicField }}"></iframe> #}
+                </div>
+            </div>
         {% endif %}
-        {% if SolutionTime %}
-            <span class="oooSLALabel">{{ 'Solution Time' | Translate }}: <span class="oooSLAValue">{{ SolutionTime }} {{ 'hour(s)' | Translate }}</span></span>
+
+        {% if SubservicesHTML | length > 0 %}
+            <div class="oooDetailedAccordion WidgetSimple Collapsed Animate">
+                <div class="Header">
+                    <div class="WidgetAction Toggle">
+                        <a href="#" title="{{ 'Show or hide the content' | Translate }}">
+                            <h3>{{ 'Sub-Service(s)' | Translate }}</h3>
+                            <div class="NumberOfSubservices"><span>{{ NumberOfSubservices }}</span></div>
+                            <i class="ooofo ooofo-arrow_u"></i>
+                            <i class="ooofo ooofo-arrow_d"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="oooDetailedSubservices Content" style="display: none;">
+                    {% for Subservice in SubservicesHTML %}
+                        {{ Subservice | safe }}
+                    {% endfor %}
+                </div>
+            </div>
         {% endif %}
+
+        </div>
     </div>
-    {% endif %}
 </div>

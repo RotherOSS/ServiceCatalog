@@ -74,6 +74,7 @@ sub Run {
         }
 
         # rewrite handle and action for
+        $Service{DescriptionLong} ||= '';
         $Service{DescriptionLong}
             =~ s{ index[.]pl [?] Action=AgentITSMServiceZoom }{customer.pl?Action=CustomerTileServiceCatalog}gxms;
 
@@ -99,17 +100,26 @@ sub Run {
 
         # add needed HTML headers
         $Service{DescriptionLong} = $Kernel::OM->Get('Kernel::System::HTMLUtils')->DocumentComplete(
-            String  => $Service{DescriptionLong},
-            Charset => 'utf-8',
+            String            => $Service{DescriptionLong},
+            Charset           => 'utf-8',
+            CustomerInterface => 1,
         );
 
+        # return complete HTML as an attachment
+        return $LayoutObject->Attachment(
+            Type        => 'inline',
+            ContentType => 'text/html',
+            Content     => $Service{DescriptionLong},
+        );
+    }
+    elsif ( $Self->{Subaction} eq 'DynamicFieldView' ) {
         # add support for dynamic fields
         my @DynamicFieldList;
         my $DynamicFieldFilter = {
             %{ $ConfigObject->Get("CustomerDashboard::Configuration::ServiceCatalog")->{DynamicField} || {} },
         };
 
-        # get the dynamic fields for ticket object
+        # get the dynamic fields for service object
         my $DynamicFieldLookup = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
             Valid       => 1,
             ObjectType  => ['Service'],
@@ -224,13 +234,11 @@ sub Run {
             Data         => { %Param },
         );
 
-        $Service{DescriptionLong} .= $Output;
-
         # return complete HTML as an attachment
         return $LayoutObject->Attachment(
             Type        => 'inline',
             ContentType => 'text/html',
-            Content     => $Service{DescriptionLong},
+            Content     => $Output,
         );
     }
     # ---------------------------------------------------------- #

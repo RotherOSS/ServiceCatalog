@@ -11,20 +11,126 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-ul.oooParentServiceList > li,
-ul.oooChildServiceList > li {
-    display: inline-block;
-    min-width: 97px;
-    text-align: center;
-    padding: 12px 16px;
-    margin: 8px 16px 8px 0;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: 0 1px 4px 0 rgba(4, 0, 71, 0.16);
-    box-shadow: 0 1px 4px 0 var(--colShadowDark);
+/* General settings */
+/* #Overlay {
+    background: rgba(0, 2, 60, 0.2);
+} */
+
+.oooNewBox {
+    width: 38px;
+    height: 22px;
+    right: 360px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    background: var(--colMainLight);
+    border-radius: 10px;
+    display: inline-flex;
+    color: #ffffff;
+    margin-right: 20px;
 }
 
-ul.oooBreadcrumbServiceList > li {
+.oooNewBox > span {
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.oooTile_ServiceCatalog {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px !important;
+    gap: 32px;
+    isolation: isolate;
+    /* position: absolute; */
+    height: 185px;
+    left: 484px;
+    top: 192px;
+    border-radius: 24px;
+}
+
+.oooParentServiceList {
+    display: flex;
+    /* flex-direction: row; */
+    /* align-items: flex-start; */
+    /* padding: 0px; */
+    gap: 16px;
+    /* height: 128px; */
+    /* flex: none; */
+    /* order: 1; */
+    /* align-self: stretch; */
+    /* flex-grow: 0;
+    z-index: 0; */
+}
+
+.oooParentServiceList > li {
+    line-break: anywhere;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    padding: 56px 32px 32px;
+    gap: 8px;
+    width: 200px;
+    height: 128px;
+    background: #ffffff;
+    border-radius: 16px;
+    /* 
+    flex-direction: row;
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 1; */
+}
+
+.oooParentServiceList > .oooServiceMore {
+    background: rgba(127, 128, 157, 0.05);
+    color: var(--colTextLight);
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    gap: 8px;
+}
+
+.oooServiceMore:hover {
+    outline: none !important;
+    gap: 8px;
+    color: var(--colMainLight) !important;
+    background: #ffffff;
+}
+
+.oooParentServiceList > li:hover {
+    cursor: pointer;
+    outline: 2px solid var(--colMainLight);
+    color: var(--colMainLight);
+}
+
+.oooServiceMore:hover > .oooServiceMoreSearch > span,
+.oooServiceMore:hover > .oooServiceMoreInfo {
+    display: none;
+}
+
+.oooServiceMore:hover > .oooServiceMoreSearch {
+    justify-content: center;
+    font-size: 25px;
+    color: var(--colMainLight);
+}
+
+.oooServiceMoreSearch {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    width: 64px;
+    height: 18px;
+}
+
+.oooBreadcrumbServiceList > li {
     display: inline-block;
     cursor: pointer;
 }
@@ -45,17 +151,135 @@ ul.oooBreadcrumbServiceList > li:first-child {
     margin-left: 8px;
 }
 
-.oooServiceBreadcrumb {
-    margin-top: 16px;
-    margin-bottom: 24px;
+.oooDetailedView .oooServiceBreadcrumb {
+    width: 675px;
+    left: 85px;
+    top: 71px;
 }
+
+.oooServiceBreadcrumb {
+    position: absolute;
+    width: 824px;
+    height: 29px;
+    left: 184px;
+    top: 127px;
+}
+
+.oooServiceBreadcrumbField {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    width: 840px;
+    height: 40px;
+    overflow-x: scroll;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.oooDetailedView .oooServiceBreadcrumbField {
+    width: 675px;
+}
+
+.oooBreadcrumbServiceList {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 8px;
+    width: 527px;
+    height: 29px;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.oooBreadcrumbServiceList > li {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 24px;
+    gap: 13px;
+    width: auto;
+    height: 29px;
+    background: rgba(127, 128, 157, 0.08);
+    border-radius: 76px;
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.oooBreadcrumbServiceList > li.oooServiceIDSelected {
+    border: 1px solid var(--colMainLight);
+    color: var(--colMainLight);
+    background: #ffffff;
+}
+
+.oooServiceResult {
+    color: var(--colTextLight);
+    font-size: 12px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+.oooBreadcrumbServiceList > li {
+    font-size: 12px;
+    line-height: 15px;
+    color: var(--colTextLight);
+}
+
+/* .oooBreadcrumbServiceList > li:last-child {
+    color: var(--colTextDark);
+} */
 
 .oooServiceBreadcrumbField .ooofo.ooofo-arrow_r::before {
     font-weight: bold;
 }
 
 .oooServiceWrapper {
-    width: calc( 100% + 32px );
+    /* width: calc( 100% + 32px ); */
+    /* display: flex; */
+    /* gap: 24px; */
+    /* flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    width: 1005px;
+    height: 280px;
+    flex: none; */
+    /* order: 0;
+    flex-grow: 0; */
+}
+
+/* .oooDetailedView > .Content {
+    background: #fff;
+} */
+
+.Dialog.oooDetailedView > .Content {
+    padding: 0px 25px;
+}
+
+/* .Dialog.oooDetailedView body {
+    margin: 0;
+} */
+
+.oooDetailedView {
+    min-height: 704px;
+}
+
+.Dialog.oooDetailedView, .oooDetailedView > div {
+    background: #ffffff;
+}
+
+
+/* .Dialog.oooDetailedView {
+    background: #fff !important;
+} */
+
+.Dialog.oooDetailedView > .Header {
+    padding-top: 24px;
 }
 
 .oooServiceWrapper > .oooSubservices  {
@@ -67,59 +291,227 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooServiceContainer {
-    display: grid;
-    grid-template-columns: 220px 40px;
-    grid-template-rows: 54px 40px 6px 18px;
-    border-radius: 15px;
-    margin: 0 32px 32px 0;
-    float: left;
-    padding: 0 32px 24px 32px;
-    background: #fff;
-    width: 276px;
+    /* display: grid; */
+    /* grid-template-columns: 220px 40px; */
+    /* grid-template-rows: 54px 40px 6px 18px; */
+    /* border-radius: 15px; */
+    /* margin: 0 32px 32px 0; */
+    /* float: left; */
+    /* padding: 0 32px 24px 32px; */
+    /* background: #fff; */
+    /* width: 276px; */
+    /* gap: 16px 16px; */
+    /* grid-auto-flow: row; */
+    /* cursor: pointer; */
     gap: 16px 16px;
-    grid-auto-flow: row;
+    margin: 8px;
+    float: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0px;
+    isolation: isolate;
+    width: 319px;
+    height: 280px;
+    background: #ffffff;
+    border-radius: 10px;
+    /* flex: none; */
+    /* order: 0; */
+    /* flex-grow: 0; */
+}
+
+.oooServiceContainer:hover, .oooDetailedTicketTypeList > a:hover {
+    outline: 2px solid var(--colMainLight);
+    background: transparent;
     cursor: pointer;
+}
+
+.oooServiceContainer:hover .oooServiceName {
+    color: var(--colMainLight);
+}
+
+/* Special styling within subservice list in detailed view */
+.oooDetailedSubservices > .oooServiceContainer .oooServiceName, 
+.oooDetailedSubservices > .oooServiceContainer .oooSubservices,
+.oooDetailedSubservices > .oooServiceContainer .oooServiceInformation {
+    font-size: 12px;
+}
+
+.oooDetailedSubservices > .oooServiceContainer,
+.oooDetailedSubservices > .oooServiceContainer > .oooDesciptionHeader,
+.oooDetailedSubservices > .oooServiceContainer > .oooServiceBottom {
+    width: 300px;
+}
+
+.oooDetailedSubservices > .oooServiceContainer {
+    /* margin-left: -10px; */
+    height: 160px;
+    gap: 0;
+}
+
+.oooDetailedSubservices > .oooServiceContainer > .oooDesciptionHeader {
+    height: 0;
+}
+
+.oooDetailedSubservices > .oooServiceContainer > .oooDescriptionBody > .oooDescriptionShort {
+    display: none;
+}
+
+.oooDetailedSubservices > .oooServiceContainer .oooServiceInformation {
+    width: 233px;
+    flex-grow: 0;
+}
+
+.oooDetailedSubservices > .oooServiceContainer .oooServiceActionEntry {
+    max-width: 255px;
+}
+
+.oooDetailedSubservices > .oooServiceContainer .oooServiceActions {
+    max-height: 118px;
+}
+
+.oooDesciptionHeader {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    position: relative;
+    padding: 24px;
+    isolation: isolate;
+    width: 319px;
+    height: 72px;
+    border: 0px solid rgba(127, 128, 157, 0.16);
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+    z-index: 2;
+}
+
+.oooDesciptionHeader i {
+    padding: 5px;
 }
 
 .oooServiceName {
-    text-align: center;
-    grid-area: 1 / 1 / 2 / 3;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    position: relative;
-    left: -32px;
-    width: 100%;
-    padding: 12px 32px 0 32px;
-    border-radius: 15px 15px 0 0;
-    background: #dfdfe7;
+    font-size: 16px;
+    flex-grow: 1;
 }
 
-.oooDescriptionShort { 
-    grid-area: 2 / 1 / 4 / 2;
-    overflow: hidden;
+.oooServiceActions {
+    user-select: none;
+    position: absolute;
+    right: 15%;
+    top: 20%;
+    padding: 16px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: #FFFFFF;
+    box-shadow: 0px 6px 12px rgb(0 0 0 / 16%);
+    border-radius: 10px;
+    cursor: initial;
+    max-height: 234px;
+    overflow-y: scroll;
 }
 
-.oooInformation { 
+.oooServiceActionEntry {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 14px 24px 11px;
+    gap: 16px;
+    /* width: 205px; */
+    width: auto;
+    max-width: 270px;
+    height: 41px;
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.oooServiceActionEntry:hover {
+    background: var(--colBGLight);
+    color: var(--colMainLight);
     cursor: pointer;
-    grid-area: 2 / 2 / 3 / 3;
+} 
+
+/* Apply border-bottom to the last element with the class .oooServiceActionCreate in the list */
+.oooServiceActionSubservices {
+    border-top: 0.6px solid #E5E5EB;
+}
+
+.oooDescriptionBody { 
+    /* grid-area: 2 / 1 / 4 / 2;
+    overflow: hidden; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 16px 24px;
+    gap: 4px;
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 1;
+    z-index: 1;
+    font-size: 12px;
+    color: var(--colTextLight);
+}
+
+.oooServiceBottom {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    padding: 16px 24px;
+    width: 319px;
+    height: 48px;
+    border-top: 1px solid rgba(127, 128, 157, 0.16);
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+    z-index: 0;
+    color: var(--colTextLight);
+}
+
+.oooServiceInformation { 
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 8px;
+    width: 257px;
+    height: 16px;
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+}
+
+.oooServiceBottom:hover {
+    background: var(--colMainLight);
+    border-radius: 0 0 10px 10px;
+    color: #ffffff;
 }
 
 .oooCreate { 
     grid-area: 3 / 2 / 5 / 3;
 }
 
-.oooCreate, .oooInformation {
+.oooCreate {
     color: #001bff;
     color: var(--colMainLight);
-    background: #fff;
+    background: #ffffff;
     font-size: 24px;
     box-shadow: 0 1px 4px 0 rgba(4, 0, 71, 0.16);
     box-shadow: 0 1px 4px 0 var(--colShadowDark);
     border-radius: 5px;
 }
 
-.oooCreate > i, .oooInformation > i {
+.oooCreate > i, .oooServiceInformation > i {
     display: block;
     width: 24px;
     height: 24px;
@@ -127,11 +519,19 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooSubservices { 
-    grid-area: 4 / 1 / 5 / 2;
+    /* grid-area: 4 / 1 / 5 / 2; */
+    text-decoration-line: underline;
+    color: var(--colTextLight);
+    font-size: 16px;
+    line-height: 150%;
+}
+
+.oooSubservices:hover {
+    color: var(--colMainLight);
 }
 
 .oooDetailedServiceContainer {
-    display: grid;
+    /* display: grid;
     grid-template-columns: 7fr 3fr;
     grid-template-rows: 72px auto auto;
     gap: 24px 24px;
@@ -139,26 +539,59 @@ ul.oooBreadcrumbServiceList > li:first-child {
     border-radius: 15px;
     padding: 0 32px 24px 32px;
     background: #fff;
-    width: calc( 100% - 96px );
+    width: calc( 100% - 96px ); */
+}
+
+.oooDetailedLeft {
+    position: absolute;
+    width: 750px;
+    height: 529px;
+    left: 44px;
+    top: 119px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.oooDetailedRight {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 0px;
+    gap: 16px;
+    position: absolute;
+    width: 396px;
+    height: 704px;
+    right: 0px;
+    bottom: 0px;
 }
 
 .oooDetailedServiceContainer h3 {
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
 .oooDetailedServiceName {
-    grid-area: 1 / 1 / 2 / 3;
+    left: 7px;
     position: relative;
+    /* grid-area: 1 / 1 / 2 / 3; */
+    /* position: relative;
     left: -32px;
-    width: 100%;
-    padding: 12px 32px 0 32px;
-    border-radius: 15px 15px 0 0;
-    background: #dfdfe7;
+    width: 100%; */
+    /* padding: 12px 32px 0 32px; */
+    /* padding: 12px 32px 0 38px;
+    border-radius: 15px 15px 0 0; */
+    /* background: #dfdfe7; */
 }
 
 .oooDetailedServiceName > p {
     line-height: 1.3;
 }
+
+.oooDetailedServiceName > h2 {
+    font-size: 24px;
+}
+
 /*  
 .oooDetailedDescriptionShort {
     margin: 16px 0;
@@ -166,7 +599,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }*/
 
 .oooDetailedDescriptionLong { 
-    grid-area: 2 / 1 / 4 / 2; 
+    /* grid-area: 2 / 1 / 4 / 2;  */
 }
 
 .oooDetailedDescriptionLong > * {
@@ -175,41 +608,246 @@ ul.oooBreadcrumbServiceList > li:first-child {
     min-height: 300px;
 }
 
+.oooDetailedSubtitle {
+    padding-bottom: 8px;
+}
+
+.oooSLALabel + * {
+    padding-top: 8px;
+}
+
 .oooDetailedSLA { 
-    grid-area: 3 / 2 / 4 / 3; 
-    align-self: end;
+    /* grid-area: 3 / 2 / 4 / 3; 
+    align-self: end; */
 }
 
-.oooDetailedTicketTypes {
-    font-weight: bold;
+/* .oooSLALabel {
+    font-size: 12px;
+} */
+
+.oooDetailedAdditionalInformation > div:last-child {
+    margin-top: 15px;
+}
+
+.oooDetailedTicketTypeList {
+    /* font-weight: bold;
     grid-area: 2 / 2 / 3 / 3; 
-    align-self: start;
+    align-self: start; */
+    width: 364px;
+    height: 100px;
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 1;
+    z-index: 1;
 }
 
-.oooDetailedTicketTypes > a > i::before {
+/* .oooDetailedTicketTypeList > a > i::before {
     /* width: 15px;
     display: inline-block;
-    text-align: center; */
+    text-align: center; 
     vertical-align: middle;
+} */
+
+.oooDetailedTicketTypeList > a {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-direction: column;
+    margin: 3px;
+    justify-content: center;
+    align-items: center;
+    /* TODO: padding creates problems on type names */
+    /* padding: 32px; */
+    padding: 32px 8px;
+    gap: 8px;
+    /* position: absolute; */
+    width: 110.67px;
+    height: 100px;
+    /* left: 126.67px; */
+    top: 0px;
+    border: 1px solid rgba(127, 128, 157, 0.16);
+    border-radius: 10px;
 }
 
-.oooDetailedTicketTypes > a {
-    display: block;
-    color: #001bff;
-    color: var(--colMainLight);
-    top: -1px;
-    position: relative;
-    margin-bottom: 8px;
-}
 
-/* SLA fields */
-span.oooSLALabel {
+.oooDetailedTicketTypeList > a > i {
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    font-size: 22px;
 }
+
+.oooDetailedTicketTypeList > a > span {
+    font-size: 12px;
+    line-height: 15px;
+    text-align: center;
+}
+
+.oooDetailedAccordionList {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+    width: 323px;
+    height: 524px;
+    margin-bottom: 30px;
+    overflow-y: scroll;
+    background: var(--colBGLight);
+    border-radius: 10px;
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+    z-index: 0;
+}
+
+.oooDetailedAccordion {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px 16px;
+    border-bottom: 1px solid #7F809D08;
+    /* width: 332px; */
+    /* height: 84px; */
+    /* border-radius: 10px; */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+    margin: -1px 0px;
+}
+
+.oooDetailedAccordion .oooDetailedFAQ, .oooDetailedAccordion .oooDetailedSubservices {
+    margin-left: -20px;
+}
+
+.oooDetailedAccordion > .Header > .WidgetAction > a {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+} 
+
+.oooDetailedAccordion i.ooofo-arrow_d, .oooDetailedAccordion i.ooofo-arrow_u {
+    position: absolute;
+    right: 90px;
+    top: 22px;
+    left: 275px;
+    margin-top: -19px;
+    transform: rotate(180deg); /* fix this, should't be needed */
+
+    /*
+    position: absolute;
+    right: 90px;
+    margin-top: -19px;
+    transform: rotate(180deg); fix this, should't be needed */
+}
+
+.oooDetailedAccordion i.ooofo-arrow_d {
+    color: var(--colMainLight);
+}
+
+.oooDetailedAccordion h3 {
+    line-height: 20px;
+}
+
+.oooDetailedAccordion.Collapsed i.ooofo-arrow_d {
+    display: none;
+}
+
+.oooDetailedAccordion.Expanded i.ooofo-arrow_u {
+    display: none;
+}
+
+.oooDetailedAccordion.Expanded h3, .oooDetailedAccordion .WidgetAction > a:hover {
+    color: var(--colMainLight);
+}
+
+.oooDetailedAccordion .WidgetAction > a:hover > .NumberOfSubservices {
+    background: var(--colMainLight);
+}
+
+.oooDetailedAccordionCaption {
+    font-weight: 700;
+    font-size: 12px;
+    display: flex;
+    /* padding-top: 8px; */
+}
+
+.oooDetailedAccordion > .Content {
+    padding: 25px 0px 0px;
+}
+
+.oooDetailedAccordion .NumberOfSubservices {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    gap: 8px;
+    width: 16px;
+    height: 16px;
+    background: var(--colTextLight);
+    border-radius: 40px;
+    margin-left: 10px;
+}
+
+.oooDetailedAccordion.Expanded .NumberOfSubservices {
+    background: var(--colMainLight);
+}
+
+.oooDetailedAccordion .NumberOfSubservices > span {
+    font-weight: 700;
+    font-size: 9px;
+    line-height: 11px;
+    color: #ffffff;
+}
+
+.oooDetailedFAQ > a:hover {
+    cursor: pointer;
+}
+
+.oooDetailedFAQItem {
+    width: 288px;
+    /* margin-left: -20px; */
+    line-height: 150%;
+    padding: 13px 0px 20px 20px;
+    position: relative;
+}
+
+.oooDetailedFAQItem:hover {
+    background: rgba(127, 128, 157, 0.04);
+    border: 0px solid rgba(127, 128, 157, 0.16);
+    border-radius: 10px;
+}
+
+.oooDetailedFAQ > a:hover > .oooDetailedFAQItem > .oooFAQDetailsHint {
+    display: block !important;
+    position: absolute;
+    right: 27px;
+    top: calc(50% - 27px/2 + 0.5px);
+    color: var(--colMainLight);
+    font-size: 10px;
+}
+
+.oooDetailedFAQ > a:hover > .oooDetailedFAQItem > .oooFAQDescription {
+    background-image: linear-gradient(to right, var(--colTextDark) 0%, transparent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.oooFAQDescription {
+    font-size: 12px;
+}
+
+/* .oooDetailedFAQItem > span {
+    font-size: 12px;
+} */
 
 span.oooSLAValue {
-    flex-basis: 40%;
-    margin-left: auto;
+    /* flex-basis: 40%;
+    margin-left: auto; */
 }
 
 /* TODO: Could/Should be transfered to other CSS classes */
@@ -245,15 +883,162 @@ span.oooSLAValue {
 .Dialog {
     max-height: calc(100vh - 50px);
     overflow-y: auto;
-    background-color: #f7f7f9;
+    background-color: var(--colBGLight);
     background-color: var(--colBGLight);
     width: 95%;
     max-width: 1212px;
+    /* min-height: 80%; */
 }
 
 .Dialog > .Content {
-    padding: 0px 48px 16px 48px;
+    padding: 20px 48px 16px 48px;
 }
+
+.Dialog > .Header {
+    background: #ffffff;
+    padding: 16px 0px 66px 100px;
+}
+
+.Dialog > .Header .Close {
+    left: 50px;
+    top: 79px;
+}
+
+.Dialog > .Header .ooofo {
+    top: 5px;
+    font-size: 16px;
+}
+
+.Dialog > .Header #ServiceID_Search {
+    width: 220px !important;
+    background: transparent;
+    border-radius: 30px 2px 2px 30px;
+    border: 1px solid var(--colTextLight);
+    box-shadow: 0px 29px 49px 8px rgb(0 0 0 / 4%);
+}
+
+.Dialog > .Header #ServiceID_Search:hover, .Dialog > .Header .InputField_Selection:hover {
+    cursor: default;
+}
+
+.Dialog > .Header .oooServiceFieldSearch > input {
+    /* width: 788px !important; */
+    width: 968px;
+    border-radius: 30px;
+    background: transparent;
+    /* border-radius: 0px 30px 30px 0px; */
+    height: 54px;
+    border: 1px solid var(--colTextLight);
+    box-shadow: 0px 29px 49px 8px rgb(0 0 0 / 4%);
+    padding-left: 40px;
+}
+
+.Dialog > .Header #ServiceID_Search:before {
+    font-family: FontAwesome;
+    content: "\f002";
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    width: 15px;
+    pointer-events: none;
+    z-index: 5;
+    color: #27414f;
+}
+
+.Dialog > .Header #ServiceID_Search + .InputField_Selection {
+    padding: 0;
+    width: 150px;
+    left: 25px !important;
+    background: transparent;
+}
+
+.Dialog > .Header #ServiceID_Search + .InputField_Selection:before {
+    content: "\e902";
+    font-family: 'otobo';
+    position: absolute;
+    top: 7px;
+    right: -50px;
+    color: var(--colTextLight);
+}
+
+.Dialog > .Header #ServiceID_Search > div {
+    content: "\e902";
+    font-family: 'otobo';
+    position: absolute;
+    right: -50px;
+}
+
+.Dialog > .Header .InputField_Selection .Remove {
+    display: none;
+}
+
+.Dialog > .Header .InputField_Selection .Text {
+    width: 230px;
+    text-align: left;
+    height: 45px;
+}
+
+.Dialog > .Header .InputField_Container > .InputField_InputContainer > .FocusField, .Dialog > .Header .InputField_Container > .InputField_InputContainer i.fa-times-circle {
+    display: none;
+}
+
+.Dialog + .InputField_ListContainer {
+    z-index: 99999;
+    display: block;
+    margin-top: 11px;
+}
+
+.Dialog + .InputField_ListContainer .InputField_TreeContainer {
+    margin: 0;
+    border-radius: 10px;
+}
+
+.Dialog + .InputField_ListContainer .InputField_TreeContainer .jstree-node:not(:last-child) {
+    border-bottom: 1px solid var(--colBGLight);
+}
+
+.Dialog + .InputField_ListContainer .InputField_TreeContainer a.jstree-anchor {
+    color: var(--colTextLight);
+}
+
+.Dialog + .InputField_ListContainer .InputField_TreeContainer .jstree-InputField .jstree-wholerow-ul .jstree-wholerow-clicked {
+    background-color: var(--colBGLight);
+}
+
+.Dialog + .InputField_ListContainer > .oooClose {
+    display: none;
+}
+
+.oooServiceField, .oooServiceFieldSearch {
+    display: inline-block;
+    width: 253px;
+    height: 58px;
+    left: 0px;
+    border-radius: 10px;
+}
+
+.oooServiceFieldSearch:after {
+    font-family: FontAwesome;
+    content: "\f002";
+    position: relative;
+    right: 50px;
+    font-size: 16px;
+    color: var(--colTextLight);
+    cursor: text;
+}
+
+/* TODO: This should be added to the otobo.svg */
+.ooofo-loupe::before {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='48' width='48'%3E%3Cpath d='M24 34.1q.65 0 1.075-.425.425-.425.425-1.075v-6.9h6.9q.65 0 1.075-.425.425-.425.425-1.075 0-.65-.425-1.075-.425-.425-1.075-.425h-6.9v-6.9q0-.65-.425-1.075Q24.65 14.3 24 14.3q-.65 0-1.075.425-.425.425-.425 1.075v6.9h-6.9q-.65 0-1.075.425-.425.425-.425 1.075 0 .65.425 1.075.425.425 1.075.425h6.9v6.9q0 .65.425 1.075.425.425 1.075.425Zm0 9.9q-4.15 0-7.8-1.575-3.65-1.575-6.35-4.275-2.7-2.7-4.275-6.35Q4 28.15 4 24t1.575-7.8Q7.15 12.55 9.85 9.85q2.7-2.7 6.35-4.275Q19.85 4 24 4t7.8 1.575q3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24v15.9q0 1.7-1.2 2.9T39.9 44Zm0-3q7.1 0 12.05-4.95Q41 31.1 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.1 0-12.05 4.95Q7 16.9 7 24q0 7.1 4.95 12.05Q16.9 41 24 41Zm0-16.8Z'/%3E%3C/svg%3E");
+    zoom: 0.3;
+}
+
+.ooofo-subscription::before {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='48' width='48'%3E%3Cpath d='M15.5 7q-.65 0-1.075-.425Q14 6.15 14 5.5q0-.65.425-1.075Q14.85 4 15.5 4h17q.65 0 1.075.425Q34 4.85 34 5.5q0 .65-.425 1.075Q33.15 7 32.5 7Zm-6.55 6q-.65 0-1.075-.425-.425-.425-.425-1.075 0-.65.425-1.075Q8.3 10 8.95 10h30.1q.65 0 1.075.425.425.425.425 1.075 0 .65-.425 1.075Q39.7 13 39.05 13ZM7 44q-1.2 0-2.1-.9Q4 42.2 4 41V19q0-1.2.9-2.1.9-.9 2.1-.9h34q1.2 0 2.1.9.9.9.9 2.1v22q0 1.2-.9 2.1-.9.9-2.1.9Zm0-3h34V19H7v22Zm15.7-5.15 6.85-4.6q.7-.45.7-1.25t-.7-1.25l-6.85-4.6q-.75-.55-1.55-.1-.8.45-.8 1.35v9.25q0 .9.8 1.3t1.55-.1ZM7 19v22-22Z'/%3E%3C/svg%3E");
+    zoom: 0.3;
+}
+
+/* Custom Changes */
 
 #oooTile01 {
     grid-area: 5 / 9 / 5 / 13;
@@ -343,6 +1128,10 @@ span.oooSLAValue {
     
     #oooTile07 {
         grid-area: 3 / 1 / 4 / 2;
+    }
+
+    .oooServiceCatalogWrapper {
+        /* max-width: 420px; */
     }
 }
 

@@ -1,0 +1,25 @@
+# --
+# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (GPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
+# --
+<div class="oooServiceCatalog">
+    <div class="Row oooServiceField">
+        {{ ServiceStrg | safe }}
+    </div>
+    <div class="Row oooServiceFieldSearch">
+        <input title="{{ 'Search' | Translate }}" type="text" name="Search" placeholder="{{ 'Search' | Translate }}..."></input>
+    </div>
+    <div class="oooServiceBreadcrumb">
+        <div class="oooServiceBreadcrumbField">
+            <ul class="oooBreadcrumbServiceList"></ul>
+        </div>
+    </div>
+    <p class="oooServiceResult">
+        <span class="oooServiceResultNumber"></span>
+    </p>
+    <div class="oooServiceWrapper">
+    </div>
+</div>
