@@ -258,6 +258,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         }
 
         var LiString = '';
+        // var LiString = '<i class="oooScrollLeft ooofo-arrow_l"></i>';
  
         // Add the current service to the list.
         if (ServiceID != 'All') {
@@ -271,9 +272,12 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         for (var ServiceIDLoop in Service) {
             if (Service[ServiceIDLoop].ParentID) continue;  // Skip if the service has a parent.
             if (ServiceIDLoop == ServiceID) continue;  // Don't show the current service twice.
-            
+            if (!Service[ServiceIDLoop].NameShort) continue;  // TODO/FIXME: Workaround Stefan R. This should not be necessary, fix in .pm.
+
             LiString += '<li data-service-id="' + ServiceIDLoop + '" class="oooServiceIDAvailable">' + Service[ServiceIDLoop].NameShort + '</li>';
         }
+
+        // LiString += '<i class="oooScrollRight ooofo-arrow_r"></i>';
 
         // var LiString = '<li data-service-id="' + SelectedService.ServiceID + '" class="oooServiceIDAvailable">' + SelectedService.NameShort + '</li>';
         // Limit the number of shown parents.

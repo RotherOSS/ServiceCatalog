@@ -28,7 +28,7 @@
             <Hash>
                 <Item Key="Incident">ooofo-bang oooColor-Red</Item>
                 <Item Key="Incident::Major">ooofo-bang oooColor-Red</Item>
-                <Item Key="ServiceRequest">ooofo-rplus oooColor-Green</Item>
+                <Item Key="ServiceRequest"></Item>
                 <Item Key="Problem"></Item>
                 <Item Key="RfC"></Item>
             </Hash>

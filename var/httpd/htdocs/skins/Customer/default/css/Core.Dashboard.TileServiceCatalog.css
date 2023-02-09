@@ -140,12 +140,12 @@ ul.oooChildServiceList > li:not(:first-child) {
     padding: 4px 4px;
 }
 
-ul.oooBreadcrumbServiceList > i {
+/* ul.oooBreadcrumbServiceList > i {
     position: relative;
     top: 1px;
     font-size: 12px;
     padding: 0px 8px;
-}
+} */
 
 ul.oooBreadcrumbServiceList > li:first-child {
     margin-left: 8px;
@@ -171,11 +171,46 @@ ul.oooBreadcrumbServiceList > li:first-child {
     align-items: flex-start;
     padding: 0px;
     width: 840px;
-    height: 40px;
+    height: 50px;
     overflow-x: scroll;
+    overflow-y: hidden;
     flex: none;
     order: 1;
     flex-grow: 0;
+}
+
+.oooScrollLeft, .oooScrollRight {
+    display: block;
+    font-family: 'otobo' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+}
+
+.oooScrollLeft:before {
+    content: "\e903";
+    position: absolute;
+    left: 20px;
+    height: 15px;
+    top: 8px;
+    width: 15px;
+    text-align: center;
+    vertical-align: text-bottom;
+}
+
+.oooScrollRight:before {
+    content: "\e904";
+    position: absolute;
+    right: 0px;
+    height: 15px;
+    top: 8px;
+    width: 15px;
+    text-align: center;
+    vertical-align: text-bottom;
 }
 
 .oooDetailedView .oooServiceBreadcrumbField {
@@ -325,6 +360,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     outline: 2px solid var(--colMainLight);
     background: transparent;
     cursor: pointer;
+    color: var(--colMainLight);
 }
 
 .oooServiceContainer:hover .oooServiceName {
@@ -412,7 +448,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     border-radius: 10px;
     cursor: initial;
     max-height: 234px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .oooServiceActionEntry {
@@ -548,7 +584,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     height: 529px;
     left: 44px;
     top: 119px;
-    overflow-y: scroll;
+    overflow-y: hidden;
     overflow-x: hidden;
 }
 
@@ -654,11 +690,9 @@ ul.oooBreadcrumbServiceList > li:first-child {
     display: inline-flex;
     flex-direction: column;
     margin: 3px;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
-    /* TODO: padding creates problems on type names */
-    /* padding: 32px; */
-    padding: 32px 8px;
+    padding: 16px 32px;
     gap: 8px;
     /* position: absolute; */
     width: 110.67px;
@@ -678,6 +712,10 @@ ul.oooBreadcrumbServiceList > li:first-child {
     font-size: 22px;
 }
 
+.oooDetailedTicketTypeList > a:hover > i {
+    color: var(--colMainLight);
+}
+
 .oooDetailedTicketTypeList > a > span {
     font-size: 12px;
     line-height: 15px;
@@ -692,7 +730,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     width: 323px;
     height: 524px;
     margin-bottom: 30px;
-    overflow-y: scroll;
+    overflow-y: auto;
     background: var(--colBGLight);
     border-radius: 10px;
     flex: none;
