@@ -54,7 +54,7 @@ sub Run {
     my $LanguageObject = $Kernel::OM->Get('Kernel::Language');
     my $LayoutObject   = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $SLAObject      = $Kernel::OM->Get('Kernel::System::SLA');
-    my $FAQObject      = $Kernel::OM->Get('Kernel::System::FAQ');
+    my $PackageObject = $Kernel::OM->Get('Kernel::System::Package');
 
     my $DefaultTimeZone = $Kernel::OM->Create('Kernel::System::DateTime')->OTOBOTimeZoneGet();
 
@@ -160,12 +160,6 @@ sub Run {
         QueueID        => 1,
     );
 
-    # Get FAQ interface state list
-    my $InterfaceStates = $FAQObject->StateTypeList(
-        Types  => $ConfigObject->Get('FAQ::Customer::StateTypes'),
-        UserID => $Param{UserID},
-    );
-
     my $Settings = $ConfigObject->Get( 'CustomerDashboard::Configuration::ServiceCatalog' ) || {}; 
     for my $ServiceRef ( @{$ServiceListRefArray} ) {
         $ServiceListRef{ $ServiceRef->{ServiceID} } = $ServiceRef;
@@ -255,67 +249,83 @@ sub Run {
             }
         }
 
-        # Get all linked FAQ articles.
-        my %LinkKeyList = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkKeyList(
-            Object1   => 'Service',
-            Key1      => $Service{ServiceID},
-            Object2   => 'FAQ',
-            State     => 'Valid',
-            UserID    => 1,
+        # Check if FAQ modul is installed, if yes we check service related faq messages
+        my $FAQInstalled = $PackageObject->PackageIsInstalled(
+            Name   => 'FAQ',
         );
 
-        # For each LinkKeyList, get the FAQ article.
-        for my $LinkKey ( keys %LinkKeyList ) {
-            my %FAQData = $FAQObject->FAQGet(
-                ItemID     => $LinkKey,
-                ItemFields => 1,
-                UserID     => $Param{UserID},
+        # FAQ package is installed
+        if ( $FAQInstalled ) {
+  
+            my $FAQObject      = $Kernel::OM->Get('Kernel::System::FAQ');
+
+            # Get FAQ interface state list
+            my $InterfaceStates = $FAQObject->StateTypeList(
+                Types  => $ConfigObject->Get('FAQ::Customer::StateTypes'),
+                UserID => $Param{UserID},
+                );
+
+            # Get all linked FAQ articles.
+            my %LinkKeyList = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkKeyList(
+                Object1   => 'Service',
+                Key1      => $Service{ServiceID},
+                Object2   => 'FAQ',
+                State     => 'Valid',
+                UserID    => 1,
             );
 
-            # Check if the user has permission to see this FAQ.
-            my @ValidIDs      = $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
-            my %ValidIDLookup = map { $_ => 1 } @ValidIDs;
+            # For each LinkKeyList, get the FAQ article.
+            for my $LinkKey ( keys %LinkKeyList ) {
+                my %FAQData = $FAQObject->FAQGet(
+                    ItemID     => $LinkKey,
+                    ItemFields => 1,
+                    UserID     => $Param{UserID},
+                );
 
-            # Check user permission
-            my $Permission = $FAQObject->CheckCategoryCustomerPermission(
-                CustomerUser => $Param{CustomerUser},
-                CategoryID   => $FAQData{CategoryID},
-                UserID       => $Param{UserID},
-            );
+                # Check if the user has permission to see this FAQ.
+                my @ValidIDs      = $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
+                my %ValidIDLookup = map { $_ => 1 } @ValidIDs;
 
-            # Permission check
-            if (
-                $Permission
-                && $FAQData{Approved}
-                && $ValidIDLookup{ $FAQData{ValidID} }
-                && $InterfaceStates->{ $FAQData{StateTypeID} }
-                )
-            {
-                # Filter out information we don't need.
-                my %FilteredFAQData = ();
-                # Get the config for the FAQ fields we want to display.
-                my $DescriptionFieldToDisplay = $Settings->{FAQDescriptionField} || 'Field1';
-                for my $Key ( ( 'ItemID', 'Title', $DescriptionFieldToDisplay, 'CategoryName' ) ) {
-                    next if !$FAQData{$Key};
+                # Check user permission
+                my $Permission = $FAQObject->CheckCategoryCustomerPermission(
+                    CustomerUser => $Param{CustomerUser},
+                    CategoryID   => $FAQData{CategoryID},
+                    UserID       => $Param{UserID},
+                );
 
-                    if ( $Key eq $DescriptionFieldToDisplay ) {
-                        # Remove HTML tags.
-                        $FilteredFAQData{Description} = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii(
-                            String => $FAQData{$Key},
-                        );
+                # Permission check
+                if (
+                    $Permission
+                    && $FAQData{Approved}
+                    && $ValidIDLookup{ $FAQData{ValidID} }
+                    && $InterfaceStates->{ $FAQData{StateTypeID} }
+                    )
+                {
+                    # Filter out information we don't need.
+                    my %FilteredFAQData = ();
+                    # Get the config for the FAQ fields we want to display.
+                    my $DescriptionFieldToDisplay = $Settings->{FAQDescriptionField} || 'Field1';
+                    for my $Key ( ( 'ItemID', 'Title', $DescriptionFieldToDisplay, 'CategoryName' ) ) {
+                        next if !$FAQData{$Key};
 
-                        # If the field is longer than 70 characters, add an ellipsis.
-                        if ( length( $FilteredFAQData{Description} ) > 45 ) {
-                            $FilteredFAQData{Description} = substr( $FilteredFAQData{Description}, 0, 45 ) . '...';
+                        if ( $Key eq $DescriptionFieldToDisplay ) {
+                            # Remove HTML tags.
+                            $FilteredFAQData{Description} = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii(
+                                String => $FAQData{$Key},
+                            );
+
+                            # If the field is longer than 70 characters, add an ellipsis.
+                            if ( length( $FilteredFAQData{Description} ) > 45 ) {
+                                $FilteredFAQData{Description} = substr( $FilteredFAQData{Description}, 0, 45 ) . '...';
+                            }
+                        } else {
+                            $FilteredFAQData{$Key} = $FAQData{$Key};
                         }
-                    } else {
-                        $FilteredFAQData{$Key} = $FAQData{$Key};
                     }
+                    push @{ $Service{FAQs} }, \%FilteredFAQData;
                 }
-                push @{ $Service{FAQs} }, \%FilteredFAQData;
             }
         }
-
         # Save the service in a list.
         $ServiceList{ $Service{ServiceID} } = \%Service;
     }
