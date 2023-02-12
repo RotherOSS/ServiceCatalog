@@ -26,8 +26,8 @@
         <Navigation>Frontend::Customer::View::Dashboard::Configuration</Navigation>
         <Value>
             <Hash>
-                <Item Key="Incident">ooofo-bang oooColor-Red</Item>
-                <Item Key="Incident::Major">ooofo-bang oooColor-Red</Item>
+                <Item Key="Incident">ooofo-bug_report_black_ oooColor-Red</Item>
+                <Item Key="Incident::Major">ooofo-bug_report_black_ oooColor-Red</Item>
                 <Item Key="ServiceRequest"></Item>
                 <Item Key="Problem"></Item>
                 <Item Key="RfC"></Item>
