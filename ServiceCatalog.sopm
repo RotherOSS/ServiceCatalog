@@ -31,6 +31,7 @@
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Customer.TileServiceCatalog.js" />
         <File Permission="660" Location="var/httpd/htdocs/skins/Customer/default/css/Core.Dashboard.TileServiceCatalog.css" />
         <File Permission="660" Location="var/httpd/htdocs/common/fonts/otobo.svg" />
+        <File Permission="660" Location="var/httpd/htdocs/skins/Customer/default/css/Core.Icons.css" />
     </Filelist>
     <DatabaseInstall Type="post">
         <TableCreate Type="post" Name="service_type">
