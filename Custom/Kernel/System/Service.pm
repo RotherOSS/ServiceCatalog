@@ -467,6 +467,7 @@ Return
     $ServiceData{DescriptionShort}
     $ServiceData{DescriptionLong}
     $ServiceData{TicketTypeIDs}
+    $ServiceData{DestQueueID}
 # ---
 # ---
 # ITSMCore
@@ -564,7 +565,7 @@ sub ServiceGet {
 # ---
 # RotherOSS
 # ---
-        . ", description_short, description_long "
+         . ", description_short, description_long, dest_queueid"
 # ---
             . 'FROM service WHERE id = ?',
         Bind  => [ \$Param{ServiceID} ],
@@ -593,6 +594,7 @@ sub ServiceGet {
 # ---
         $ServiceData{DescriptionShort} = $Row[10];
         $ServiceData{DescriptionLong}  = $Row[11];
+	$ServiceData{DestQueueID}  = $Row[12];
 # ---
     }
 
@@ -819,6 +821,9 @@ sub ServiceAdd {
     # set comment
     $Param{Comment} ||= '';
 
+    # Rother OSS / Move ticket to queue
+    $Param{DestQueueID} ||= '';
+
     # cleanup given params
     for my $Argument (qw(Name Comment)) {
         $Kernel::OM->Get('Kernel::System::CheckItem')->StringClean(
@@ -899,12 +904,12 @@ sub ServiceAdd {
 # ---
         SQL => 'INSERT INTO service '
             . '(name, valid_id, comments, create_time, create_by, change_time, change_by, '
-            . 'type_id, criticality, description_short, description_long) '
-            . 'VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?, ?, ?, ?, ?)',
+            . 'type_id, criticality, description_short, description_long, dest_queueid) '
+            . 'VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?, ?, ?, ?, ?, ?)',
         Bind => [
             \$Param{FullName}, \$Param{ValidID}, \$Param{Comment},
             \$Param{UserID}, \$Param{UserID}, \$Param{TypeID}, \$Param{Criticality},
-            \$Param{DescriptionShort}, \$Param{DescriptionLong},
+            \$Param{DescriptionShort}, \$Param{DescriptionLong}, \$Param{DestQueueID},
         ],
 # ---
     );
@@ -989,6 +994,9 @@ sub ServiceUpdate {
 
     # set default comment
     $Param{Comment} ||= '';
+
+    # Rother OSS / Move ticket to queue
+    $Param{DestQueueID} ||= '';
 
     # cleanup given params
     for my $Argument (qw(Name Comment)) {
@@ -1106,12 +1114,12 @@ sub ServiceUpdate {
 # ---
         SQL => 'UPDATE service SET name = ?, valid_id = ?, comments = ?, '
             . ' change_time = current_timestamp, change_by = ?, type_id = ?, criticality = ?, '
-            . ' description_short = ?, description_long = ?'
+            . ' description_short = ?, description_long = ?, dest_queueid = ?'
             . ' WHERE id = ?',
         Bind => [
             \$Param{FullName}, \$Param{ValidID}, \$Param{Comment},
             \$Param{UserID}, \$Param{TypeID}, \$Param{Criticality},
-            \$Param{DescriptionShort}, \$Param{DescriptionLong}, \$Param{ServiceID},
+            \$Param{DescriptionShort}, \$Param{DescriptionLong}, \$Param{DestQueueID}, \$Param{ServiceID},
         ],
 # ---
     );
@@ -2311,6 +2319,247 @@ sub AttachmentDelete {
         SQL  => 'DELETE FROM service_attachment WHERE id = ? AND service_id = ? ',
         Bind => [ \$Param{FileID}, \$Param{ServiceID} ],
     );
+
+    return 1;
+}
+
+=head2 UpdateTypServiceACL()
+delete attachment of article
+    my $Success = $ServiceObject->UpdateTypServiceACL(
+        ServiceID => 123,
+        TicketTypeID    => 1, # Optional
+        ServiceValid => 0,1,2,
+        UserID    => 1,
+    );
+Returns:
+    $Success = 1 ;              # or undef if acl could not be added/changed/deleted
+=cut
+
+sub UpdateTypServiceACL {
+    my ( $Self, %Param ) = @_;
+
+    for my $Argument (qw(ServiceID ServiceValid UserID)) {
+        if ( !defined $Param{$Argument} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Argument!",
+            );
+
+            return;
+        }
+    }
+
+    my $Success;
+    my $ACLName;
+
+    my $ACLObject = $Kernel::OM->Get('Kernel::System::ACL::DB::ACL');
+
+    my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
+    my $ACLOptions = $ConfigObject->Get('ServiceCatalog::CreateTypeServiceRelatedAcls::Options');
+    my $GenerateInitalACLToDisableAllServices = $Param{GenerateInitalACLToDisableAllServices} || $ACLOptions->{GenerateInitalACLToDisableAllServices};
+    my $Possible = $Param{ConfigChange} || $ACLOptions->{ConfigChange};
+    my $ACLDeploy = $Param{ACLDeploy} || $ACLOptions->{ACLDeploy};
+    my $ACLValidID = $Param{ACLValidID} || $ACLOptions->{ACLValidID};
+    my $FrontendAction = $Param{FrontendAction} || $ACLOptions->{FrontendAction};
+
+    my $TypeObject = $Kernel::OM->Get('Kernel::System::Type');
+    my $TicketType = $TypeObject->TypeLookup( TypeID => $Param{TicketTypeID} );
+
+    my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
+    my $ServiceName = $ServiceObject->ServiceLookup( ServiceID => $Param{ServiceID} );
+
+    if ( !$TicketType ) {
+    # Remove Service from all ACLs.
+   
+        my %TypeList = $TypeObject->TypeList(
+            Valid => 1,
+        );
+
+	TYPE:
+	for my $TicketType ( values %TypeList ) {
+
+            my $ACLRemoveName = 'zzz - Show Service based on Ticket-Type: ' . $TicketType;
+
+            # Check if disable ACL exists
+            my $ACL = $ACLObject->ACLGet(
+                Name   => $ACLRemoveName,
+                UserID => 1,
+            );
+
+	    if (IsHashRefWithData($ACL) ) {
+          
+		my $ConfigChangeHashRefOld = $ACL->{ConfigChange};
+		my $OldServices = $ConfigChangeHashRefOld->{$Possible} && $ConfigChangeHashRefOld->{$Possible}{Ticket} ? $ConfigChangeHashRefOld->{$Possible}{Ticket}{Service} : undef;
+                my @ConfigServices = $OldServices ? $OldServices->@* : ();
+		@ConfigServices = grep(!/$ServiceName/, @ConfigServices);
+
+                $ConfigChangeHashRefOld->{$Possible}{Ticket}{Service} = [@ConfigServices];
+                $ACL->{ConfigChange} = $ConfigChangeHashRefOld;
+
+    		$Success = $ACLObject->ACLUpdate(
+                    $ACL->%*,
+                    UserID => 1,
+                );
+	    }
+	}
+        return 1;
+    }
+
+    # Generate a initial ACL, which disable all services
+    if ( $GenerateInitalACLToDisableAllServices eq '1' ) {
+
+        my $ACLDisableName = 'zza - Disable all Services if no Ticket-Type is selected.';
+
+	# Check if disable ACL exists
+	my $ACL = $ACLObject->ACLGet(
+            Name   => $ACLDisableName,
+            UserID => 1,
+        );
+
+	# Create ACL if it not exists
+	if ( !IsHashRefWithData($ACL) ) {
+
+	    my $DisableConfigMatchHashRef;
+	    $DisableConfigMatchHashRef->{Properties}->{Frontend}->{Action} = $FrontendAction;
+	    # $DisableConfigMatchHashRef->{Properties}->{Ticket}->{Type} = [];
+
+	    my $DisableConfigChangeHashRef;
+	    $DisableConfigChangeHashRef->{PossibleNot}{Ticket}{Service} = ['[RegExp].*'];
+
+            my %NewACL = (
+                Name           => $ACLDisableName,
+                Comment        => 'This ACL was generated when a service was added or changed.',
+                Description    => 'This ACL is used to restrict Services per Ticket-Type',
+                StopAfterMatch => 0,
+                ConfigMatch    => $DisableConfigMatchHashRef,
+                ConfigChange   => $DisableConfigChangeHashRef,
+                ValidID        => $ACLValidID,
+            );
+
+            $Success = $ACLObject->ACLAdd(
+                %NewACL,
+                UserID => 1,
+            );
+	}
+    }
+
+    $ACLName = 'zzz - Show Service based on Ticket-Type: ' . $TicketType;
+
+    my $ACL = $ACLObject->ACLGet(
+        Name   => $ACLName,
+        UserID => 1,
+    );
+
+    if ( $Param{ServiceValid} != 1 ) {
+        if ( $ACL ) {
+            $Success = $ACLObject->ACLDelete(
+                ID     => $ACL->{ID},
+                UserID => 1,
+            );
+        }
+        return;
+    }
+
+    else {
+        my $Action;
+        my $ConfigChangeHashRefOld = $ACL->{ConfigChange};
+
+        my $OldServices = $ConfigChangeHashRefOld->{$Possible} && $ConfigChangeHashRefOld->{$Possible}{Ticket} ? $ConfigChangeHashRefOld->{$Possible}{Ticket}{Service} : undef;
+        my @ConfigServices = $OldServices ? $OldServices->@* : ();
+
+        my $ConfigMatchHashRef  = {};
+        $ConfigMatchHashRef->{Properties}->{Ticket}->{Type} = ["$TicketType"];
+        $ConfigMatchHashRef->{Properties}->{Frontend}->{Action} = $FrontendAction;
+
+        my $ConfigChangeHashRef = {};
+
+        if (! grep(/$ServiceName/, @ConfigServices) ) {
+            push (@ConfigServices, $ServiceName);
+            $ConfigChangeHashRef->{$Possible}{Ticket}{Service} = [@ConfigServices];
+
+            if ( IsArrayRefWithData(\@ConfigServices) ) {
+                $Action = 'Update';
+            } else {
+                $Action = 'Delete';
+            }
+        } else {
+            $ConfigChangeHashRef = $ConfigChangeHashRefOld;
+	}
+
+        my %NewACL = (
+            Name           => $ACLName,
+            Comment        => 'This ACL was generated when a service was added or changed.',
+            Description    => 'This ACL is used to restrict Services per Ticket-Type',
+            StopAfterMatch => 0,                    
+            ConfigMatch    => $ConfigMatchHashRef,  
+            ConfigChange   => $ConfigChangeHashRef, 
+            ValidID        => $ACLValidID,
+        );
+
+        if ( IsHashRefWithData($ACL) ) {
+                use Data::Dumper;
+                print STDERR Dumper(\%NewACL);
+            $Success = $ACLObject->ACLUpdate(
+                $ACL->%*,
+                %NewACL,
+                UserID => 1,
+            );
+        }
+
+        else {
+		use Data::Dumper;
+		print STDERR Dumper(\%NewACL);
+            $Success = $ACLObject->ACLAdd(
+                %NewACL,
+                UserID => 1,
+            );
+        }
+    }
+
+    if ( !$Success ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Could not ' . ( $Param{Delete} ? 'delete' : 'update' ) . " ACL $ACLName!",
+        );
+
+        return;
+    }
+
+    # Don't deploy new ACL, cause ServiceCatalog::CreateTypeServiceRelatedAcls::Options -> Deploy is disabled
+    if ( $ACLDeploy ne '1' ) {
+
+        return 1;
+    }
+
+    # deploy new ACLs - taken from Kernel/Modules/AdminACL
+    my $Location = $Kernel::OM->Get('Kernel::Config')->Get('Home') . '/Kernel/Config/Files/ZZZACL.pm';
+
+    $Success = $ACLObject->ACLDump(
+        ResultType => 'FILE',
+        Location   => $Location,
+        UserID     => 1,
+    );
+
+    if ( $Success ) {
+
+        $Success = $ACLObject->ACLsNeedSyncReset();
+
+        # remove preselection cache TODO: rebuild the cache properly (a simple $FieldRestrictionsObject->SetACLPreselectionCache(); uses the old ACLs)
+        my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+        $CacheObject->Delete(
+            Type => 'TicketACL',      # only [a-zA-Z0-9_] chars usable
+            Key  => 'Preselection',
+        );
+    }
+
+    if ( !$Success ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Could not deploy ACLs - manual fix needed!',
+        );
+
+        return;
+    }
 
     return 1;
 }

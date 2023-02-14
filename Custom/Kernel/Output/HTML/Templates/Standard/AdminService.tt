@@ -168,6 +168,17 @@
                         </div>
                         <div class="Clear"></div>
 
+                        <label for="DestQueueID">[% Translate("Ticket destination queue (only for the customer portal)") | html %]: </label>
+                        <div class="Field">
+                            [% Data.TicketQueueOptionStrg %]
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="Criticality">[% Translate("Criticality") | html %]: </label>
+                        <div class="Field">
+                            [% Data.CriticalityOptionStrg %]
+                        </div>
+                        <div class="Clear"></div>
+# EO Rother OSS
                         <label class="Mandatory" for="DescriptionShort"><span class="Marker">*</span> [% Translate("Description (short)") | html %]:</label>
                         <div class="Field">
                             <input type="text" name="DescriptionShort" id="DescriptionShort" value="[% Data.DescriptionShort | html %]" class="W50pc Validate_Required [% Data.DescriptionShortServerError | html %]" maxlength="70"/>
@@ -193,23 +204,23 @@
                     </div>
 [% RenderBlockEnd("DynamicField") %]
 # ---
-
-# ---
-# ITSMCore
-# ---
-                        <label for="TypeID">[% Translate("Type") | html %]: </label>
-                        <div class="Field">
-                            [% Data.TypeOptionStrg %]
-                        </div>
-                        <div class="Clear"></div>
-
-                        <label for="Criticality">[% Translate("Criticality") | html %]: </label>
-                        <div class="Field">
-                            [% Data.CriticalityOptionStrg %]
-                        </div>
-                        <div class="Clear"></div>
-# ---
-
+# Rother OSS
+## ---
+## ITSMCore
+## ---
+#                        <label for="TypeID">[% Translate("Type") | html %]: </label>
+#                        <div class="Field">
+#                            [% Data.TypeOptionStrg %]
+#                        </div>
+#                        <div class="Clear"></div>
+#
+#                        <label for="Criticality">[% Translate("Criticality") | html %]: </label>
+#                        <div class="Field">
+#                            [% Data.CriticalityOptionStrg %]
+#                        </div>
+#                        <div class="Clear"></div>
+## ---
+# EO Rother OSS
                         <label class="Mandatory" for="ValidID"><span class="Marker">*</span> [% Translate("Validity") | html %]:</label>
                         <div class="Field">
                             [% Data.ValidOptionStrg %]

@@ -417,6 +417,20 @@ sub Run {
                         next;
                     }
                 }
+# Rother OSS / ServiceCatalog 
+		# Create Acl if config is enabled
+		# We create one Acl per Ticket-Type
+		if ( $ConfigObject->Get('ServiceCatalog::CreateTypeServiceRelatedAcls') ) {
+		    for my $TicketType ( @{ $GetParam{TicketTypeIDs} } ) {
+                        my $Success = $ServiceObject->UpdateTypServiceACL(
+	       	            TicketTypeID => $TicketType,
+                            ServiceID   => $GetParam{ServiceID},
+                            ServiceValid => $GetParam{ValidID},
+			    UserID => 1,
+                        );
+		    }
+	        }
+# EO Rother OSS
 # ---
 
                 # if the user would like to continue editing the service, just redirect to the edit screen
@@ -621,6 +635,20 @@ sub _MaskNew {
         Class        => 'Modernize',
     );
 
+    # Move Ticket to queue
+    my %TicketQueueList = $Kernel::OM->Get('Kernel::System::Queue')->GetAllQueues(
+        Valid => 1,
+    );  
+
+    # Build ticket type selection.
+    $ServiceData{TicketQueueOptionStrg} = $LayoutObject->BuildSelection(
+        Data         => \%TicketQueueList,
+        Name         => 'DestQueueID',
+        Multiple     => 0,
+        PossibleNone => 1,
+        SelectedID   => $Param{DestQueueID} || $ServiceData{DestQueueID},
+        Class        => 'Modernize',
+    );  
 
     # add rich text editor
     if ( $LayoutObject->{BrowserRichText} ) {

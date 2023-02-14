@@ -32,6 +32,7 @@
         <File Permission="660" Location="var/httpd/htdocs/skins/Customer/default/css/Core.Dashboard.TileServiceCatalog.css" />
         <File Permission="660" Location="var/httpd/htdocs/common/fonts/otobo.svg" />
         <File Permission="660" Location="var/httpd/htdocs/skins/Customer/default/css/Core.Icons.css" />
+        <File Permission="660" Location="Kernel/System/Console/Command/Admin/ServiceCatalog/AddBulkACL.pm" />
     </Filelist>
     <DatabaseInstall Type="post">
         <TableCreate Type="post" Name="service_type">
@@ -72,6 +73,7 @@
         <TableAlter Type="post" Name="service">
             <ColumnAdd Name="description_short" Required="false" Size="191" Type="VARCHAR"></ColumnAdd>
             <ColumnAdd Name="description_long" Required="false" Size="3000" Type="VARCHAR"></ColumnAdd>
+            <ColumnAdd Name="dest_queueid" Required="false" Size="255" Type="VARCHAR"></ColumnAdd>
         </TableAlter>
     </DatabaseInstall>
     <DatabaseUpgrade>
@@ -99,6 +101,7 @@
         <TableAlter Type="pre" Name="service">
             <ColumnDrop Name="description_short"></ColumnDrop>
             <ColumnDrop Name="description_long"></ColumnDrop>
+            <ColumnDrop Name="dest_queueid"></ColumnDrop>
         </TableAlter>
     </DatabaseUninstall>
 </otobo_package>
