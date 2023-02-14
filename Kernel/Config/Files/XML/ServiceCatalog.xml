@@ -175,4 +175,26 @@
             </Hash>
         </Value>
     </Setting>
+    <Setting Name="Ticket::EventModulePost###9700-SetDynamicFieldCriticalityFromService" Required="0" Valid="0">
+        <Description Translatable="1">Event module registration. Currently, the criticality of the service can also be set in the service, but this has no effect. Therefore, this event module has been implemented that automatically updates the DynamicField Criticality in a ticket as soon as a service has been assigned. Please activate the SysConfig option SetPriorityFromCriticalityAndImpactMatrix to set the priority in the next step based an Criticality and Impact.</Description>
+        <Navigation>Core::Event::Ticket</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Event::SetDynamicFieldCriticalityFromService</Item>
+                <Item Key="Transaction">1</Item>
+                <Item Key="Event">TicketServiceUpdate</Item>
+            </Hash> 
+        </Value>
+    </Setting>
+    <Setting Name="Ticket::EventModulePost###9800-SetPriorityFromCriticalityAndImpactMatrix" Required="0" Valid="0">
+        <Description Translatable="1">Event module registration. Currently, the criticality of the service can also be set in the service, but this has no effect. Therefore, this event module has been implemented that automatically updates the priority regarding Criticality and Impact in a ticket.</Description>
+        <Navigation>Core::Event::Ticket</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Event::SetPriorityFromCriticalityAndImpactMatrix</Item>
+                <Item Key="Transaction">1</Item>
+                <Item Key="Event">TicketDynamicFieldUpdate_ITSMCriticality|TicketDynamicFieldUpdate_ITSMImpact</Item>
+            </Hash> 
+        </Value>
+    </Setting>
 </otobo_config>
