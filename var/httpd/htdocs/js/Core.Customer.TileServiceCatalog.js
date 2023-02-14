@@ -47,7 +47,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
                 // $('.Dialog.Modal .oooServiceField').appendTo('.Dialog.Modal > .Header').find('select').attr('id', 'ModalServiceID');
                 $('.oooServiceField').addClass('oooHidden');
                 $('.Dialog.Modal .oooServiceFieldSearch').appendTo('.Dialog.Modal > .Header').find('select').attr('id', 'ModalSearch');
-                $('.oooServiceBreadcrumb').appendTo('.Dialog.Modal > .Header');
+                $('.oooServiceBreadcrumbWrap').appendTo('.Dialog.Modal > .Header');
                 // Core.UI.InputFields.Init();
                 $('#ModalServiceID').val(ServiceID).trigger('redraw.InputField');
             }
@@ -290,6 +290,27 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         // }
 
         $('.oooBreadcrumbServiceList').html(LiString);
+
+        // Scroll services list.
+        const goLeft = crumb => crumb.scrollLeft(crumb.scrollLeft() - crumb.width());
+        const goRight = crumb => crumb.scrollLeft(crumb.scrollLeft() + crumb.width());
+        $('.oooScrollLeft').click(
+            e => goLeft($(e.target).parent().find('.oooServiceBreadcrumbField'))
+        );
+        $('.oooScrollRight').click(
+            e => goRight($(e.target).parent().find('.oooServiceBreadcrumbField'))
+        );
+        $('.oooServiceBreadcrumbField').on('wheel', e => {
+            switch(true) {
+                case e.originalEvent.deltaY < 0:
+                    goLeft($(e.delegateTarget));
+                    break;
+                case e.originalEvent.deltaY > 0:
+                    goRight($(e.delegateTarget));
+                    break;
+            }
+            e.preventDefault();
+        })
     }
 
     /**
