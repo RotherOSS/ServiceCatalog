@@ -565,7 +565,7 @@ sub ServiceGet {
 # ---
 # RotherOSS
 # ---
-         . ", description_short, description_long, dest_queueid"
+         . ", description_short, description_long, dest_queueid "
 # ---
             . 'FROM service WHERE id = ?',
         Bind  => [ \$Param{ServiceID} ],
