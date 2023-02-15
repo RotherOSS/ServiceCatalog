@@ -39,7 +39,7 @@
         <Navigation>Frontend::Customer::View::Dashboard::Configuration</Navigation>
         <Value>
             <Hash>
-                <DefaultItem ValueType="Select">
+                <DefaultItem ValueType="Select" SelectedID="0">
                     <Item ValueType="Option" Value="0" Translatable="1">0 - Disabled</Item>
                     <Item ValueType="Option" Value="1" Translatable="1">1 - Enabled</Item>
                 </DefaultItem>

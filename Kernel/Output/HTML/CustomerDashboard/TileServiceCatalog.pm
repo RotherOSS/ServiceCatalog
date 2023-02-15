@@ -102,6 +102,9 @@ sub Run {
                     my $FirstHour = $Day->[0];
                     my $LastHour  = $Day->[$#$Day];
 
+                    # We need one hour more, cause the calendar means inclusive the last hour
+                    $LastHour++;
+
                     # First day of the run.
                     if ( !$Run{StartDay} ) {
                         $Run{StartDay}  = $WeekDays[$Index];

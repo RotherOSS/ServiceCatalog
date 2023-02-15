@@ -18,7 +18,7 @@ OTOBO 10.1.x
 
 Packages
 --------
-
+ 
 
 Third-party software
 --------------------
@@ -27,12 +27,34 @@ Third-party software
 Configuration Reference
 =======================
 
+Core::Acl
+------------------------------------------------------------------------------------------------------------------------------
+
+ServiceCatalog::CreateTypeServiceRelatedAcls
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This option allows you to automatically generate ACLs for different interfaces when creating services. Services will then only be displayed if the ticket type stored in the service has been selected.
+
+ServiceCatalog::CreateTypeServiceRelatedAcls::Options
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Acl configuration für Type - Service restrictions. Please activate ServiceCatalog::CreateTypeServiceRelatedAcls before. For the key ConfigChange please use Possible or PossibleAdd. DeployNewACL deploy the changed acl Immediately.
+
 Core::DynamicFields::ObjectTypeRegistration
 ------------------------------------------------------------------------------------------------------------------------------
 
 DynamicFields::ObjectType###Service
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 DynamicField object registration.
+
+Core::Event::Ticket
+------------------------------------------------------------------------------------------------------------------------------
+
+Ticket::EventModulePost###9700-SetDynamicFieldCriticalityFromService
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Event module registration. Currently, the criticality of the service can also be set in the service, but this has no effect. Therefore, this event module has been implemented that automatically updates the DynamicField Criticality in a ticket as soon as a service has been assigned. Please activate the SysConfig option SetPriorityFromCriticalityAndImpactMatrix to set the priority in the next step based an Criticality and Impact.
+
+Ticket::EventModulePost###9800-SetPriorityFromCriticalityAndImpactMatrix
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Event module registration. Currently, the criticality of the service can also be set in the service, but this has no effect. Therefore, this event module has been implemented that automatically updates the priority regarding Criticality and Impact in a ticket.
 
 Frontend::Base::DynamicFieldScreens
 ------------------------------------------------------------------------------------------------------------------------------
@@ -62,17 +84,17 @@ CustomerDashboard::Configuration::ServiceCatalog
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Additional settings for the service catalog.
 
-CustomerDashboard::Configuration::ServiceCatalog###DynamicField
+CustomerDashboard::Configuration::ServiceCatalog###SortByTicketType
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Dynamic fields shown in the service catalog screen of the customer interface.
+Show services with the following ticket type last.
 
 CustomerDashboard::Configuration::ServiceCatalog###FAQDescriptionField
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The FAQ field that should be used as the description of an FAQ article in the sidebar (e.g. Field1, Field2, Field3...).
 
-CustomerDashboard::Configuration::ServiceCatalog###SortByTicketType
+CustomerDashboard::Configuration::ServiceCatalog###DynamicField
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Show services with the following ticket type last.
+Dynamic fields shown in the service catalog screen of the customer interface.
 
 Frontend::Customer::View::Dashboard::Tiles
 ------------------------------------------------------------------------------------------------------------------------------
@@ -97,4 +119,3 @@ Contact
 Version
 -------
 Author: |doc-vendor| / Version: |doc-version| / Date of release: |doc-datestamp|
-                                                                                                                                                                                                       99,1          Bot
