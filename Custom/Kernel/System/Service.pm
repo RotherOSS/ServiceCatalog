@@ -981,7 +981,7 @@ sub ServiceUpdate {
 # ---
 # RotherOSS
 # ---
-    for my $Argument (qw(ServiceID Name DescriptionShort ValidID UserID TypeID Criticality)) {
+    for my $Argument (qw(ServiceID Name DescriptionShort ValidID UserID Criticality)) {
 # ---
         if ( !$Param{$Argument} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -1113,12 +1113,12 @@ sub ServiceUpdate {
 # RotherOSS
 # ---
         SQL => 'UPDATE service SET name = ?, valid_id = ?, comments = ?, '
-            . ' change_time = current_timestamp, change_by = ?, type_id = ?, criticality = ?, '
+            . ' change_time = current_timestamp, change_by = ?, criticality = ?, '
             . ' description_short = ?, description_long = ?, dest_queueid = ?'
             . ' WHERE id = ?',
         Bind => [
             \$Param{FullName}, \$Param{ValidID}, \$Param{Comment},
-            \$Param{UserID}, \$Param{TypeID}, \$Param{Criticality},
+            \$Param{UserID}, \$Param{Criticality},
             \$Param{DescriptionShort}, \$Param{DescriptionLong}, \$Param{DestQueueID}, \$Param{ServiceID},
         ],
 # ---
@@ -1183,8 +1183,10 @@ return service ids as an array
 # ---
 # ITSMCore
 # ---
-        TypeIDs       => 2,
-        Criticalities => [ '2 low', '3 normal' ],
+# Rother OSS
+#	TypeIDs       => 2,
+# EO Rother OSS 
+	Criticalities => [ '2 low', '3 normal' ],
 # ---
     );
 
@@ -1228,16 +1230,17 @@ sub ServiceSearch {
 # ---
 # ITSMCore
 # ---
-    # add type ids
-    if ( $Param{TypeIDs} && ref $Param{TypeIDs} eq 'ARRAY' && @{ $Param{TypeIDs} } ) {
+# Rother OSS
+#    # add type ids
+#    if ( $Param{TypeIDs} && ref $Param{TypeIDs} eq 'ARRAY' && @{ $Param{TypeIDs} } ) {
 
-        # quote as integer
-        for my $TypeID ( @{ $Param{TypeIDs} } ) {
-            $TypeID = $Self->{DBObject}->Quote( $TypeID, 'Integer' );
-        }
+#        # quote as integer
+#        for my $TypeID ( @{ $Param{TypeIDs} } ) {
+#            $TypeID = $Self->{DBObject}->Quote( $TypeID, 'Integer' );
+#        }
 
-        $SQL .= " AND type_id IN (" . join(', ', @{ $Param{TypeIDs} }) . ") ";
-    }
+#        $SQL .= " AND type_id IN (" . join(', ', @{ $Param{TypeIDs} }) . ") ";
+#    }
 
     # add criticalities
     if ($Param{Criticalities} && ref $Param{Criticalities} eq 'ARRAY' && @{ $Param{Criticalities} } ) {
@@ -1733,12 +1736,12 @@ sub _ServiceGetCurrentIncidentState {
     # make local copies
     my %ServiceData = %{ $Param{ServiceData} };
     my %Preferences = %{ $Param{Preferences} };
-
-    # get service type list
-    my $ServiceTypeList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
-        Class => 'ITSM::Service::Type',
-    );
-    $ServiceData{Type} = $ServiceTypeList->{ $ServiceData{TypeID} } || '';
+# Rother OSS 
+#    # get service type list
+#    my $ServiceTypeList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+#        Class => 'ITSM::Service::Type',
+#    );
+#    $ServiceData{Type} = $ServiceTypeList->{ $ServiceData{TypeID} } || '';
 
     # set default incident state type
     $ServiceData{CurInciStateType} = 'operational';

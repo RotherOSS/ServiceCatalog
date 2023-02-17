@@ -136,7 +136,7 @@ sub Run {
 # RotherOSS
 # ---
         @{ $GetParam{TicketTypeIDs} } = $ParamObject->GetArray( Param => 'TicketTypeIDs' );
-        for (qw(ServiceID ParentID Name DescriptionShort TypeID Criticality ValidID Comment)) {
+        for (qw(ServiceID ParentID Name DescriptionShort Criticality ValidID Comment CustomerDefaultService DestQueueID)) {
 # ---
             $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
         }
@@ -228,6 +228,14 @@ sub Run {
                     );
                 }
             }
+
+            # set customer user service member
+            $ServiceObject->CustomerUserServiceMemberAdd(
+                CustomerUserLogin => '<DEFAULT>',
+                ServiceID         => $GetParam{ServiceID},
+                Active            => $GetParam{CustomerDefaultService},
+                UserID            => $Self->{UserID},
+            );
 
             if ( !%Error ) {
 
@@ -640,16 +648,35 @@ sub _MaskNew {
         Valid => 1,
     );  
 
-    # Build ticket type selection.
+    # Build ticket queue selection.
     $ServiceData{TicketQueueOptionStrg} = $LayoutObject->BuildSelection(
         Data         => \%TicketQueueList,
         Name         => 'DestQueueID',
         Multiple     => 0,
         PossibleNone => 1,
+    	TreeView       => ( $ListType eq 'tree' ) ? 1 : 0,
         SelectedID   => $Param{DestQueueID} || $ServiceData{DestQueueID},
         Class        => 'Modernize',
-    );  
+    );
 
+# Rother OSS: Default Customer Service 
+    my %DefaultServices = $ServiceObject->CustomerUserServiceMemberList(
+	CustomerUserLogin => '<DEFAULT>',
+        Result            => 'HASH',
+        DefaultServices   => 1,
+    );
+
+    $ServiceData{CustomerServiceChecked} = '';
+
+    DEFAULTSERVICE:
+    for my $DefService ( keys %DefaultServices ) {
+    
+        if ( $ServiceData{ServiceID} eq $DefService ) {
+            $ServiceData{CustomerServiceChecked} = 'checked';
+	    last DEFAULTSERVICE;
+	}
+    }
+# EO Rother OSS
     # add rich text editor
     if ( $LayoutObject->{BrowserRichText} ) {
 
@@ -683,18 +710,18 @@ sub _MaskNew {
 # ---
 # ITSMCore
 # ---
-    # generate TypeOptionStrg
-    my $TypeList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
-        Class => 'ITSM::Service::Type',
-    );
+#    # generate TypeOptionStrg
+#    my $TypeList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+#        Class => 'ITSM::Service::Type',
+#    );
 
-    # build the type dropdown
-    $ServiceData{TypeOptionStrg} = $LayoutObject->BuildSelection(
-        Data       => $TypeList,
-        Name       => 'TypeID',
-        SelectedID => $Param{TypeID} || $ServiceData{TypeID},
-        Class      => 'Modernize',
-    );
+#    # build the type dropdown
+#    $ServiceData{TypeOptionStrg} = $LayoutObject->BuildSelection(
+#        Data       => $TypeList,
+#        Name       => 'TypeID',
+#        SelectedID => $Param{TypeID} || $ServiceData{TypeID},
+#        Class      => 'Modernize',
+#    );
 
     # build the criticality dropdown
     $ServiceData{CriticalityOptionStrg} = $LayoutObject->BuildSelection(

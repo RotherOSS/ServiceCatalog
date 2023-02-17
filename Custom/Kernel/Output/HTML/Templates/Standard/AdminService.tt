@@ -162,15 +162,20 @@
 # ---
 # RotherOSS
 # ---
-                        <label for="TicketTypeIDs">[% Translate("Ticket types for the customer portal (direct link)") | html %]: </label>
+                        <label for="TicketTypeIDs">[% Translate("Show services for the following ticket types") | html %]: </label>
                         <div class="Field">
                             [% Data.TicketTypeOptionStrg %]
                         </div>
                         <div class="Clear"></div>
 
-                        <label for="DestQueueID">[% Translate("Ticket destination queue (only for the customer portal)") | html %]: </label>
+                        <label for="DestQueueID">[% Translate("Ticket destination queue") | html %]: </label>
                         <div class="Field">
                             [% Data.TicketQueueOptionStrg %]
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="CustomerDefaultService">[% Translate("Customer default service") | html %]: </label>
+                        <div class="Field">
+                            <input type="checkbox" name="CustomerDefaultService" title="[% Translate("Toggle active state for %s", Data.Name) | html %]" value="[% Data.ServiceID | html %]" [% Data.CustomerServiceChecked | html %]/>
                         </div>
                         <div class="Clear"></div>
                         <label for="Criticality">[% Translate("Criticality") | html %]: </label>
@@ -208,12 +213,12 @@
 ## ---
 ## ITSMCore
 ## ---
-                        <label for="TypeID">[% Translate("Service Type") | html %]: </label>
-                        <div class="Field">
-                            [% Data.TypeOptionStrg %]
-                        </div>
-                        <div class="Clear"></div>
-
+#                        <label for="TypeID">[% Translate("Service Type") | html %]: </label>
+#                        <div class="Field">
+#                            [% Data.TypeOptionStrg %]
+#                       </div>
+#                        <div class="Clear"></div>
+#
 #                        <label for="Criticality">[% Translate("Criticality") | html %]: </label>
 #                        <div class="Field">
 #                            [% Data.CriticalityOptionStrg %]
@@ -298,6 +303,22 @@
                 </form>
             </div>
 [% RenderBlockEnd("ServiceEdit") %]
+        </div>
+        <div class="WidgetSimple SpacingTop">
+            <div class="Header">
+                <h2>[% Translate("Reference") | html %]</h2>
+            </div>
+            <div class="Content">
+
+                <p>[% Translate("You can use the following options") | html %]:</p>
+                <dl>
+                    <dt><code>Show services for the following ticket types:</code></dt>
+                    <dd>
+                        [% Translate("Inside the customer dashboard service catalog tile add the following ticket types to create a ticket. Please enable the systemconfiguration ServiceCatalog::CreateTypeServiceRelatedAcls and ServiceCatalog::CreateTypeServiceRelatedAcls::Options to limit services type based for the other ticket masks. For that reason we deploy ACLs at Admin -> ACL.") | html %]
+                    </dd>
+
+                </dl>
+            </div>
         </div>
     </div>
     <div class="Clear"></div>
