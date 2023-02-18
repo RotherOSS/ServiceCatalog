@@ -172,7 +172,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     padding: 0px;
     width: 840px;
     height: 50px;
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: hidden;
     flex: none;
     order: 1;
@@ -194,9 +194,9 @@ ul.oooBreadcrumbServiceList > li:first-child {
 .oooScrollLeft:before {
     content: "\e903";
     position: absolute;
-    left: 150px;
+    left: 20px;
     height: 15px;
-    top: 135px;
+    top: 8px;
     width: 15px;
     text-align: center;
     vertical-align: text-bottom;
@@ -205,9 +205,9 @@ ul.oooBreadcrumbServiceList > li:first-child {
 .oooScrollRight:before {
     content: "\e904";
     position: absolute;
-    right: 150px;
+    right: 0px;
     height: 15px;
-    top: 135px;
+    top: 8px;
     width: 15px;
     text-align: center;
     vertical-align: text-bottom;
@@ -610,6 +610,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 .oooDetailedServiceName {
     left: 7px;
     position: relative;
+    margin: 10px 0;
     /* grid-area: 1 / 1 / 2 / 3; */
     /* position: relative;
     left: -32px;
@@ -640,7 +641,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 
 .oooDetailedDescriptionLong > * {
     width: 100%;
-    max-height: 600px;
+    max-height: 450px;
     min-height: 300px;
 }
 
@@ -771,7 +772,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     position: absolute;
     right: 90px;
     top: 22px;
-    left: 275px;
+    left: 280px;
     margin-top: -19px;
     transform: rotate(180deg); /* fix this, should't be needed */
 
@@ -802,7 +803,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     color: var(--colMainLight);
 }
 
-.oooDetailedAccordion .WidgetAction > a:hover > .NumberOfSubservices {
+.oooDetailedAccordion .WidgetAction > a:hover > .oooNumberOfEntries {
     background: var(--colMainLight);
 }
 
@@ -817,7 +818,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     padding: 25px 0px 0px;
 }
 
-.oooDetailedAccordion .NumberOfSubservices {
+.oooDetailedAccordion .oooNumberOfEntries {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -828,14 +829,15 @@ ul.oooBreadcrumbServiceList > li:first-child {
     height: 16px;
     background: var(--colTextLight);
     border-radius: 40px;
-    margin-left: 10px;
+    margin-left: 5px;
+    margin-top: 2px;
 }
 
-.oooDetailedAccordion.Expanded .NumberOfSubservices {
+.oooDetailedAccordion.Expanded .oooNumberOfEntries {
     background: var(--colMainLight);
 }
 
-.oooDetailedAccordion .NumberOfSubservices > span {
+.oooDetailedAccordion .oooNumberOfEntries > span {
     font-weight: 700;
     font-size: 9px;
     line-height: 11px;

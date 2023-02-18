@@ -36,17 +36,18 @@
         <div class="oooDetailedAccordionList">
 
         {% if FAQArticleList %}
-            <div class="oooDetailedAccordion WidgetSimple Collapsed Animate">
+            <div class="oooDetailedAccordion WidgetSimple {% if AdditionalInformation %}Collapsed{% else %}Expanded{% endif %} Animate">
                 <div class="Header">
                     <div class="WidgetAction Toggle">
                         <a href="#" title="{{ 'Show or hide the content' | Translate }}">
                             <h3>{{ 'FAQ article on this topic' | Translate }}</h3>
+                            <div class="oooNumberOfEntries"><span>{{ FAQArticleList.length }}</span></div>
                             <i class="ooofo ooofo-arrow_u"></i>
                             <i class="ooofo ooofo-arrow_d"></i>
                         </a>
                     </div>
                 </div>
-                <div class="oooDetailedFAQ Content" style="display: none;">
+                <div class="oooDetailedFAQ Content" {% if AdditionalInformation %}style="display: none;"{% else %}{% endif %}>
                     {% for FAQArticle in FAQArticleList %}
                             <a href="{{ Baselink }}Action=CustomerFAQZoom;ItemID={{ FAQArticle.ItemID }}" title="{{ FAQArticle.Title }}">
                                 <div class="oooDetailedFAQItem">
@@ -60,8 +61,8 @@
             </div>
         {% endif %}
 
-        {% if WorkingHours or FirstResponseTime or SolutionTime or DynamicFieldList %}
-            <div class="oooDetailedAccordion WidgetSimple Collapsed Animate">
+        {% if AdditionalInformation %}
+            <div class="oooDetailedAccordion WidgetSimple {% if FAQArticleList %}Collapsed{% else %}Expanded{% endif %} Animate">
                 <div class="Header">
                     <div class="WidgetAction Toggle">
                         <a href="#" title="{{ 'Show or hide the content' | Translate }}">
@@ -71,7 +72,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="oooDetailedAdditionalInformation Content" style="display: none;">
+                <div class="oooDetailedAdditionalInformation Content" {% if FAQArticleList %}style="display: none;"{% else %}{% endif %}>
                     <div>
                         {% if WorkingHours or FirstResponseTime or SolutionTime %}
                             <p class="oooDetailedAccordionCaption oooDetailedSubtitle">{{ 'Service hours' | Translate }}</p>
@@ -112,7 +113,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="{{ 'Show or hide the content' | Translate }}">
                             <h3>{{ 'Sub-Service(s)' | Translate }}</h3>
-                            <div class="NumberOfSubservices"><span>{{ NumberOfSubservices }}</span></div>
+                            <div class="oooNumberOfEntries"><span>{{ NumberOfSubservices }}</span></div>
                             <i class="ooofo ooofo-arrow_u"></i>
                             <i class="ooofo ooofo-arrow_d"></i>
                         </a>
