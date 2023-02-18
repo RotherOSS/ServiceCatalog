@@ -861,6 +861,21 @@ sub Run {
             $GetParam{Priority}   = $Config->{PriorityDefault};
         }
 
+# Rother OSS / Move ticket in queue based on service information
+        if ( $GetParam{ServiceID} ) {
+
+            my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
+            my %ServiceData = $ServiceObject->ServiceGet(
+                ServiceID => $GetParam{ServiceID},
+                UserID    => 1,
+            );
+
+            if ( IsStringWithData( $ServiceData{DestQueueID} )) {
+                $NewQueueID = $ServiceData{DestQueueID};
+            }
+        }
+# EO Rother OSS
+
         # create new ticket, do db insert
         my $TicketID = $TicketObject->TicketCreate(
             QueueID      => $NewQueueID,

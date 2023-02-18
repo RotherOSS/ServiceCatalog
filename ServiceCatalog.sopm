@@ -35,6 +35,8 @@
         <File Permission="660" Location="Kernel/System/Console/Command/Admin/ServiceCatalog/AddBulkACL.pm" />
         <File Permission="660" Location="Kernel/System/Ticket/Event/SetDynamicFieldCriticalityFromService.pm" />
         <File Permission="660" Location="Kernel/System/Ticket/Event/SetPriorityFromCriticalityAndImpactMatrix.pm" />
+        <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentTicketPhone.tt" />
+        <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentTicketEmail.tt" />
     </Filelist>
     <DatabaseInstall Type="post">
         <TableCreate Type="post" Name="service_type">
