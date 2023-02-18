@@ -122,26 +122,6 @@
             </Hash>
         </Value>
     </Setting>
-    <Setting Name="CustomerDashboard::Tiles###FeaturedLink-01" Required="0" Valid="0">
-        <Description Translatable="1">Tile registration for the CustomerDashboard. Module is required.</Description>
-        <Navigation>Frontend::Customer::View::Dashboard::Tiles</Navigation>
-        <Value>
-            <Hash>
-                <Item Key="Order">2</Item>
-                <Item Key="Template">Dashboard/TileFeaturedLink</Item>
-                <Item Key="Config">
-                    <Hash>
-                        <Item Key="TextColor">#ffffff</Item>
-                        <Item Key="BackgroundImage">/otobo-web/common/img/Dashboard/dashboard_bgfl.png</Item>
-                        <Item Key="HeaderText"># FAQ Article № 1</Item>
-                        <Item Key="MainText">List of features coming with the OTOBO beta version.</Item>
-                        <Item Key="FooterText">Show &gt;</Item>
-                        <Item Key="Link">https://otobo.de/de/otobo-features/</Item>
-                    </Hash>
-                </Item>
-            </Hash>
-        </Value>
-    </Setting>
     <Setting Name="ServiceCatalog::CreateTypeServiceRelatedAcls" Required="0" Valid="1">
         <Description Translatable="1">This option allows you to automatically generate ACLs for different interfaces when creating services. Services will then only be displayed if the ticket type stored in the service has been selected.</Description>
         <Navigation>Core::Acl</Navigation>
