@@ -210,6 +210,11 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
             SubservicesHTML.push(TargetNS.DisplayService(SubserviceID));
         }
 
+        var AdditionalInformation;
+        if (Service.WorkingHours || SolutionTime || FirstResponseTime || Service.DynamicField) {
+            AdditionalInformation = 1;
+        }
+
         var Detailed = Core.Template.Render('Customer/TileServiceCatalogDetailed', {
             ID: ServiceID,
             Name:  Service.NameShort,
@@ -220,6 +225,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
             WorkingHours: Service.WorkingHours,
             SolutionTime: SolutionTime,
             FirstResponseTime: FirstResponseTime,
+            AdditionalInformation: AdditionalInformation,
             TypeList: Service.TicketType,
             Baselink: Baselink,
             FAQArticleList: Service.FAQs,
