@@ -39,7 +39,8 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
                     CloseOnEscape: true,
                     PositionTop: '15px',
                     PositionLeft: 'Center',
-                    AllowAutoGrow: false
+                    AllowAutoGrow: false,
+                    Stacked: true
                 });
 
                 $('.Dialog.Modal').addClass('oooServiceCatalogModal');
@@ -72,7 +73,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         $(document).on('click', '.oooServiceBottom, .oooServiceActionDetails', function() {
             var ServiceID = $(this).parent().attr('data-service-id');
             if (!ServiceID) return;
-            TargetNS.DisplayDetailedService(ServiceID);
+            TargetNS.DisplayDetailedService(ServiceID, true);
             return;
         });
 
@@ -192,8 +193,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         return Container;
     }
 
-    TargetNS.DisplayDetailedService = function(ServiceID) {
-        $('.oooServiceWrapper').html('');
+    TargetNS.DisplayDetailedService = function(ServiceID, StackDialog = false) {
         var Service = JSON.parse(Core.Config.Get('ServiceList'))[ServiceID];
         var Baselink = Core.Config.Get('Baselink');
         var IframeLink = Baselink + 'Action=CustomerTileServiceCatalog;Subaction=HTMLView;ServiceID=' + ServiceID + ';' + Core.Config.Get('SessionName') + '=' + Core.Config.Get('SessionID')
@@ -243,8 +243,22 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
             NumberOfSubservices: TargetNS.GetSubservices(ServiceID).length,
             SubservicesHTML: SubservicesHTML,
         });
-        
-        $(Detailed).appendTo('.oooServiceWrapper');
+
+        if (StackDialog) {
+            Core.UI.Dialog.ShowDialog({
+                HTML: Detailed,
+                Modal: true,
+                CloseOnClickOutside: true,
+                CloseOnEscape: true,
+                PositionTop: '30px',
+                PositionLeft: 'Center',
+                AllowAutoGrow: false,
+                Stacked: true
+            });
+        } else {
+            $('.oooServiceWrapper').html('');
+            $(Detailed).appendTo('.oooServiceWrapper');
+        }
 
         // Resize iFrame.
         var IFrame = $('.oooServiceWrapper').find('[data-service-id="' + ServiceID + '"]').find('iframe');
