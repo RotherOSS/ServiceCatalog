@@ -38,6 +38,7 @@
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentTicketPhone.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentTicketEmail.tt" />
         <File Permission="660" Location="var/httpd/htdocs/skins/Agent/default/css/Core.InputFields.css" />
+        <File Permission="660" Location="var/httpd/htdocs/js/Core.UI.Dialog.js" />
     </Filelist>
     <DatabaseInstall Type="post">
         <TableCreate Type="post" Name="service_type">
