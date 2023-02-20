@@ -600,6 +600,16 @@ sub _MaskNew {
         },
     );
 
+    # ---
+    # RotherOSS
+    # ---
+
+    # output service option reference
+    $LayoutObject->Block(
+        Name => 'ServiceReference',
+    );
+    # ---
+
     $LayoutObject->Block( Name => 'ActionList' );
     $LayoutObject->Block( Name => 'ActionOverview' );
 

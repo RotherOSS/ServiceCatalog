@@ -101,8 +101,8 @@
 [% RenderBlockEnd("NoDataFoundMsg") %]
 [% RenderBlockStart("OverviewListRow") %]
                         <tr [% IF Data.ValidID != 1%]class="Invalid"[% END %]>
-                            <td title="[% Data.Name | html %]">[% Data.LevelSpace | html %]<a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=ServiceEdit;ServiceID=[% Data.ServiceID | uri %]">[% Data.Name | truncate(80) | html %]</a></td>
-                            <td title="[% Data.Comment | html %]">[% Data.Comment | truncate(20) | html %]</td>
+                            <td title="[% Data.Name | html %]">[% Data.LevelSpace | html %]<a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=ServiceEdit;ServiceID=[% Data.ServiceID | uri %]">[% Data.Name | truncate(180) | html %]</a></td>
+                            <td title="[% Data.Comment | html %]">[% Data.Comment | truncate(120) | html %]</td>
                             <td>[% Translate(Data.Valid) | html %]</td>
                             <td>[% Data.ChangeTime | Localize("TimeShort") %]</td>
                             <td>[% Data.CreateTime | Localize("TimeShort") %]</td>
@@ -162,7 +162,7 @@
 # ---
 # RotherOSS
 # ---
-                        <label for="TicketTypeIDs">[% Translate("Show services for the following ticket types") | html %]: </label>
+                        <label for="TicketTypeIDs">[% Translate("Service depends on the following ticket types") | html %]: </label>
                         <div class="Field">
                             [% Data.TicketTypeOptionStrg %]
                         </div>
@@ -304,22 +304,57 @@
             </div>
 [% RenderBlockEnd("ServiceEdit") %]
         </div>
-        <div class="WidgetSimple SpacingTop">
+[% RenderBlockStart("ServiceReference") %]
+        <div class="WidgetSimple SpacingTop Collapsed">
             <div class="Header">
-                <h2>[% Translate("Reference") | html %]</h2>
+                <div class="WidgetAction Toggle">
+                    <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
+                </div>
+                <h2>[% Translate("Option Reference") | html %]</h2>
             </div>
             <div class="Content">
 
                 <p>[% Translate("You can use the following options") | html %]:</p>
                 <dl>
-                    <dt><code>Show services for the following ticket types:</code></dt>
+                    <dt>[% Translate("Show services for the following ticket types") | html %]:</dt>
                     <dd>
-                        [% Translate("Inside the customer dashboard service catalog tile add the following ticket types to create a ticket. Please enable the systemconfiguration ServiceCatalog::CreateTypeServiceRelatedAcls and ServiceCatalog::CreateTypeServiceRelatedAcls::Options to limit services type based for the other ticket masks. For that reason we deploy ACLs at Admin -> ACL.") | html %]
+                        [% Translate('Within the ServiceCatalogue tile in the customer dashboard, it is possible to show ticket types for preconfigured ticket creation inside the service description. Furthermore, it is possible to restrict the services for other screens using the ticket types set here. If you wish to do this, please activate the options "ServiceCatalog::CreateTypeServiceRelatedAcls" and "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" in the OTOBO system configuration. The restriction is made via automatically generated ACLs, which can be viewed under "Admin -> Access Control Lists (ACL)". If necessary, please adjust the option "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" according to your requirements.') | html %]
+                    </dd>
+
+                    <dt>[% Translate("Ticket destination queue") | html %]:</dt>
+                    <dd>
+                        [% Translate('If we work service-based, we do not want to offer the customer a choice of queues in the customer portal when creating a ticket, but decide on the basis of the service into which queue (or which team of agents) the ticket should be processed first. In order to use this option sensibly, please deactivate the option "Ticket::Frontend::CustomerTicketMessage###Queue" and set a sensible default queue in the option "Ticket::Frontend::CustomerTicketMessage###QueueDefault". As soon as you set a "Ticket destination queue" here in the service, the ticket will immediately be created in this queue. If the field remains empty, the default queue configured above will be used.') | html %]
+                    </dd>
+
+                    <dt>[% Translate("Customer default service") | html %]:</dt>
+                    <dd>
+                        [% Translate("If you do not assign services to customers or companies individually, but all services are initially offered to your customers for selection, the step of releasing each service as a \"default\" service under \"Admin -> Customer user <-> Service\" (or \"Customer <-> Service\") can be bypassed here. Of course, in the next step it is possible to restrict the services via ACLs.") | html %]
+                    </dd>
+
+                    <dt>[% Translate("Criticality") | html %]:</dt>
+                    <dd>
+                        [% Translate("Here, there is the possibility to automatically calculate the correct ticket priority in the background based on the dynamic field \"ITSMCriticality\" and \"ITSMImpact\". Please activate the option \"Ticket::EventModulePost###9700-SetDynamicFieldCriticalityFromService\" and the option \"Ticket::EventModulePost###9800-SetPriorityFromCriticalityAndImpactMatrix\". In the next step, you have the possibility using \"Admin -> Criticality ↔ Impact ↔ Priority\" to set the priority using a matrix.") | html %]
+                    </dd>
+
+                    <dt>[% Translate("Description (short)") | html %]:</dt>
+                    <dd>
+                        [% Translate("Short summary of the service, mainly used in the CustomerDashboard.") | html %]
+                    </dd>
+
+                    <dt>[% Translate("Description (long)") | html %]:</dt>
+                    <dd>
+                        [% Translate("Description of the service. Screenshots and tables are also allowed. Please ensure the correct width of the image for screenshots. This can be adjusted in the ckeditor after uploading the screenshot. A width of 600px has proven to be useful or you can configure a \"max-width\" of 95% under Advanced.") | html %]
+                    </dd>
+
+                    <dt>[% Translate("Add more service catalog fields") | html %]:</dt>
+                    <dd>
+                        [% Translate("You have the option of adding further fields here in the service catalogue at any time. To do this, please go to \"Admin -> DynamicFields\" and create the new field of the object type \"Service\". You can then activate the field for the customer dashboard under \"Admin -> DynamicField Screens\" by assigning it under \"CustomerDashboardTile ServiceCatalog\".") | html %]
                     </dd>
 
                 </dl>
             </div>
         </div>
+[% RenderBlockEnd("ServiceReference") %]
     </div>
     <div class="Clear"></div>
 </div>

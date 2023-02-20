@@ -106,7 +106,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 .oooParentServiceList > li:hover {
     cursor: pointer;
-    outline: 2px solid var(--colMainLight);
+    border: 2px solid var(--colMainLight);
     color: var(--colMainLight);
 }
 
@@ -152,15 +152,15 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooDetailedView .oooServiceBreadcrumb {
-    width: 675px;
+    width: 600px;
     left: 85px;
-    top: 71px;
+    top: 100px;
 }
 
 .oooServiceBreadcrumb {
     position: absolute;
     width: 824px;
-    height: 29px;
+    height: 20px;
     left: 184px;
     top: 127px;
 }
@@ -191,7 +191,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     -webkit-font-smoothing: antialiased;
 }
 
-.oooScrollLeft:before {
+.oooScrollLeft {
     content: "\e903";
     position: absolute;
     left: 150px;
@@ -202,11 +202,11 @@ ul.oooBreadcrumbServiceList > li:first-child {
     vertical-align: text-bottom;
 }
 
-.oooScrollRight:before {
+.oooScrollRight {
     content: "\e904";
     position: absolute;
-    right: 0px;
-    height: 150px;
+    right: 150px;
+    height: 15px;
     top: 135px;
     width: 15px;
     text-align: center;
@@ -214,7 +214,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooDetailedView .oooServiceBreadcrumbField {
-    width: 675px;
+    width: 600px;
 }
 
 .oooBreadcrumbServiceList {
@@ -238,7 +238,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     padding: 8px 24px;
     gap: 13px;
     width: auto;
-    height: 29px;
+    height: 20px;
     background: rgba(127, 128, 157, 0.08);
     border-radius: 76px;
     flex: none;
@@ -261,8 +261,8 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooBreadcrumbServiceList > li {
-    font-size: 12px;
-    line-height: 15px;
+    font-size: 11px;
+    line-height: 13px;
     color: var(--colTextLight);
 }
 
@@ -350,14 +350,17 @@ ul.oooBreadcrumbServiceList > li:first-child {
     width: 319px;
     height: 280px;
     background: #ffffff;
-    border-radius: 10px;
+    border-radius: 16px;
     /* flex: none; */
     /* order: 0; */
     /* flex-grow: 0; */
 }
 
 .oooServiceContainer:hover, .oooDetailedTicketTypeList > a:hover {
-    outline: 2px solid var(--colMainLight);
+    border: 2px solid var(--colMainLight);
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     background: transparent;
     cursor: pointer;
     color: var(--colMainLight);
@@ -503,7 +506,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     flex-direction: row;
     align-items: flex-end;
     padding: 16px 24px;
-    width: 319px;
+//    width: 319px;
     height: 48px;
     border-top: 1px solid rgba(127, 128, 157, 0.16);
     flex: none;
@@ -583,7 +586,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     width: 750px;
     height: 529px;
     left: 44px;
-    top: 119px;
+    top: 144px;
     overflow-y: hidden;
     overflow-x: hidden;
 }
@@ -827,7 +830,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     gap: 8px;
     width: 16px;
     height: 16px;
-    background: var(--colTextLight);
+    background: var(--colTextDark);
     border-radius: 40px;
     margin-left: 5px;
     margin-top: 2px;
@@ -940,8 +943,8 @@ span.oooSLAValue {
 }
 
 .Dialog > .Header .Close {
-    left: 50px;
-    top: 79px;
+    left: 56px;
+    top: 46px;
 }
 
 .Dialog > .Header .ooofo {
@@ -1078,44 +1081,11 @@ span.oooSLAValue {
     zoom: 0.3;
 }
 
-/* Custom Changes */
-
-#oooTile01 {
-    grid-area: 5 / 9 / 5 / 13;
-}
-
-/* #oooTile04 {
-    grid-area: 5 / 5 / 5 / 9;
-} */
-
-/* #oooTile02 {
-    grid-area: 1 / 1 / 17 / 5;
-}
-
-#oooTile03 {
-    grid-area: 9 / 5 / 20 / 13;
-}
-
-#oooTile04 {
-    grid-area: 1 / 13 / 5 / 5;
-}
-*/
 #oooTile07 {
     padding: 24px 32px;
 }
 
 @media only screen and (min-width: 1280px) {
-    #oooTile02 {
-        grid-area: 1 / 1 / 17 / 5;
-    }
-    
-    #oooTile03 {
-        grid-area: 9 / 5 / 20 / 13;
-    }
-    
-    #oooTile04 {
-        grid-area: 1 / 13 / 5 / 5;
-    }
     
     #oooTile07 {
         grid-area: 5 / 13 / 9 / 5;
@@ -1124,25 +1094,6 @@ span.oooSLAValue {
 }
 
 @media only screen and (min-width: 880px) and (max-width: 1279px) {
-    #oooTile01 {
-        grid-area: 1 / 4 / 4 / 7;
-    }
-
-    #oooTile02 {
-        grid-area: 1 / 1 / 7 / 4;
-    }
-    
-    #oooTile03 {
-        grid-area: 10 / 1 / 20 / 7;
-    }
-    
-    #oooTile04 {
-        grid-area: 1 / 4 / 7 / 7;
-    }
-    
-    #oooTile06 {
-        grid-area: 10 / 4 / 13 / 7;
-    }
 
     #oooTile07 {
         grid-area: 7 / 1 / 10 / 7;
@@ -1150,21 +1101,6 @@ span.oooSLAValue {
 }
 
 @media only screen and (min-width: 768px) and (max-width: 879px) {
-    #oooTile02 {
-        grid-area: 4 / 1 / 6 / 2;
-    }
-    
-    #oooTile03 {
-        grid-area: 6 / 1 / 10 / 2;
-    }
-    
-    #oooTile04 {
-        grid-area: 1 / 1 / 3 / 1;
-    }
-
-    #oooTile06 {
-        grid-area: 7 / 1 / 8 / 2;
-    }
     
     #oooTile07 {
         grid-area: 3 / 1 / 4 / 2;
@@ -1176,21 +1112,6 @@ span.oooSLAValue {
 }
 
 @media only screen and (min-width: 436px) and (max-width: 767px) {
-    #oooTile02 {
-        grid-area: 3 / 1 / 5 / 2;
-    }
-    
-    #oooTile03 {
-        grid-area: 5 / 1 / 9 / 2;
-    }
-    
-    #oooTile04 {
-        grid-area: 1 / 1 / 2 / 2;
-    }
- 
-    #oooTile06 {
-        grid-area: 7 / 1 / 8 / 2;
-    }
     
     #oooTile07 {
         grid-area: 3 / 1 / 2 / 2;
@@ -1198,25 +1119,6 @@ span.oooSLAValue {
 }
 
 @media only screen and (max-width: 435px) {
-    #oooTile02 {
-        grid-area: 3 / 1 / 5 / 2;
-        display: block;
-    }
-    
-    #oooTile03 {
-        grid-area: 5 / 1 / 9 / 2;
-        display: block;
-    }
-    
-    #oooTile04 {
-        grid-area: 1 / 1 / 2 / 2;
-        display: block;
-    }
- 
-    #oooTile06 {
-        grid-area: 7 / 1 / 8 / 2;
-        display: block;
-    }
     
     #oooTile07 {
         grid-area: 3 / 1 / 2 / 2;
