@@ -139,7 +139,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
             }
         // If there is no subservice, show a detailed view of that service.
         } else if (Subservices.length == 0) {
-            return TargetNS.DisplayDetailedService(ServiceID);
+            return TargetNS.DisplayDetailedService(ServiceID, $('.oooServiceWrapper').html().trim().length > 0);
         }
 
         $('.oooServiceWrapper').html('');
