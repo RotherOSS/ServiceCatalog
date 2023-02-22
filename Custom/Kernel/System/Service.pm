@@ -807,7 +807,7 @@ sub ServiceAdd {
 # ---
 # RotherOSS
 # ---
-    for my $Argument (qw(Name ValidID UserID DescriptionShort TypeID Criticality)) {
+    for my $Argument (qw(Name ValidID UserID DescriptionShort Criticality)) {
 # ---
         if ( !$Param{$Argument} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
