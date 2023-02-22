@@ -42,7 +42,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
                     AllowAutoGrow: false,
                     Stacked: true
                 });
-
+                $('.Dialog.Modal').attr({'data-service-id': ServiceID});
                 $('.Dialog.Modal').addClass('oooServiceCatalogModal');
                 // The search field is not needed anymore
                 // $('.Dialog.Modal .oooServiceField').appendTo('.Dialog.Modal > .Header').find('select').attr('id', 'ModalServiceID');
@@ -255,6 +255,26 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
                 AllowAutoGrow: false,
                 Stacked: true
             });
+            const o = new MutationObserver(mrs => {
+                mrs.forEach(mr => {
+                    if (
+                        'childList' === mr.type &&
+                        Array.from(mr.removedNodes).find(
+                            rn => rn.getAttribute('data-stacked')
+                        )
+                    ) {
+                        let OldServiceID = $('.Dialog.Modal').attr('data-service-id');
+                        $('.Dialog.Modal').remove();
+                        while ($('#Overlay').length) {
+                            $('#Overlay').remove();
+                        }
+                        o.disconnect();
+                        $('.oooServiceIDAvailable[data-service-id="' + OldServiceID + '"]').click();
+                        TargetNS.DisplayDetailedService(ServiceID);
+                    }
+                });
+            });
+            o.observe($('div.Dialog[data-stacked]').get(-1).parentElement, { childList: true });
         } else {
             $('.oooServiceWrapper').html('');
             $(Detailed).appendTo('.oooServiceWrapper');
