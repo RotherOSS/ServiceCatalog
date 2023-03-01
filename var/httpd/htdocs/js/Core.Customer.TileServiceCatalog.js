@@ -66,6 +66,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
             }
             var ServiceID = $(this).attr('data-service-id');
             $('#ModalServiceID').val(ServiceID).trigger('redraw.InputField');
+            $($('.Dialog.Modal').get(0)).attr({'data-service-id': $($('.Dialog.Modal').get(0)).attr('data-service-id') + ' ' + ServiceID});
             TargetNS.DisplayServiceList(ServiceID);
         });
 
@@ -255,6 +256,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
                 AllowAutoGrow: false,
                 Stacked: true
             });
+            // $('.oooServiceBreadcrumbWrap').appendTo($('.Dialog.Modal > .Header'));
             const o = new MutationObserver(mrs => {
                 mrs.forEach(mr => {
                     if (
@@ -263,14 +265,15 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
                             rn => rn.getAttribute('data-stacked')
                         )
                     ) {
-                        let OldServiceID = $('.Dialog.Modal').attr('data-service-id');
+                        let OldServiceID = $('.Dialog.Modal').attr('data-service-id').split(/ /).at(-2);
                         $('.Dialog.Modal').remove();
                         while ($('#Overlay').length) {
                             $('#Overlay').remove();
                         }
                         o.disconnect();
-                        $('.oooServiceIDAvailable[data-service-id="' + OldServiceID + '"]').click();
-                        TargetNS.DisplayDetailedService(ServiceID);
+                        $($('.oooServiceIDAvailable').get(0)).click();
+                        $('.oooServiceIDAvailable[data-service-id="All"]').click();
+                        $('.oooServiceContainer[data-service-id="' + OldServiceID + '"]').click();
                     }
                 });
             });
