@@ -139,19 +139,18 @@
         <Navigation>Core::Acl</Navigation>
         <Value>
             <Hash>
-		<Item Key="FrontendAction">
+		        <Item Key="FrontendAction">
                     <Array>
-			<Item>CustomerTicketMessage</Item>
-			<Item>CustomerDashboard</Item>
+			            <Item>CustomerTicketMessage</Item>
                         <Item>AgentTicketPhone</Item>
-			<Item>AgentTicketEmail</Item>	
-	                <Item>AgentTicketFreeText</Item>		
-	            </Array>
-	        </Item>
+			            <Item>AgentTicketEmail</Item>	
+	                    <Item>AgentTicketFreeText</Item>		
+	                </Array>
+	            </Item>
                 <Item Key="GenerateInitalACLToDisableAllServices">1</Item>
                 <Item Key="ConfigChange">Possible</Item>
-		<Item Key="ACLDeploy">1</Item>
-		<Item Key="ACLValidID">1</Item>
+		        <Item Key="ACLDeploy">1</Item>
+		        <Item Key="ACLValidID">1</Item>
             </Hash>
         </Value>
     </Setting>

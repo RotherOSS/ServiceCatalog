@@ -79,28 +79,6 @@ sub Run {
 
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-use Data::Dumper;
-print STDERR Dumper(\%TicketTypeService);
     $Self->Print("<green>Done.</green>\n");
     return $Self->ExitCodeOk();
 }
