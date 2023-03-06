@@ -17,7 +17,7 @@
     <div class="oooServiceCatalogWrapper">
         <ul class="oooParentServiceList">
 [% RenderBlockStart("ParentService") %]
-            <li title="[% Translate('Show details of this service.') | html %]" data-service-id="[% Data.ServiceID | html %]" class="oooServiceIDAvailable">[% Data.NameShort | html %]</li>
+            <li title="[% Translate('Show details of this service.') | html %]" data-service-id="[% Data.ServiceID | html %]" class="oooServiceIDAvailable">[% Translate(Data.NameShort) | html %]</li>
 [% RenderBlockEnd("ParentService") %]
 [% RenderBlockStart("ParentServiceMore") %]
             <li class="oooServiceMore oooServiceIDAvailable" data-service-id="All">
