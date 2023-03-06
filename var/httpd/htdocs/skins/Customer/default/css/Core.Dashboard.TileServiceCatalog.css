@@ -54,16 +54,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 .oooParentServiceList {
     display: flex;
-    /* flex-direction: row; */
-    /* align-items: flex-start; */
-    /* padding: 0px; */
     gap: 16px;
-    /* height: 128px; */
-    /* flex: none; */
-    /* order: 1; */
-    /* align-self: stretch; */
-    /* flex-grow: 0;
-    z-index: 0; */
 }
 
 .oooParentServiceList > li {
@@ -1098,6 +1089,23 @@ span.oooSLAValue {
     #oooTile07 {
         grid-area: 7 / 1 / 10 / 7;
     }
+
+    .Dialog > .Header .oooServiceFieldSearch > input {
+        width: 668px;
+    }
+
+    .oooServiceBreadcrumbField {
+        width: 620px;
+    }
+
+    .oooServiceBreadcrumb {
+        left: 124px;
+        width: 640px;
+    }
+
+    .oooScrollLeft {
+        left: 114px;
+    } 
 }
 
 @media only screen and (min-width: 768px) and (max-width: 879px) {
@@ -1105,9 +1113,142 @@ span.oooSLAValue {
     #oooTile07 {
         grid-area: 3 / 1 / 4 / 2;
     }
+    
+    .oooParentServiceList {
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 0px;
+        gap: 8px;
+        width: 100%;
+        max-width: 420px;
+        height: 128px;
+        overflow-x: scroll;
+        flex: none;
+        order: 1;
+        flex-grow: 0;
+        z-index: 0;
+    }
 
-    .oooServiceCatalogWrapper {
-        /* max-width: 420px; */
+    .oooParentServiceList > li {
+        flex-direction: row;
+        width: 274.75px;
+        flex: none;
+        order: 0;
+        align-self: stretch;
+        flex-grow: 0;
+    }
+
+    .Dialog > .Header .oooServiceFieldSearch > input {
+        width: 550px;
+    }
+
+    .oooServiceBreadcrumbField {
+        width: 530px;
+    }
+
+    .oooServiceBreadcrumb {
+        left: 124px;
+        width: 530px;
+    }
+
+    .oooScrollLeft {
+        left: 114px;
+    } 
+}
+
+@media only screen and (max-width: 767px) {
+    .oooParentServiceList {
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 0px;
+        gap: 8px;
+        width: 100%;
+        max-width: 420px;
+        height: 128px;
+        overflow-x: scroll;
+        flex: none;
+        order: 1;
+        flex-grow: 0;
+        z-index: 0;
+    }
+
+    .oooBreadcrumbServiceList {
+        max-width: 320px;
+    }
+
+    .oooParentServiceList > li {
+        flex-direction: row;
+        width: 274.75px;
+        flex: none;
+        order: 0;
+        align-self: stretch;
+        flex-grow: 0;
+    }
+
+    .oooServiceBreadcrumb {
+        left: 20px;
+        max-width: 320px;
+    }
+
+    .oooServiceResult {
+        display: none;
+    }
+
+    .oooServiceContainer:hover, .oooDetailedTicketTypeList > a:hover {
+        width: 100%;
+        left: 0 !important;
+        top: 50px !important;
+    }
+
+    .oooServiceBreadcrumbField {
+        width: 320px;
+    }
+
+    .Dialog {
+        left: 0 !important;
+        width: 100%;
+        top: 50px !important;
+        bottom: 0;
+    }
+
+    .Dialog > .Content {
+        padding: 80px 20px 20px 20px;
+    }
+
+    .Dialog > .Header {
+        padding: 0;
+    }
+
+    .Dialog > .Header .Close {
+        width: 100%;
+        height: 30px;
+        left: 0;
+        top: 6px;
+    }
+
+    .Dialog > .Header .ooofo {
+        position: absolute;
+        width: 4px;
+        height: 40px;
+        background: #E5E5EB;
+        left: 50%;
+        transform: rotate(90deg);
+        border-radius: 20px;
+    }
+
+    .Dialog > .Header .Close .ooofo-close:before {
+        display: none;
+    }
+
+    .Dialog > .Header .oooServiceFieldSearch > input {
+        width: 312px;
+        border-radius: 0;
+        border: none;
+        border-bottom: 1px solid var(--colBGLight);
+    }
+
+    .oooTile_ServiceCatalog > h2 {
+        display: flex;
     }
 }
 
@@ -1122,6 +1263,18 @@ span.oooSLAValue {
     
     #oooTile07 {
         grid-area: 3 / 1 / 2 / 2;
-        display: block;
+        display: grid;
+    }
+
+    .oooParentServiceList {
+        max-width: 360px;
+    }
+
+    .oooDetailedLeft {
+        width: 300px;
+    }
+
+    .oooDetailedRight {
+        width: 375px;
     }
 }
