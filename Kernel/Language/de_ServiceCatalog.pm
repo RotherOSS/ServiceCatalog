@@ -77,6 +77,7 @@ sub Data {
     $Self->{Translation}->{'Additional information'} = 'Zusatzinformationen';
     $Self->{Translation}->{'Service hours'} = 'Servicezeiten';
     $Self->{Translation}->{'o\'clock'} = 'Uhr';
+    $Self->{Translation}->{'Further information'} = 'Weitere Informationen';
 
     # Perl Module: Kernel/Modules/CustomerTileServiceCatalog.pm
 
@@ -159,29 +160,30 @@ sub Data {
         'Diese Option erlaubt die automatische Generierung von ACL\'s, die die Anzeige von Services in Abhängigkeit der im Servicekatalog zugewisenen Typen einschränkt. Um ACL\'s für bereits angelegte Services zu erstellen, kann auch das Console-Skript "AddBulkACL\ verwendet werden."';
 
     push @{ $Self->{JavaScriptStrings} // [] }, (
-    '%s results',
-    '%s results for %s',
-    'Additional information',
-    'All',
-    'Create %s',
-    'Create Ticket',
-    'Create a new ticket for this service.',
-    'Create a new ticket of type %s.',
-    'Details',
-    'FAQ article on this topic',
-    'First Response Time',
-    'More details',
-    'Search',
-    'Service Information',
-    'Service hours',
-    'Show %s sub-service(s)',
-    'Show details of this service.',
-    'Show or hide the content',
-    'Solution Time',
-    'Sub-Service(s)',
-    'hour(s)',
-    'o\'clock',
-    'sub-service(s) available',
+        '%s results',
+        '%s results for %s',
+        'Additional information',
+        'All',
+        'Create %s',
+        'Create Ticket',
+        'Create a new ticket for this service.',
+        'Create a new ticket of type %s.',
+        'Details',
+        'FAQ article on this topic',
+        'First Response Time',
+        'More details',
+        'Search',
+        'Service Information',
+        'Service hours',
+        'Show %s sub-service(s)',
+        'Show details of this service.',
+        'Show or hide the content',
+        'Solution Time',
+        'Sub-Service(s)',
+        'hour(s)',
+        'o\'clock',
+        'Further information',
+        'sub-service(s) available',
     );
 
 }

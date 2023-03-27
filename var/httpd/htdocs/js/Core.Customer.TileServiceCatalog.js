@@ -125,6 +125,20 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         $(document).on('click', '.oooDesciptionHeader > i', function(e) {
             return false;
         });
+
+        // Toggle the sidebar information for mobile views.
+        $(document).on('click', '#oooDetailedToggleSidebar', function() {
+            if (!$('.oooDetailedRight').is(':visible')) {
+                $('.oooDetailedRight').show();
+                $('.oooDetailedLeft').hide();
+                $('.oooServiceBreadcrumbWrap').hide();
+            } else {
+                $('.oooDetailedLeft').show();
+                $('.oooDetailedRight').hide();
+                $('.oooServiceBreadcrumbWrap').show();
+            }
+        });
+
     }
 
     TargetNS.DisplayServiceList = function(ServiceID) {
