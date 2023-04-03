@@ -20,6 +20,16 @@ var Core = Core || {};
 Core.Customer = Core.Customer || {};
 
 Core.Customer.TileServiceCatalog = (function (TargetNS) {
+    const $l = e => $($(e).get(-1)); // last matched elem
+    const clone_offset_dialog = () => {
+        const last_dialog = $l('.Dialog.Modal');
+        last_dialog.parent().append(last_dialog.clone(true));
+        const new_dialog = $l('.Dialog.Modal');
+        const offset = new_dialog.offset();
+        offset.top += 30;
+        offset.left += 30;
+        new_dialog.offset(offset);
+    };
 
     TargetNS.Init = function() {
         // Listen to document to recognize DOM changes.
@@ -42,7 +52,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
                     AllowAutoGrow: false,
                     Stacked: true
                 });
-                $('.Dialog.Modal').attr({'data-service-id': ServiceID});
+
                 $('.Dialog.Modal').addClass('oooServiceCatalogModal');
                 // The search field is not needed anymore
                 // $('.Dialog.Modal .oooServiceField').appendTo('.Dialog.Modal > .Header').find('select').attr('id', 'ModalServiceID');
@@ -64,9 +74,9 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
                 ) {
                 return;
             }
+            clone_offset_dialog();
             var ServiceID = $(this).attr('data-service-id');
             $('#ModalServiceID').val(ServiceID).trigger('redraw.InputField');
-            $($('.Dialog.Modal').get(0)).attr({'data-service-id': $($('.Dialog.Modal').get(0)).attr('data-service-id') + ' ' + ServiceID});
             TargetNS.DisplayServiceList(ServiceID);
         });
 
@@ -74,7 +84,8 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         $(document).on('click', '.oooServiceBottom, .oooServiceActionDetails', function() {
             var ServiceID = $(this).parent().attr('data-service-id');
             if (!ServiceID) return;
-            TargetNS.DisplayDetailedService(ServiceID, true);
+            clone_offset_dialog();
+            TargetNS.DisplayDetailedService(ServiceID);
             return;
         });
 
@@ -154,27 +165,27 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
             }
         // If there is no subservice, show a detailed view of that service.
         } else if (Subservices.length == 0) {
-            return TargetNS.DisplayDetailedService(ServiceID, $('.oooServiceWrapper').html().trim().length > 0);
+            return TargetNS.DisplayDetailedService(ServiceID);
         }
 
-        $('.oooServiceWrapper').html('');
-        $('.oooServiceResult').removeClass('oooHidden');
+        $l('.oooServiceWrapper').html('');
+        $l('.oooServiceResult').removeClass('oooHidden');
         // $('.oooServiceBreadcrumb').addClass('oooHidden');
-        $('.oooServiceFieldSearch > input').focus(); // Autofocus the search field.
+        $l('.oooServiceFieldSearch > input').focus(); // Autofocus the search field.
         // $('.oooServiceField').removeClass('oooHidden');
-        $('.oooServiceFieldSearch').removeClass('oooHidden');
-        $('.Dialog').removeClass('oooDetailedView');
+        $l('.oooServiceFieldSearch').removeClass('oooHidden');
+        $l('.Dialog').removeClass('oooDetailedView');
 
 	// Try to set the dynamic top
 //        var Top = $('.oooServiceBreadcrumb').offset().top - $('.oooBreadcrumbServiceList > li').height() / 2;
 //	$(".oooScrollLeft, .oooScrollRight").css('top', Top);
 
-        var Top = $('.oooServiceBreadcrumb').position().top + $('.oooServiceBreadcrumb').height() / 2 - 7;
-        var Left = $('.oooServiceBreadcrumb').position().left - 30;
-        var Right = $('.oooServiceBreadcrumb').position().left + $('.oooServiceBreadcrumb').width() + 30;
-        $(".oooScrollLeft, .oooScrollRight").css('top', Top);
-        $(".oooScrollLeft").css('left', Left);
-        $(".oooScrollRight").css('left', Right); 
+        var Top = $l('.oooServiceBreadcrumb').position().top + $l('.oooServiceBreadcrumb').height() / 2 - 7;
+        var Left = $l('.oooServiceBreadcrumb').position().left - 30;
+        var Right = $l('.oooServiceBreadcrumb').position().left + $l('.oooServiceBreadcrumb').width() + 30;
+        $l(".oooScrollLeft, .oooScrollRight").css('top', Top);
+        $l(".oooScrollLeft").css('left', Left);
+        $l(".oooScrollRight").css('left', Right); 
 
         // Get all subservices for the search function.
         var AllSubservices = TargetNS.GetAllSubservices(ServiceID);
@@ -185,7 +196,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
                 Class = 'oooHidden oooInitialHidden';
             }
             var DisplayServiceHTML = TargetNS.DisplayService(SubserviceID, Class);
-            $(DisplayServiceHTML).appendTo('.oooServiceWrapper');
+            $(DisplayServiceHTML).appendTo($l('.oooServiceWrapper'));
         } 
 
         TargetNS.CreateBreadcrumb(ServiceID);
@@ -208,7 +219,8 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         return Container;
     }
 
-    TargetNS.DisplayDetailedService = function(ServiceID, StackDialog = false) {
+    TargetNS.DisplayDetailedService = function(ServiceID) {
+        $l('.oooServiceWrapper').html('');
         var Service = JSON.parse(Core.Config.Get('ServiceList'))[ServiceID];
         var Baselink = Core.Config.Get('Baselink');
         var IframeLink = Baselink + 'Action=CustomerTileServiceCatalog;Subaction=HTMLView;ServiceID=' + ServiceID + ';' + Core.Config.Get('SessionName') + '=' + Core.Config.Get('SessionID')
@@ -258,65 +270,29 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
             NumberOfSubservices: TargetNS.GetSubservices(ServiceID).length,
             SubservicesHTML: SubservicesHTML,
         });
-
-        if (StackDialog) {
-            Core.UI.Dialog.ShowDialog({
-                HTML: Detailed,
-                Modal: true,
-                CloseOnClickOutside: true,
-                CloseOnEscape: true,
-                PositionTop: '30px',
-                PositionLeft: 'Center',
-                AllowAutoGrow: false,
-                Stacked: true
-            });
-            // $('.oooServiceBreadcrumbWrap').appendTo($('.Dialog.Modal > .Header'));
-            const o = new MutationObserver(mrs => {
-                mrs.forEach(mr => {
-                    if (
-                        'childList' === mr.type &&
-                        Array.from(mr.removedNodes).find(
-                            rn => rn.getAttribute('data-stacked')
-                        )
-                    ) {
-                        let OldServiceID = $('.Dialog.Modal').attr('data-service-id').split(/ /).at(-2);
-                        $('.Dialog.Modal').remove();
-                        while ($('#Overlay').length) {
-                            $('#Overlay').remove();
-                        }
-                        o.disconnect();
-                        $($('.oooServiceIDAvailable').get(0)).click();
-                        $('.oooServiceIDAvailable[data-service-id="All"]').click();
-                        $('.oooServiceContainer[data-service-id="' + OldServiceID + '"]').click();
-                    }
-                });
-            });
-            o.observe($('div.Dialog[data-stacked]').get(-1).parentElement, { childList: true });
-        } else {
-            $('.oooServiceWrapper').html('');
-            $(Detailed).appendTo('.oooServiceWrapper');
-        }
+        
+        $(Detailed).appendTo($l('.oooServiceWrapper'));
 
         // Resize iFrame.
-        var IFrame = $('.oooServiceWrapper').find('[data-service-id="' + ServiceID + '"]').find('iframe');
+        var IFrame = $l('.oooServiceWrapper').find('[data-service-id="' + ServiceID + '"]').find('iframe');
         ResizeIframe(IFrame);
         Core.UI.Init();
 
         TargetNS.CreateBreadcrumb(ServiceID);
 
-        $('.Dialog').addClass('oooDetailedView');
-        $('.oooServiceResult').addClass('oooHidden');
+        $l('.Dialog').addClass('oooDetailedView');
+        $l('.oooServiceResult').addClass('oooHidden');
         // $('.oooServiceBreadcrumb').removeClass('oooHidden').appendTo('.Dialog > .Header');
         // $('.Dialog > .Content .oooDetailedTicketTypeList').appendTo('.Dialog > .Header');
-        $('.oooServiceField').addClass('oooHidden');
-        $('.oooServiceFieldSearch').addClass('oooHidden');
+        $l('.oooServiceField').addClass('oooHidden');
+        $l('.oooServiceFieldSearch').addClass('oooHidden');
 	// Try to set the dynamic top
-	var Top = $('.oooServiceBreadcrumb').position().top + $('.oooServiceBreadcrumb').height() / 2 - 7;
-        var Left = $('.oooServiceBreadcrumb').position().left - 30;
-	var Right = $('.oooServiceBreadcrumb').position().left + $('.oooServiceBreadcrumb').width() + 30;
-	$(".oooScrollLeft, .oooScrollRight").css('top', Top);
-	$(".oooScrollLeft").css('left', Left);
-	$(".oooScrollRight").css('left', Right);    
+	var Top = $l('.oooServiceBreadcrumb').position().top + $('.oooServiceBreadcrumb').height() / 2 - 7;
+        var Left = $l('.oooServiceBreadcrumb').position().left - 30;
+	var Right = $l('.oooServiceBreadcrumb').position().left + $('.oooServiceBreadcrumb').width() + 30;
+	$l(".oooScrollLeft, .oooScrollRight").css('top', Top);
+	$l(".oooScrollLeft").css('left', Left);
+	$l(".oooScrollRight").css('left', Right);    
 
     }
 
@@ -328,9 +304,9 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         var NumberOfServices = $('.oooServiceContainer:not(.oooHidden)').length;
 
         if (SelectedService) {
-            $('.oooServiceResult').text(Core.Language.Translate('%s results for %s', NumberOfServices, SelectedService.NameShort));
+            $l('.oooServiceResult').text(Core.Language.Translate('%s results for %s', NumberOfServices, SelectedService.NameShort));
         } else {
-            $('.oooServiceResult').text(Core.Language.Translate('%s results', NumberOfServices));
+            $l('.oooServiceResult').text(Core.Language.Translate('%s results', NumberOfServices));
         }
 
         var LiString = '';
@@ -365,7 +341,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         //     LiString = '<li data-service-id="' + SelectedService.ServiceID + '" class="oooServiceIDAvailable">' + SelectedService.NameShort + '</li><i class="ooofo ooofo-arrow_r"></i>' + LiString;
         // }
 
-        $('.oooBreadcrumbServiceList').html(LiString);
+        $l('.oooBreadcrumbServiceList').html(LiString);
 
         // Scroll services list.
         const goLeft = crumb => crumb.scrollLeft(crumb.scrollLeft() - crumb.width());

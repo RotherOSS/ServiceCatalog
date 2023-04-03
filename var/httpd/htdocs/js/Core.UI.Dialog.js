@@ -713,40 +713,40 @@ Core.UI.Dialog = (function (TargetNS) {
         // publish close event
         Core.App.Publish('Event.UI.Dialog.CloseDialog.Close', [$Dialog]);
 
-        if ($Dialog[$Dialog.length - 1].dataset.stacked) {
+        if ($Dialog.length > 1 && $Dialog[$Dialog.length - 1].dataset.stacked) {
             $($Dialog[$Dialog.length - 1]).remove();
         } else {
             $Dialog.remove();
-        }
-        $('#Overlay').remove();
-        $('body').css({
-            'overflow': 'auto'
-        });
-        $(document).unbind('keydown.Dialog').unbind('keypress.Dialog').unbind('click.Dialog');
-        $(window).unbind('resize.Dialog');
-        $('body').css('min-height', 'auto');
+            $('#Overlay').remove();
+            $('body').css({
+                'overflow': 'auto'
+            });
+            $(document).unbind('keydown.Dialog').unbind('keypress.Dialog').unbind('click.Dialog');
+            $(window).unbind('resize.Dialog');
+            $('body').css('min-height', 'auto');
 
-        // Revert orignal html
-        if (InternalDialogCounter) {
-            DialogCopy = Core.Data.Get($('body'), 'DialogCopy');
-            DialogSelectorData = Core.Data.Get($('body'), 'DialogSelector');
-            // Get saved HTML
-            if (typeof DialogCopy !== 'undefined') {
-                BackupHTML = DialogCopy[InternalDialogCounter];
-                $DialogSelector = DialogSelectorData[InternalDialogCounter];
+            // Revert orignal html
+            if (InternalDialogCounter) {
+                DialogCopy = Core.Data.Get($('body'), 'DialogCopy');
+                DialogSelectorData = Core.Data.Get($('body'), 'DialogSelector');
+                // Get saved HTML
+                if (typeof DialogCopy !== 'undefined') {
+                    BackupHTML = DialogCopy[InternalDialogCounter];
+                    $DialogSelector = DialogSelectorData[InternalDialogCounter];
 
-                // If HTML could be restored, write it back into the page
-                if (BackupHTML && BackupHTML.length) {
-                    $DialogSelector.append(BackupHTML);
+                    // If HTML could be restored, write it back into the page
+                    if (BackupHTML && BackupHTML.length) {
+                        $DialogSelector.append(BackupHTML);
+                    }
+
+                    // delete this variable from the object
+                    delete DialogCopy[InternalDialogCounter];
+                    delete DialogSelectorData[InternalDialogCounter];
                 }
 
-                // delete this variable from the object
-                delete DialogCopy[InternalDialogCounter];
-                delete DialogSelectorData[InternalDialogCounter];
+                // write the new DialogCopy back
+                Core.Data.Set($('body'), 'DialogCopy', DialogCopy);
             }
-
-            // write the new DialogCopy back
-            Core.Data.Set($('body'), 'DialogCopy', DialogCopy);
         }
     };
 
