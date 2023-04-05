@@ -176,17 +176,6 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         $l('.oooServiceFieldSearch').removeClass('oooHidden');
         $l('.Dialog').removeClass('oooDetailedView');
 
-	// Try to set the dynamic top
-//        var Top = $('.oooServiceBreadcrumb').offset().top - $('.oooBreadcrumbServiceList > li').height() / 2;
-//	$(".oooScrollLeft, .oooScrollRight").css('top', Top);
-
-        var Top = $l('.oooServiceBreadcrumb').position().top + $l('.oooServiceBreadcrumb').height() / 2 - 7;
-        var Left = $l('.oooServiceBreadcrumb').position().left - 30;
-        var Right = $l('.oooServiceBreadcrumb').position().left + $l('.oooServiceBreadcrumb').width() + 30;
-        $l(".oooScrollLeft, .oooScrollRight").css('top', Top);
-        $l(".oooScrollLeft").css('left', Left);
-        $l(".oooScrollRight").css('left', Right); 
-
         // Get all subservices for the search function.
         var AllSubservices = TargetNS.GetAllSubservices(ServiceID);
         for (var SubserviceID of AllSubservices) {
@@ -284,16 +273,6 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         $l('.oooServiceResult').addClass('oooHidden');
         // $('.oooServiceBreadcrumb').removeClass('oooHidden').appendTo('.Dialog > .Header');
         // $('.Dialog > .Content .oooDetailedTicketTypeList').appendTo('.Dialog > .Header');
-        $l('.oooServiceField').addClass('oooHidden');
-        $l('.oooServiceFieldSearch').addClass('oooHidden');
-	// Try to set the dynamic top
-	var Top = $l('.oooServiceBreadcrumb').position().top + $('.oooServiceBreadcrumb').height() / 2 - 7;
-        var Left = $l('.oooServiceBreadcrumb').position().left - 30;
-	var Right = $l('.oooServiceBreadcrumb').position().left + $('.oooServiceBreadcrumb').width() + 30;
-	$l(".oooScrollLeft, .oooScrollRight").css('top', Top);
-	$l(".oooScrollLeft").css('left', Left);
-	$l(".oooScrollRight").css('left', Right);    
-
     }
 
     TargetNS.CreateBreadcrumb = function(ServiceID) {

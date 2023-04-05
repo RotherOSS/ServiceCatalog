@@ -148,12 +148,12 @@ ul.oooBreadcrumbServiceList > li:first-child {
     top: 100px;
 }
 
+.oooServiceBreadcrumbWrap {
+    margin: 0.3em;
+}
+
 .oooServiceBreadcrumb {
-    position: absolute;
-    width: 824px;
-    height: 20px;
-    left: 184px;
-    top: 127px;
+    display: inline-block;
 }
 
 .oooServiceBreadcrumbField {
@@ -161,7 +161,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     flex-direction: column;
     align-items: flex-start;
     padding: 0px;
-    width: 840px;
+    width: 920px;
     height: 50px;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -171,7 +171,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooScrollLeft, .oooScrollRight {
-    display: block;
+    display: inline-block;
     font-family: 'otobo' !important;
     speak: none;
     font-style: normal;
@@ -184,24 +184,10 @@ ul.oooBreadcrumbServiceList > li:first-child {
 
 .oooScrollLeft {
     content: "\e903";
-    position: absolute;
-    left: 150px;
-    height: 15px;
-    top: 135px;
-    width: 15px;
-    text-align: center;
-    vertical-align: text-bottom;
 }
 
 .oooScrollRight {
     content: "\e904";
-    position: absolute;
-    right: 150px;
-    height: 15px;
-    top: 135px;
-    width: 15px;
-    text-align: center;
-    vertical-align: text-bottom;
 }
 
 .oooDetailedView .oooServiceBreadcrumbField {
