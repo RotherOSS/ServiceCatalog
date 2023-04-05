@@ -35,7 +35,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         // Listen to document to recognize DOM changes.
         $(document).on('click', '.oooServiceIDAvailable', function() {
             var ServiceID = $(this).attr('data-service-id');
-
+            $('.Dialog.Modal .Close').click();
             // Show the dialog if not already open.
             if (!$('.Dialog.Modal').length) {
                 var ModalContainer = Core.Template.Render('Customer/TileServiceCatalogModal', {
