@@ -280,7 +280,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         var SelectedService = Service[ServiceID];
 
         // Show the number of displayed services.
-        var NumberOfServices = $('.oooServiceContainer:not(.oooHidden)').length;
+        var NumberOfServices = $l('.oooServiceContainer:not(.oooHidden)').length;
 
         if (SelectedService) {
             $l('.oooServiceResult').text(Core.Language.Translate('%s results for %s', NumberOfServices, SelectedService.NameShort));
