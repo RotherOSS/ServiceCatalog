@@ -130,7 +130,7 @@ Core.UI.Dialog = (function (TargetNS) {
      *      Must be unbinded when closing the dialog.
      */
     function InitKeyEvent(CloseOnEscape) {
-        var $Dialog = $('div.Dialog:visible');
+        var $Dialog = () => $('div.Dialog:visible');
         /*
          * Opera can't prevent the default action of special keys on keydown. That's why we need a special keypress event here,
          * to prevent the default action for the special keys.
@@ -148,7 +148,7 @@ Core.UI.Dialog = (function (TargetNS) {
             // Tab pressed
             if (Event.keyCode === 9) {
                 // :tabbable probably comes from jquery UI
-                $Tabbables = $('a:visible, input:visible, textarea:visible, select:visible, button:visible', $Dialog);
+                $Tabbables = $('a:visible, input:visible, textarea:visible, select:visible, button:visible', $Dialog());
                 $First = $Tabbables.filter(':first');
                 $Last = $Tabbables.filter(':last');
 
@@ -167,7 +167,7 @@ Core.UI.Dialog = (function (TargetNS) {
             }
             // Escape pressed and CloseOnEscape is true
             else if (Event.keyCode === 27 && CloseOnEscape) {
-                TargetNS.CloseDialog($Dialog);
+                TargetNS.CloseDialog($Dialog());
                 Event.preventDefault();
                 Event.stopPropagation();
                 return false;
