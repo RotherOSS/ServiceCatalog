@@ -142,21 +142,11 @@ ul.oooBreadcrumbServiceList > li:first-child {
     margin-left: 8px;
 }
 
-.oooDetailedView .oooServiceBreadcrumb {
-    width: calc(100% - 180px);
-    /* left: 85px; */
-    /* top: 100px; */
-}
-
 .oooServiceBreadcrumbWrap {
     margin-top: 20px;
     display: flex;
     flex-wrap: nowrap;
     width: 100%;
-}
-
-.Dialog:has(.Content .oooDetailedServiceContainer) .oooServiceBreadcrumbWrap {
-    width: 725px;
 }
 
 .oooServiceBreadcrumb {
@@ -200,10 +190,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
     content: "\e904";
     padding-left: 20px;
     padding-right: 30px;
-}
-
-.oooDetailedView .oooServiceBreadcrumbField {
-    /* width: 830px; */
 }
 
 .oooBreadcrumbServiceList {
@@ -277,18 +263,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
     flex-grow: 0; */
 }
 
-/* .oooDetailedView > .Content {
-    background: #fff;
-} */
-
-.Dialog.oooDetailedView > .Content {
-    padding: 0px 25px;
-}
-
-/* .Dialog.oooDetailedView body {
-    margin: 0;
-} */
-
 .oooDetailedView {
     min-height: 704px;
 }
@@ -297,13 +271,21 @@ ul.oooBreadcrumbServiceList > li:first-child {
     background: #ffffff;
 }
 
-
-/* .Dialog.oooDetailedView {
-    background: #fff !important;
-} */
-
 .Dialog.oooDetailedView > .Header {
     padding-top: 24px;
+    width: 720px;
+}
+
+.oooDetailedView .oooServiceFieldSearch {
+    display: none;
+}
+
+.oooDetailedView .oooServiceBreadcrumb {
+    width: calc(100% - 180px);
+}
+
+.Dialog.oooDetailedView > .Content {
+    padding: 0px 25px;
 }
 
 .oooServiceWrapper > .oooSubservices  {
@@ -573,9 +555,9 @@ ul.oooBreadcrumbServiceList > li:first-child {
 .oooDetailedLeft {
     position: absolute;
     width: 750px;
-    height: 529px;
+    height: 599px;
     left: 44px;
-    top: 170px;
+    top: 100px;
     overflow-y: hidden;
     overflow-x: hidden;
 }
@@ -947,10 +929,6 @@ span.oooSLAValue {
     border: 1px solid var(--colTextLight);
     box-shadow: 0px 29px 49px 8px rgb(0 0 0 / 4%);
     padding-left: 40px;
-}
-
-.Dialog:has(.Content .oooDetailedServiceContainer) > .Header .oooServiceFieldSearch > input {
-    width: 625px;
 }
 
 .Dialog > .Header #ServiceID_Search:before {
