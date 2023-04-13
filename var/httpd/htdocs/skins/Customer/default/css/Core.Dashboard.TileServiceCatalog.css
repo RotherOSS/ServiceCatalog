@@ -58,7 +58,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 }
 
 .oooParentServiceList > li {
-    line-break: anywhere;
+    word-wrap: anywhere;
     box-sizing: border-box;
     display: flex;
     align-items: flex-start;
