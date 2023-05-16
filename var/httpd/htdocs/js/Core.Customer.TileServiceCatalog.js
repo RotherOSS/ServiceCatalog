@@ -115,9 +115,13 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         // Enable the search function.
         $(document).on('keyup', '.Dialog > .Header > .oooServiceFieldSearch > input', function() {
             var SearchString = $(this).val().toLowerCase();
-            $l('.Dialog .oooServiceContainer').each(function() {
+            $l('.Dialog .oooServiceWrapper').find('.oooServiceContainer').each(function() {
                 var ServiceName = $(this).find('.oooServiceName').text();
-                if (ServiceName.toLowerCase().indexOf(SearchString.toLowerCase()) > -1) {
+                var Description = $(this).find('.oooDescriptionShort').text();
+                if (
+                    (ServiceName.toLowerCase().indexOf(SearchString.toLowerCase()) > -1) ||
+                    (Description.toLowerCase().indexOf(SearchString.toLowerCase()) > -1)
+                ) {
                     $(this).removeClass('oooHidden');
                 } else {
                     $(this).addClass('oooHidden');
