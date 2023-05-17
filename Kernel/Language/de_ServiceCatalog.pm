@@ -160,8 +160,8 @@ sub Data {
         'Diese Option erlaubt die automatische Generierung von ACL\'s, die die Anzeige von Services in Abhängigkeit der im Servicekatalog zugewisenen Typen einschränkt. Um ACL\'s für bereits angelegte Services zu erstellen, kann auch das Console-Skript "AddBulkACL\ verwendet werden."';
 
     push @{ $Self->{JavaScriptStrings} // [] }, (
-        '%s results',
-        '%s results for %s',
+        'results',
+        'results for %s',
         'Additional information',
         'All',
         'Create %s',
