@@ -283,13 +283,10 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         var Service = JSON.parse(Core.Config.Get('ServiceList'));
         var SelectedService = Service[ServiceID];
 
-        // Show the number of displayed services.
-        var NumberOfServices = $l('.oooServiceContainer:not(.oooHidden)').length;
-
         if (SelectedService) {
-            $l('.oooServiceResult').text(Core.Language.Translate('%s results for %s', NumberOfServices, SelectedService.NameShort));
+            $l('.oooServiceResult').text(Core.Language.Translate('results for %s', SelectedService.NameShort));
         } else {
-            $l('.oooServiceResult').text(Core.Language.Translate('%s results', NumberOfServices));
+            $l('.oooServiceResult').text(Core.Language.Translate('results'));
         }
 
         var LiString = '';
