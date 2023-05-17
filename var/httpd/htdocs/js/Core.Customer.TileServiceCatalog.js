@@ -29,6 +29,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         offset.top += 30;
         offset.left += 30;
         new_dialog.offset(offset);
+        $(new_dialog).find('.oooServiceFieldSearch > input').val('');
     };
 
     TargetNS.Init = function() {
