@@ -39,7 +39,7 @@
         <Navigation>Frontend::Customer::View::Dashboard::Configuration</Navigation>
         <Value>
             <Hash>
-                <DefaultItem ValueType="Select" SelectedID="0">
+                <DefaultItem ValueType="Select">
                     <Item ValueType="Option" Value="0" Translatable="1">0 - Disabled</Item>
                     <Item ValueType="Option" Value="1" Translatable="1">1 - Enabled</Item>
                 </DefaultItem>
@@ -126,12 +126,10 @@
         <Description Translatable="1">This option allows you to automatically generate ACLs for different interfaces when creating services. Services will then only be displayed if the ticket type stored in the service has been selected. The \"AddBulkACL\" console script can also be used to create ACLs for services that have already been create.</Description>
         <Navigation>Core::Acl</Navigation>
         <Value>
-            <Hash>
-                <DefaultItem ValueType="Select" SelectedID="0">
-                    <Item ValueType="Option" Value="0" Translatable="1">0 - Disabled</Item>
-                    <Item ValueType="Option" Value="1" Translatable="1">1 - Enabled</Item>
-                </DefaultItem>
-            </Hash>
+            <Item ValueType="Select" SelectedID="0">
+                <Item ValueType="Option" Value="0" Translatable="1">0 - Disabled</Item>
+                <Item ValueType="Option" Value="1" Translatable="1">1 - Enabled</Item>
+            </Item>
         </Value>
     </Setting>
     <Setting Name="ServiceCatalog::CreateTypeServiceRelatedAcls::Options" Required="0" Valid="1">
