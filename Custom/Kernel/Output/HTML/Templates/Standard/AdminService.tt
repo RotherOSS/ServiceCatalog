@@ -2,9 +2,9 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/
 # --
-# $origin: otobo itsm core - 734da46f4d87076e659f043ed406e5d91767f7b0 - Kernel/Output/HTML/Templates/Standard/AdminService.tt
+# $origin: otobo - fa038a38019d88902d7e5fddf3dcdfeb2effbbf0 - Kernel/Output/HTML/Templates/Standard/AdminService.tt
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -101,8 +101,8 @@
 [% RenderBlockEnd("NoDataFoundMsg") %]
 [% RenderBlockStart("OverviewListRow") %]
                         <tr [% IF Data.ValidID != 1%]class="Invalid"[% END %]>
-                            <td title="[% Data.Name | html %]">[% Data.LevelSpace | html %]<a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=ServiceEdit;ServiceID=[% Data.ServiceID | uri %]">[% Data.Name | truncate(180) | html %]</a></td>
-                            <td title="[% Data.Comment | html %]">[% Data.Comment | truncate(120) | html %]</td>
+                            <td title="[% Data.Name | html %]">[% Data.LevelSpace | html %]<a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=ServiceEdit;ServiceID=[% Data.ServiceID | uri %]">[% Data.Name | truncate(80) | html %]</a></td>
+                            <td title="[% Data.Comment | html %]">[% Data.Comment | truncate(20) | html %]</td>
                             <td>[% Translate(Data.Valid) | html %]</td>
                             <td>[% Data.ChangeTime | Localize("TimeShort") %]</td>
                             <td>[% Data.CreateTime | Localize("TimeShort") %]</td>
@@ -198,16 +198,7 @@
                             <textarea id="RichText" class="RichText" rows="10" cols="60" name="DescriptionLong">[% Data.DescriptionLong | html %]</textarea>
                         </div>
                         <div class="Clear"></div>
-
-[% RenderBlockStart("DynamicField") %]
-                    <div class="Row Row_DynamicField_[% Data.Name | html %]">
-                        [% Data.Label %]
-                        <div class="Field">
-                            [% Data.Field %]
-                        </div>
-                        <div class="Clear"></div>
-                    </div>
-[% RenderBlockEnd("DynamicField") %]
+                        [% Data.DynamicFieldHTML %] 
 # ---
 # Rother OSS
 ## ---
