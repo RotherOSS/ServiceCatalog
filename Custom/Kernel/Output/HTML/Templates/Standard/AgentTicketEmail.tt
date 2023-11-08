@@ -4,7 +4,7 @@
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/
 # --
-# $origin: otobo - a7efa05bdfdb410d7bb4c3445fbd9254edff12a4 - Kernel/Output/HTML/Templates/Standard/AgentTicketEmail.tt
+# $origin: otobo - 9f63cb57020a55f7b70a1f7d6f03edc3fce6e06a - Kernel/Output/HTML/Templates/Standard/AgentTicketEmail.tt
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -102,6 +102,8 @@
                                     <i class="fa fa-minus-square-o"></i>
                                     <span class="InvisibleText">[% Translate("Remove Ticket Customer User") | html %]</span>
                                 </a>
+                                <a href="#" id="MoveCustomerTicketToCc_[% Data.Count | html %]"  class="MoveCustomerButton CcMove"  title="[% Translate("Move to Cc") | html %]"  name="MoveCustomerTicketToCc_[% Data.Count | html %]"><span>Cc</span></a>
+                                <a href="#" id="MoveCustomerTicketToBcc_[% Data.Count | html %]" class="MoveCustomerButton BccMove" title="[% Translate("Move to Bcc") | html %]" name="MoveCustomerTicketToBcc_[% Data.Count | html %]"><span>Bcc</span></a>
 
 [% RenderBlockStart("CustomerErrorExplantion") %]
                                 <p class="Explanation Error">[% Translate("Please remove this entry and enter a new one with the correct value.") | html %]</p>
@@ -177,6 +179,8 @@
                                     <i class="fa fa-minus-square-o"></i>
                                     <span class="InvisibleText">[% Translate("Remove Cc") | html %]</span>
                                 </a>
+                                <a href="#" id="MoveCustomerTicketCcTo_[% Data.Count | html %]"  class="MoveCustomerButton ToMove"  title="[% Translate("Move to To") | html %]"  name="MoveCustomerTicketCcTo_[% Data.Count | html %]"><span>To</span></a>
+                                <a href="#" id="MoveCustomerTicketCcBcc_[% Data.Count | html %]" class="MoveCustomerButton BccMove" title="[% Translate("Move to Bcc") | html %]" name="MoveCustomerTicketCcBcc_[% Data.Count | html %]"><span>Bcc</span></a>
 
 [% RenderBlockStart("CcCustomerErrorExplantion") %]
                                 <p class="Explanation Error">[% Translate("Please remove this entry and enter a new one with the correct value.") | html %]</p>
@@ -252,6 +256,8 @@
                                     <i class="fa fa-minus-square-o"></i>
                                     <span class="InvisibleText">[% Translate("Remove Bcc") | html %]</span>
                                 </a>
+                                <a href="#" id="MoveCustomerTicketBccTo_[% Data.Count | html %]" class="MoveCustomerButton ToMove" title="[% Translate("Move to To") | html %]" name="MoveCustomerTicketBccTo_[% Data.Count | html %]"><span>To</span></a>
+                                <a href="#" id="MoveCustomerTicketBccCc_[% Data.Count | html %]" class="MoveCustomerButton CcMove" title="[% Translate("Move to Cc") | html %]" name="MoveCustomerTicketBccCc_[% Data.Count | html %]"><span>Cc</span></a>
 
 [% RenderBlockStart("BccCustomerErrorExplantion") %]
                                 <p class="Explanation Error">[% Translate("Please remove this entry and enter a new one with the correct value.") | html %]</p>
@@ -354,6 +360,7 @@
                     <div class="Clear"></div>
 # EO Rother OSS
 [% Data.DynamicFieldHTML %]
+
 [% RenderBlockStart("OwnerSelection") %]
                     <label for="NewUserID">[% Translate("Owner") | html %]:</label>
                     <div class="Field">

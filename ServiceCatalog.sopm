@@ -6,7 +6,7 @@
     <Vendor>Rother OSS GmbH</Vendor>
     <URL>https://rother-oss.com/</URL>
     <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
-    <PackageRequired Version="10.1.1">ITSMCore</PackageRequired>
+    <PackageRequired Version="11.0.0">ITSMCore</PackageRequired>
     <PackageMerge Name="RotherOSS-ServiceCatalog" TargetVersion="10.0.4"></PackageMerge>
     <Description Lang="en">A detailed service catalog.</Description>
     <Filelist>
