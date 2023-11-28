@@ -159,7 +159,7 @@
             <Hash>
                 <Item Key="Module">Kernel::System::Ticket::Event::SetDynamicFieldCriticalityFromService</Item>
                 <Item Key="Transaction">1</Item>
-                <Item Key="Event">TicketServiceUpdate</Item>
+                <Item Key="Event">TicketServiceUpdate|TicketCreate</Item>
             </Hash> 
         </Value>
     </Setting>

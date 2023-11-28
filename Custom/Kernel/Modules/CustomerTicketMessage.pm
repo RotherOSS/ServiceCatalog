@@ -1449,18 +1449,18 @@ sub Run {
             },
             ServiceID => {
                 PossibleNone => 1,
-                Translation  => 0,
+                Translation  => 1,
                 TreeView     => $TreeView,
                 Max          => 100,
             },
             SLAID => {
                 PossibleNone => 1,
-                Translation  => 0,
+                Translation  => 1,
                 Max          => 100,
             },
             TypeID => {
                 PossibleNone => 1,
-                Translation  => 0,
+                Translation  => 1,
                 Max          => 100,
             }
         );
@@ -1765,7 +1765,7 @@ sub _MaskNew {
             SelectedID   => $Param{TypeID},
             PossibleNone => 1,
             Sort         => 'AlphanumericValue',
-            Translation  => 0,
+            Translation  => 1,
             Class        => "Validate_Required Modernize " . ( $Param{Errors}->{TypeIDInvalid} || '' ),
         );
         $LayoutObject->Block(
@@ -1809,7 +1809,7 @@ sub _MaskNew {
             PossibleNone => 1,
             TreeView     => $TreeView,
             Sort         => 'TreeView',
-            Translation  => 0,
+            Translation  => 1,
             Max          => 200,
         );
         $LayoutObject->Block(
@@ -1844,7 +1844,7 @@ sub _MaskNew {
                     . ( $Param{Errors}->{SLAInvalid} || '' ),
                 PossibleNone => 1,
                 Sort         => 'AlphanumericValue',
-                Translation  => 0,
+                Translation  => 1,
                 Max          => 200,
             );
             $LayoutObject->Block(
