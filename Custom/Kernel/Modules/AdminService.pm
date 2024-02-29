@@ -2,9 +2,10 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
-# $origin: otobo - 866ca7d0103f52a61cedf7c5b10cac6b9cb56991 - Kernel/Modules/AdminService.pm
+# $origin: otobo - 739b3be62b71991d6571cc1f091e6d96f6bff498 - Kernel/Modules/AdminService.pm
+# $origin: ITSMCore - de1b6d190bff78f7f9722b81a8c3069c7aa2371c - Kernel/Modules/AdminService.pm
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -36,7 +37,7 @@ sub new {
     bless( $Self, $Type );
 
     # ---
-    # RotherOSS
+    # Rother OSS / ServiceCatalog
     # ---
     # get form id
     $Self->{FormID} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'FormID' );
@@ -136,7 +137,7 @@ sub Run {
 # RotherOSS
 # ---
         @{ $GetParam{TicketTypeIDs} } = $ParamObject->GetArray( Param => 'TicketTypeIDs' );
-        for (qw(ServiceID ParentID Name DescriptionShort Criticality ValidID Comment CustomerDefaultService DestQueueID)) {
+        for (qw(ServiceID ParentID Name DescriptionShort TypeID Criticality CustomerDefaultService DestQueueID ValidID Comment)) {
 # ---
             $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
         }
@@ -229,6 +230,7 @@ sub Run {
                 }
             }
 
+            # Rother OSS / ServiceCatalog
             # set customer user service member
             $ServiceObject->CustomerUserServiceMemberAdd(
                 CustomerUserLogin => '<DEFAULT>',
@@ -236,6 +238,7 @@ sub Run {
                 Active            => $GetParam{CustomerDefaultService},
                 UserID            => $Self->{UserID},
             );
+            # EOC ServiceCatalog
 
             if ( !%Error ) {
 
@@ -430,14 +433,14 @@ sub Run {
 		# We create one Acl per Ticket-Type
 		if ( $ConfigObject->Get('ServiceCatalog::CreateTypeServiceRelatedAcls') ) {
 		    for my $TicketType ( @{ $GetParam{TicketTypeIDs} } ) {
-                        my $Success = $ServiceObject->UpdateTypServiceACL(
-	       	            TicketTypeID => $TicketType,
-                            ServiceID   => $GetParam{ServiceID},
-                            ServiceValid => $GetParam{ValidID},
-			    UserID => 1,
-                        );
-		    }
-	        }
+                my $Success = $ServiceObject->UpdateTypServiceACL(
+                    TicketTypeID => $TicketType,
+                    ServiceID    => $GetParam{ServiceID},
+                    ServiceValid => $GetParam{ValidID},
+                    UserID       => 1,
+                );
+            }
+        }
 # EO Rother OSS
 # ---
 
@@ -600,15 +603,12 @@ sub _MaskNew {
         },
     );
 
-    # ---
-    # RotherOSS
-    # ---
-
+    # Rother OSS / ServiceCatalog
     # output service option reference
     $LayoutObject->Block(
         Name => 'ServiceReference',
     );
-    # ---
+    # EOC ServiceCatalog
 
     $LayoutObject->Block( Name => 'ActionList' );
     $LayoutObject->Block( Name => 'ActionOverview' );
@@ -653,6 +653,7 @@ sub _MaskNew {
         Class        => 'Modernize',
     );
 
+# Rother OSS / ServiceCatalog
     # Move Ticket to queue
     my %TicketQueueList = $Kernel::OM->Get('Kernel::System::Queue')->GetAllQueues(
         Valid => 1,
@@ -669,9 +670,9 @@ sub _MaskNew {
         Class        => 'Modernize',
     );
 
-# Rother OSS: Default Customer Service 
+    # Default Customer Service 
     my %DefaultServices = $ServiceObject->CustomerUserServiceMemberList(
-	CustomerUserLogin => '<DEFAULT>',
+	    CustomerUserLogin => '<DEFAULT>',
         Result            => 'HASH',
         DefaultServices   => 1,
     );
@@ -686,7 +687,7 @@ sub _MaskNew {
 	    last DEFAULTSERVICE;
 	}
     }
-# EO Rother OSS
+# EO ServiceCatalog
     # add rich text editor
     if ( $LayoutObject->{BrowserRichText} ) {
 
@@ -720,18 +721,18 @@ sub _MaskNew {
 # ---
 # ITSMCore
 # ---
-#    # generate TypeOptionStrg
-#    my $TypeList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
-#        Class => 'ITSM::Service::Type',
-#    );
+   # generate TypeOptionStrg
+   my $TypeList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+       Class => 'ITSM::Service::Type',
+   );
 
-#    # build the type dropdown
-#    $ServiceData{TypeOptionStrg} = $LayoutObject->BuildSelection(
-#        Data       => $TypeList,
-#        Name       => 'TypeID',
-#        SelectedID => $Param{TypeID} || $ServiceData{TypeID},
-#        Class      => 'Modernize',
-#    );
+   # build the type dropdown
+   $ServiceData{TypeOptionStrg} = $LayoutObject->BuildSelection(
+       Data       => $TypeList,
+       Name       => 'TypeID',
+       SelectedID => $Param{TypeID} || $ServiceData{TypeID},
+       Class      => 'Modernize',
+   );
 
     # build the criticality dropdown
     $ServiceData{CriticalityOptionStrg} = $LayoutObject->BuildSelection(

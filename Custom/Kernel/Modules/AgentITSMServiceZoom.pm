@@ -2,10 +2,9 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
-# Origin: 1bbdb2a96cc97aa60ca189b096dbfc99493d8392
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
-# $origin: otobo -  - Kernel/Modules/AgentITSMServiceZoom.pm
+# $origin: ITSMCore - 1bbdb2a96cc97aa60ca189b096dbfc99493d8392 - Kernel/Modules/AgentITSMServiceZoom.pm
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -71,7 +70,7 @@ sub Run {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
 # ---
-# RotherOSS
+# Rother OSS / ServiceCatalog
 # ---
    # ---------------------------------------------------------- #
     # HTMLView Subaction
@@ -242,7 +241,7 @@ sub Run {
             );
         }
     }
-# ---
+# EOC ServiceCatalog
 
     # run config item menu modules
     if ( ref $ConfigObject->Get('ITSMService::Frontend::MenuModule') eq 'HASH' ) {

@@ -2,9 +2,10 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
-# $origin: otobo itsm core - 734da46f4d87076e659f043ed406e5d91767f7b0 - Kernel/System/Service.pm
+# $origin: ITSMCore - de1b6d190bff78f7f9722b81a8c3069c7aa2371c - Kernel/System/Service.pm
+# $origin: otobo - 739b3be62b71991d6571cc1f091e6d96f6bff498 - Kernel/System/Service.pm
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -260,13 +261,11 @@ return a list of services with the complete list of attributes for each service
             CurInciState     => 'Operational',
             CurInciStateType => 'operational',
 # ---
-# ---
-# RotherOSS
-# ---
+# Rother OSS / ServiceCatalog
             DescriptionShort => 'Short information...',
             DescriptionLong  => 'Long information...',
             TicketTypeIDs    => [ 1, 2, 3 ],
-# ---
+# EO ServiceCatalog
         },
         {
             ServiceID  => 2,
@@ -327,11 +326,9 @@ sub ServiceListGet {
 # ---
         . ", type_id, criticality "
 # ---
-# ---
-# RotherOSS
-# ---
+# Rother OSS / ServiceCatalog
         . ", description_short, description_long "
-# ---
+# EO ServiceCatalog
 
         . 'FROM service';
 
@@ -369,12 +366,10 @@ sub ServiceListGet {
         $ServiceData{TypeID}      = $Row[8];
         $ServiceData{Criticality} = $Row[9] || '';
 # ---
-# ---
-# RotherOSS
-# ---
+# Rother OSS / ServiceCatalog
          $ServiceData{DescriptionShort} = $Row[10];
          $ServiceData{DescriptionLong}  = $Row[11];
-# ---
+# EO ServiceCatalog
         # add service data to service list
         push @ServiceList, \%ServiceData;
 
@@ -562,11 +557,9 @@ sub ServiceGet {
 # ---
             . ", type_id, criticality "
 # ---
-# ---
-# RotherOSS
-# ---
+# Rother OSS / ServiceCatalog
          . ", description_short, description_long, dest_queueid "
-# ---
+# EO ServiceCatalog
             . 'FROM service WHERE id = ?',
         Bind  => [ \$Param{ServiceID} ],
         Limit => 1,
@@ -594,7 +587,7 @@ sub ServiceGet {
 # ---
         $ServiceData{DescriptionShort} = $Row[10];
         $ServiceData{DescriptionLong}  = $Row[11];
-	$ServiceData{DestQueueID}  = $Row[12];
+	    $ServiceData{DestQueueID}      = $Row[12];
 # ---
     }
 
@@ -807,7 +800,7 @@ sub ServiceAdd {
 # ---
 # RotherOSS
 # ---
-    for my $Argument (qw(Name ValidID UserID DescriptionShort Criticality)) {
+    for my $Argument (qw(Name ValidID UserID DescriptionShort TypeID Criticality)) {
 # ---
         if ( !$Param{$Argument} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -930,6 +923,7 @@ sub ServiceAdd {
 # ---
     # Insert new ticket type relations.
     for my $TicketTypeID ( @{ $Param{TicketTypeIDs} } ) {
+        next if !$TicketTypeID;
         return if !$DBObject->Do(
             SQL => 'INSERT INTO service_type '
                 . '(service_id, ticket_type_id, create_time, create_by) '
@@ -981,7 +975,7 @@ sub ServiceUpdate {
 # ---
 # RotherOSS
 # ---
-    for my $Argument (qw(ServiceID Name DescriptionShort ValidID UserID Criticality)) {
+    for my $Argument (qw(ServiceID Name DescriptionShort ValidID UserID TypeID Criticality)) {
 # ---
         if ( !$Param{$Argument} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -1113,12 +1107,12 @@ sub ServiceUpdate {
 # RotherOSS
 # ---
         SQL => 'UPDATE service SET name = ?, valid_id = ?, comments = ?, '
-            . ' change_time = current_timestamp, change_by = ?, criticality = ?, '
+            . ' change_time = current_timestamp, change_by = ?, type_id = ?, criticality = ?, '
             . ' description_short = ?, description_long = ?, dest_queueid = ?'
             . ' WHERE id = ?',
         Bind => [
             \$Param{FullName}, \$Param{ValidID}, \$Param{Comment},
-            \$Param{UserID}, \$Param{Criticality},
+            \$Param{UserID}, \$Param{TypeID}, \$Param{Criticality},
             \$Param{DescriptionShort}, \$Param{DescriptionLong}, \$Param{DestQueueID}, \$Param{ServiceID},
         ],
 # ---
@@ -1183,9 +1177,7 @@ return service ids as an array
 # ---
 # ITSMCore
 # ---
-# Rother OSS
-#	TypeIDs       => 2,
-# EO Rother OSS 
+	TypeIDs       => 2,
 	Criticalities => [ '2 low', '3 normal' ],
 # ---
     );
@@ -1230,17 +1222,16 @@ sub ServiceSearch {
 # ---
 # ITSMCore
 # ---
-# Rother OSS
-#    # add type ids
-#    if ( $Param{TypeIDs} && ref $Param{TypeIDs} eq 'ARRAY' && @{ $Param{TypeIDs} } ) {
+    # add type ids
+    if ( $Param{TypeIDs} && ref $Param{TypeIDs} eq 'ARRAY' && @{ $Param{TypeIDs} } ) {
 
-#        # quote as integer
-#        for my $TypeID ( @{ $Param{TypeIDs} } ) {
-#            $TypeID = $Self->{DBObject}->Quote( $TypeID, 'Integer' );
-#        }
+        # quote as integer
+        for my $TypeID ( @{ $Param{TypeIDs} } ) {
+            $TypeID = $Self->{DBObject}->Quote( $TypeID, 'Integer' );
+        }
 
-#        $SQL .= " AND type_id IN (" . join(', ', @{ $Param{TypeIDs} }) . ") ";
-#    }
+        $SQL .= " AND type_id IN (" . join(', ', @{ $Param{TypeIDs} }) . ") ";
+    }
 
     # add criticalities
     if ($Param{Criticalities} && ref $Param{Criticalities} eq 'ARRAY' && @{ $Param{Criticalities} } ) {
@@ -1736,12 +1727,12 @@ sub _ServiceGetCurrentIncidentState {
     # make local copies
     my %ServiceData = %{ $Param{ServiceData} };
     my %Preferences = %{ $Param{Preferences} };
-# Rother OSS 
-#    # get service type list
-#    my $ServiceTypeList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
-#        Class => 'ITSM::Service::Type',
-#    );
-#    $ServiceData{Type} = $ServiceTypeList->{ $ServiceData{TypeID} } || '';
+
+    # get service type list
+    my $ServiceTypeList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+        Class => 'ITSM::Service::Type',
+    );
+    $ServiceData{Type} = $ServiceTypeList->{ $ServiceData{TypeID} } || '';
 
     # set default incident state type
     $ServiceData{CurInciStateType} = 'operational';

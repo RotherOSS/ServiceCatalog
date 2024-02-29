@@ -2,9 +2,9 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
-# $origin: otobo - e894aef610208fdc401a4df814ca59658292fbba - Kernel/Modules/CustomerTicketMessage.pm
+# $origin: otobo - 53896b8b4d80edb90a2e54fc94011f8de3918963 - Kernel/Modules/CustomerTicketMessage.pm
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -403,7 +403,6 @@ sub Run {
                     DynamicFieldBackendObject => $BackendObject,
                     ChangedElements           => \%ChangedElements,    # optional to reduce ACL evaluation
                     Action                    => $Self->{Action},
-                    TicketID                  => $Self->{TicketID},
                     FormID                    => $Self->{FormID},
                     CustomerUser              => $Self->{UserID},
                     GetParam                  => {
@@ -861,7 +860,7 @@ sub Run {
             $GetParam{Priority}   = $Config->{PriorityDefault};
         }
 
-# Rother OSS / Move ticket in queue based on service information
+# Rother OSS / ServiceCatalog Move ticket in queue based on service information
         if ( $GetParam{ServiceID} ) {
 
             my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
@@ -874,7 +873,7 @@ sub Run {
                 $NewQueueID = $ServiceData{DestQueueID};
             }
         }
-# EO Rother OSS
+# EO ServiceCatalog
 
         # create new ticket, do db insert
         my $TicketID = $TicketObject->TicketCreate(
@@ -1294,7 +1293,6 @@ sub Run {
                     DynamicFieldBackendObject => $BackendObject,
                     ChangedElements           => \%ChangedElements,    # optional to reduce ACL evaluation
                     Action                    => $Self->{Action},
-                    TicketID                  => $Self->{TicketID},
                     FormID                    => $Self->{FormID},
                     CustomerUser              => $Self->{UserID},
                     GetParam                  => {
@@ -1363,8 +1361,6 @@ sub Run {
             };
         }
 
-        # define dynamic field visibility
-        my %FieldVisibility;
         if ( IsHashRefWithData( $DynFieldStates{Visibility} ) ) {
             push @DynamicFieldAJAX, {
                 Name => 'Restrictions_Visibility',

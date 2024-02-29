@@ -2,7 +2,10 @@
 // OTOBO is a web-based ticketing system for service organisations.
 // --
 // Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-// Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
+// Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
+// --
+// $origin: otobo - 55126f4ab25373dded7533aeb0d7cd7743e7e7a9 - var/httpd/htdocs/js/Core.UI.Dialog.js
+// --
 // --
 // This program is free software: you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -130,7 +133,12 @@ Core.UI.Dialog = (function (TargetNS) {
      *      Must be unbinded when closing the dialog.
      */
     function InitKeyEvent(CloseOnEscape) {
-        var $Dialog = () => $('div.Dialog:visible');
+        // Rother OSS / ServiceCatalog
+        // var $Dialog = $('div.Dialog:visible');
+        var $Dialog = function() {
+            return $('div.Dialog:visible');
+        };
+        // EO ServiceCatalog
         /*
          * Opera can't prevent the default action of special keys on keydown. That's why we need a special keypress event here,
          * to prevent the default action for the special keys.
@@ -148,7 +156,10 @@ Core.UI.Dialog = (function (TargetNS) {
             // Tab pressed
             if (Event.keyCode === 9) {
                 // :tabbable probably comes from jquery UI
+                // Rother OSS / ServiceCatalog
+                // $Tabbables = $('a:visible, input:visible, textarea:visible, select:visible, button:visible', $Dialog);
                 $Tabbables = $('a:visible, input:visible, textarea:visible, select:visible, button:visible', $Dialog());
+                // EO ServiceCatalog
                 $First = $Tabbables.filter(':first');
                 $Last = $Tabbables.filter(':last');
 
@@ -167,7 +178,9 @@ Core.UI.Dialog = (function (TargetNS) {
             }
             // Escape pressed and CloseOnEscape is true
             else if (Event.keyCode === 27 && CloseOnEscape) {
+                // Rother OSS / ServiceCatalog
                 TargetNS.CloseDialog($Dialog());
+                // EO ServiceCatalog
                 Event.preventDefault();
                 Event.stopPropagation();
                 return false;
@@ -224,7 +237,7 @@ Core.UI.Dialog = (function (TargetNS) {
      * @param {String} Params.Buttons.Type - 'Submit'|'Close' (default: none) Special type of the button - invokes a standard function.
      * @param {String} Params.Buttons.Class - Optional class parameters for the button element.
      * @param {Function} Params.Buttons.Function - The function which is executed on click (optional).
-     * @param {Boolean} Params.Stacked - If true, then a new dialog appears on top of existing ones (default: false).
+     * @param {Boolean} Params.Stacked - If true, then a new dialog appears on top of existing ones (default: false).  // Rother OSS / ServiceCatalog
      * @description
      *      The main dialog function used for all different types of dialogs.
      */
@@ -234,8 +247,11 @@ Core.UI.Dialog = (function (TargetNS) {
             DialogHTML,
             FullsizeMode = false,
             CustomerInterface = Core.Config.Get('SessionName') === Core.Config.Get('CustomerPanelSessionName');
-
+        // Rother OSS / ServiceCatalog
+        // DialogHTML = '<div class="Dialog">';
         DialogHTML = '<div class="Dialog"' + (Params.Stacked ? ' data-stacked="stacked"' : '') + '>';
+        // EO ServiceCatalog
+
         if (!Params.HideHeader) {
             var CloseIcon = CustomerInterface ? 'ooofo ooofo-close' : 'fa fa-times';
             DialogHTML += '<div class="Header"><a class="Close" title="' + Core.Language.Translate('Close this dialog') + '" href="#"><i class="' + CloseIcon + '"></i></a></div>';
@@ -713,9 +729,11 @@ Core.UI.Dialog = (function (TargetNS) {
         // publish close event
         Core.App.Publish('Event.UI.Dialog.CloseDialog.Close', [$Dialog]);
 
+        // Rother OSS / ServiceCatalog
         if ($Dialog.length > 1 && $Dialog[$Dialog.length - 1].dataset.stacked) {
             $($Dialog[$Dialog.length - 1]).remove();
         } else {
+        // EO ServiceCatalog
             $Dialog.remove();
             $('#Overlay').remove();
             $('body').css({
@@ -746,7 +764,9 @@ Core.UI.Dialog = (function (TargetNS) {
 
                 // write the new DialogCopy back
                 Core.Data.Set($('body'), 'DialogCopy', DialogCopy);
+            // Rother OSS / ServiceCatalog
             }
+            // EO ServiceCatalog
         }
     };
 

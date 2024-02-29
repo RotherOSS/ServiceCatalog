@@ -38,18 +38,23 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 }
 
 .oooTile_ServiceCatalog {
-    width: 100%;
+    /* width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 0px !important;
     gap: 32px;
-    isolation: isolate;
+    isolation: isolate; */
     /* position: absolute; */
-    height: 185px;
+    /* height: 185px;
     left: 484px;
     top: 192px;
-    border-radius: 24px;
+    border-radius: 24px; */
+}
+
+.oooTile_ServiceCatalog > h2 {
+    margin-top: 16px;
+    margin-bottom: 16px;
 }
 
 .oooParentServiceList {
@@ -97,9 +102,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 .oooParentServiceList > li:hover {
     cursor: pointer;
-    border: 2px solid var(--colMainLight);
+    /* border: 2px solid var(--colMainLight); */
+    outline: 2px solid var(--colMainLight);
     color: var(--colMainLight);
 }
+
+.oooParentServiceList > li.oooServiceMore:hover {
+    border: 2px solid var(--colMainLight);
+} 
 
 .oooServiceMore:hover > .oooServiceMoreSearch > span,
 .oooServiceMore:hover > .oooServiceMoreInfo {
@@ -117,14 +127,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     flex-direction: row;
     align-items: center;
     gap: 8px;
-    width: 64px;
+    width: 75px;
     height: 18px;
 }
 
-.oooBreadcrumbServiceList > li {
+/* .oooBreadcrumbServiceList > li {
     display: inline-block;
     cursor: pointer;
-}
+} */
 
 ul.oooChildServiceList > li:not(:first-child) {
     margin-left: 12px;
@@ -143,7 +153,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooServiceBreadcrumbWrap {
-    margin-top: 20px;
+    padding-top: 20px;
     display: flex;
     flex-wrap: nowrap;
     width: 100%;
@@ -186,12 +196,14 @@ ul.oooBreadcrumbServiceList > li:first-child {
     content: "\e903";
     padding-left: 32px;
     padding-right: 16px;
+    padding-top: 13px;
 }
 
 .oooScrollRight {
     content: "\e904";
     padding-left: 24px;
     padding-right: 32px;
+    padding-top: 13px;
 }
 
 .oooBreadcrumbServiceList {
@@ -215,13 +227,17 @@ ul.oooBreadcrumbServiceList > li:first-child {
     padding: 8px 24px;
     gap: 13px;
     width: auto;
-    height: 20px;
+    height: 40px;
     background: rgba(127, 128, 157, 0.08);
     border-radius: 76px;
     flex: none;
     order: 1;
     align-self: stretch;
     flex-grow: 0;
+    cursor: pointer;
+    font-size: 11px;
+    line-height: 13px;
+    color: var(--colTextLight);
 }
 
 .oooBreadcrumbServiceList > li.oooServiceIDSelected {
@@ -237,11 +253,11 @@ ul.oooBreadcrumbServiceList > li:first-child {
     margin-left: 10px;
 }
 
-.oooBreadcrumbServiceList > li {
+/* .oooBreadcrumbServiceList > li {
     font-size: 11px;
     line-height: 13px;
     color: var(--colTextLight);
-}
+} */
 
 /* .oooBreadcrumbServiceList > li:last-child {
     color: var(--colTextDark);
@@ -265,8 +281,43 @@ ul.oooBreadcrumbServiceList > li:first-child {
     flex-grow: 0; */
 }
 
-.oooDetailedView {
+.Dialog.oooServiceCatalogModal {
     min-height: 704px;
+    height: 704px;
+}
+
+.Dialog.oooServiceCatalogModal:not(:last-child) > .Header,
+.Dialog.oooServiceCatalogModal:not(:last-child) > .Content {
+    display: none;
+}
+
+.Dialog.oooServiceCatalogModal:not(:last-child) {
+    background: #ffffff;
+}
+
+/* 1. Hide all the elements */
+.Dialog.oooServiceCatalogModal {
+    /* display: none; */
+    /* top: 50px !important;
+    left: 150px !important; */
+}
+
+/* 2. Display the last element */
+.Dialog.oooServiceCatalogModal:last-child {
+    /* display: block; */
+}
+
+/* 3. Apply a special rule to the forelast element */
+.Dialog.oooServiceCatalogModal:nth-last-child(2) {
+    /* display: block;
+    background-color: #fff; */
+    /* top: 95px !important; */
+    /* left: 90px !important; */
+}
+
+.Dialog.oooServiceCatalogModal:nth-last-child(2) > .Header,
+.Dialog.oooServiceCatalogModal:nth-last-child(2) > .Content {
+    display: none;
 }
 
 .Dialog.oooDetailedView, .oooDetailedView > div {
@@ -283,7 +334,8 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooDetailedView .oooServiceBreadcrumb {
-    width: calc(100% - 180px);
+    width: 100%;
+    /* width: calc(100% - 180px); */
 }
 
 .Dialog.oooDetailedView > .Content {
@@ -330,7 +382,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooServiceContainer:hover, .oooDetailedTicketTypeList > a:hover {
-    border: 2px solid var(--colMainLight);
+    outline: 2px solid var(--colMainLight);
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -683,6 +735,10 @@ ul.oooBreadcrumbServiceList > li:first-child {
     text-align: center;
 }
 
+.oooDetailedTicketTypeList > a > i {
+    color: var(--colMainLight);
+}
+
 .oooDetailedAccordionList {
     display: flex;
     flex-direction: column;
@@ -877,7 +933,8 @@ span.oooSLAValue {
 }
 
 .ooofo-bang::before {
-    content: '\2757';
+    content: '!';
+    font-weight: bold;
 } 
 
 .Dialog {
@@ -890,8 +947,9 @@ span.oooSLAValue {
     /* min-height: 80%; */
 }
 
-.Dialog > .Content {
-    padding: 20px 48px 16px 48px;
+.Dialog.oooServiceCatalogModal > .Content {
+    padding: 20px 48px 16px 100px;
+    /* padding: 20px 48px 16px 48px; */
 }
 
 .Dialog > .Header {
@@ -907,6 +965,10 @@ span.oooSLAValue {
 .Dialog > .Header .ooofo {
     top: 5px;
     font-size: 16px;
+}
+
+.Dialog:not(.oooDetailedView) > .Header .ooofo {
+    top: 40px;
 }
 
 .Dialog > .Header #ServiceID_Search {
@@ -925,11 +987,11 @@ span.oooSLAValue {
     /* width: 788px !important; */
     /* width: 968px; */
     border-radius: 30px;
-    background: transparent;
+    /* background: transparent; */
+    background: #ffffff;
     /* border-radius: 0px 30px 30px 0px; */
-    height: 54px;
-    border: 1px solid var(--colTextLight);
-    box-shadow: 0px 29px 49px 8px rgb(0 0 0 / 4%);
+    height: 60px;
+    /* box-shadow: 0px 29px 49px 8px rgb(0 0 0 / 4%); */
     padding-left: 40px;
 }
 
@@ -1047,14 +1109,14 @@ span.oooSLAValue {
 }
 
 #oooTile07 {
-    padding: 24px 32px;
+    /* padding: 24px 32px; */
 }
 
 @media only screen and (min-width: 1280px) {
     
     #oooTile07 {
         grid-area: 5 / 13 / 9 / 5;
-        padding: 24px 32px;
+        /* padding: 24px 32px; */
     }
 }
 
@@ -1064,9 +1126,9 @@ span.oooSLAValue {
         grid-area: 7 / 1 / 10 / 7;
     }
 
-    .Dialog > .Header .oooServiceFieldSearch > input {
-        /* width: 668px; */
-    }
+    /* .Dialog > .Header .oooServiceFieldSearch > input {
+        width: 668px;
+    } */
 
     .oooServiceBreadcrumbField {
         /* width: calc(100% - 200px); */
@@ -1081,6 +1143,10 @@ span.oooSLAValue {
     .oooScrollLeft {
         left: 114px;
     } 
+
+    .oooParentServiceList {
+        max-width: 864px;
+    }
 }
 
 @media only screen and (min-width: 768px) and (max-width: 879px) {
@@ -1094,8 +1160,8 @@ span.oooSLAValue {
         align-items: flex-start;
         padding: 0px;
         gap: 8px;
-        width: 100%;
-        max-width: 420px;
+        /* width: 100%;
+        max-width: 420px; */
         height: 128px;
         overflow-x: scroll;
         flex: none;
@@ -1113,9 +1179,9 @@ span.oooSLAValue {
         flex-grow: 0;
     }
 
-    .Dialog > .Header .oooServiceFieldSearch > input {
-        /* width: 550px; */
-    }
+    /* .Dialog > .Header .oooServiceFieldSearch > input {
+        width: 550px;
+    } */
 
     .oooServiceBreadcrumbField {
         width: 530px;
@@ -1131,14 +1197,26 @@ span.oooSLAValue {
     } 
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 1279px) {
+    .Dialog:not(.oooDetailedView) > .Header .ooofo {
+        top: 5px;
+    }
+
+    .oooServiceBreadcrumbWrap {
+        background: var(--colBGLight);
+    }
+
+    .oooDetailedView .oooServiceBreadcrumbWrap {
+        background: transparent;
+    }
+
     .oooParentServiceList {
         flex-direction: row;
         align-items: flex-start;
         padding: 0px;
         gap: 8px;
-        width: 100%;
-        max-width: 420px;
+        /* width: 100%;
+        max-width: 420px; */
         height: 128px;
         overflow-x: scroll;
         flex: none;
@@ -1162,7 +1240,8 @@ span.oooSLAValue {
 
     .oooServiceBreadcrumb {
         left: 20px;
-        max-width: 320px;
+        width: 100%
+        /* max-width: 320px; */
     }
 
     .oooServiceResult {
@@ -1170,13 +1249,17 @@ span.oooSLAValue {
     }
 
     .oooServiceContainer:hover, .oooDetailedTicketTypeList > a:hover {
-        width: 100%;
+        /* width: 100%; */
         left: 0 !important;
         top: 50px !important;
     }
 
-    .oooServiceBreadcrumbField {
+    /* .oooServiceBreadcrumbField {
         width: 320px;
+    } */
+
+    .oooDetailedDescriptionLong > * {
+        width: 80vw;
     }
 
     .Dialog {
@@ -1186,19 +1269,25 @@ span.oooSLAValue {
         bottom: 0;
     }
 
-    .Dialog > .Content {
-        padding: 80px 20px 20px 20px;
+    .Dialog.oooServiceCatalogModal {
+        height: 100%;
+        /* background: #ffffff; */
+    }
+
+    .Dialog.oooServiceCatalogModal > .Content {
+        padding: 20px 48px 16px 50px;
     }
 
     .Dialog > .Header {
         padding: 0;
+    overflow: hidden;
     }
 
     .Dialog > .Header .Close {
         width: 100%;
         height: 30px;
         left: 0;
-        top: 6px;
+        top: 0;
     }
 
     .Dialog > .Header .ooofo {
@@ -1219,7 +1308,23 @@ span.oooSLAValue {
         /* width: 312px; */
         border-radius: 0;
         border: none;
-        border-bottom: 1px solid var(--colBGLight);
+        width: 100%;
+        height: 100%;
+        border-bottom: 1px solid rgba(127, 128, 157, 0.16);
+    }
+
+    .oooServiceFieldSearch:after {
+        right: 100px;
+    }
+
+    .oooServiceFieldSearch {
+        margin-top: 0;
+        height: 88px;
+        background: #ffffff;
+    }
+
+    .Dialog.oooDetailedView > .Header {
+        width: 100%;
     }
 
     .oooTile_ServiceCatalog > h2 {
@@ -1228,6 +1333,8 @@ span.oooSLAValue {
 
     .oooDetailedRight {
         display: none;
+        position: initial;
+        width: calc(100% - 25px);
     }
 
     #oooDetailedToggleSidebar {
@@ -1245,6 +1352,7 @@ span.oooSLAValue {
     }
 
     .oooDetailedTicketTypeList, .oooDetailedAccordionList {
+        /* width: 100%; */
         margin-top: 30px;
     }
 }
@@ -1265,6 +1373,7 @@ span.oooSLAValue {
 
     .oooParentServiceList {
         max-width: 360px;
+        padding: 3px;
     }
 
     .oooDetailedLeft {
@@ -1273,5 +1382,9 @@ span.oooSLAValue {
 
     .oooDetailedRight {
         width: 375px;
+    }
+
+    .Dialog.oooServiceCatalogModal > .Content {
+        padding: 0 20px;
     }
 }

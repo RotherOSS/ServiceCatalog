@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -34,7 +34,7 @@ sub Data {
     $Self->{Translation}->{'Option Reference'} = 'Dokumentation der Optionen';
     $Self->{Translation}->{'You can use the following options'} = 'Sie können folgende Optionen verwenden';
     $Self->{Translation}->{'Show services for the following ticket types'} = 'Services für die folgenden Tickettypen anzeigen';
-    $Self->{Translation}->{'Within the ServiceCatalogue tile in the customer dashboard, it is possible to show ticket types for preconfigured ticket creation inside the service description. Furthermore, it is possible to restrict the services for other screens using the ticket types set here. If you wish to do this, please activate the options "ServiceCatalog::CreateTypeServiceRelatedAcls" and "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" in the OTOBO system configuration. The restriction is made via automatically generated ACLs, which can be viewed under "Admin -> Access Control Lists (ACL)". If necessary, please adjust the option "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" according to your requirements.'} =
+    $Self->{Translation}->{'Within the ServiceCatalog tile in the customer dashboard, it is possible to show ticket types for preconfigured ticket creation inside the service description. Furthermore, it is possible to restrict the services for other screens using the ticket types set here. If you wish to do this, please activate the options "ServiceCatalog::CreateTypeServiceRelatedAcls" and "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" in the OTOBO system configuration. The restriction is made via automatically generated ACLs, which can be viewed under "Admin -> Access Control Lists (ACL)". If necessary, please adjust the option "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" according to your requirements.'} =
         'Innerhalb der Kachel ServiceCatalog im KundenDashboard existiert in der Servicebeschreibung die Möglichkeit, Ticket-Typen zur vorkonfigurierten Ticket-Erstellung einzublenden. Weiterhin besteht die Möglichkeit, auch für andere Masken die Services anhand der hier gesetzten Ticket-Typen einzuschränken. Falls Sie dies wünschen, aktivieren Sie bitte die Optionen "ServiceCatalog::CreateTypeServiceRelatedAcls" und "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" in der OTOBO Systemkonfiguration. Die Einsschränkung wird über automatisch generierte ACL’s vorgenommen, diese können unter "Admin -> Access Control Lists (ACL)" eingesehen werden. Bitte passen Sie bei Bedarf die Option "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" nach Ihren Anforderungen an.';
     $Self->{Translation}->{'If we work service-based, we do not want to offer the customer a choice of queues in the customer portal when creating a ticket, but decide on the basis of the service into which queue (or which team of agents) the ticket should be processed first. In order to use this option sensibly, please deactivate the option "Ticket::Frontend::CustomerTicketMessage###Queue" and set a sensible default queue in the option "Ticket::Frontend::CustomerTicketMessage###QueueDefault". As soon as you set a "Ticket destination queue" here in the service, the ticket will immediately be created in this queue. If the field remains empty, the default queue configured above will be used.'} =
         'Wenn wir Servicebasierend arbeiten, wollen wir den Kunden im Kundenportal bei der Ticketerstellung nicht die Queue zur Auswahl stellen, sondern anhand des Services entscheiden, in welche Queue (bzw. welches Bearbeiter-Team) das Ticket zuerst bearbeiten soll. Um diese Option sinnvoll zu nutzen, deaktivieren Sie bitte die Option "Ticket::Frontend::CustomerTicketMessage###Queue" und setzen Sie in der Option "Ticket::Frontend::CustomerTicketMessage###QueueDefault" eine sinnvolle Standard-Queue. Sobald Sie nun hier im Service eine "Ticket destination queue" setzen, wird das Ticket sofort in dieser Queue erstellt. Wenn das Feld leer bleibt, wird die oben konfigurierte Standardqueue verwendet.';
@@ -48,7 +48,7 @@ sub Data {
     $Self->{Translation}->{'Description of the service. Screenshots and tables are also allowed. Please ensure the correct width of the image for screenshots. This can be adjusted in the ckeditor after uploading the screenshot. A width of 600px has proven to be useful or you can configure a "max-width" of 95% under Advanced.'} =
         'Beschreibung des Services. Auch Screenshots und Tabellen sind erlaubt. Bitte achten Sie bei Screenshots auf die richtige Breite des Bildes. Diese kann im ckeditor nach dem Upload des Screenshots angepasst werden. Bewährt hat sich eine Breite von 600px oder Sie konfigurien unter Advanced eine "max-width" von 95%.';
     $Self->{Translation}->{'Add more service catalog fields'} = 'Weitere Servicekatalog Felder hinzufügen';
-    $Self->{Translation}->{'You have the option of adding further fields here in the service catalogue at any time. To do this, please go to "Admin -> DynamicFields" and create the new field of the object type "Service". You can then activate the field for the customer dashboard under "Admin -> DynamicField Screens" by assigning it under "CustomerDashboardTile ServiceCatalog".'} =
+    $Self->{Translation}->{'You have the option of adding further fields here in the service catalog at any time. To do this, please go to "Admin -> DynamicFields" and create the new field of the object type "Service". You can then activate the field for the customer dashboard under "Admin -> DynamicField Screens" by assigning it under "CustomerDashboardTile ServiceCatalog".'} =
         'Sie haben jederzeit die Möglichkeit, weitere Felder hier im Servicekatalog hinzuzufügen. Hierzu gehen Sie bitte unter "Admin -> DynamicFields" und legen das neue Feld vom Objekt-Type "Service" an. Anschließend können Sie das Feld unter "Admin -> DynamicField Screens" noch für das Kundendashboard freischalten, indem Sie es unter "CustomerDashboardTile ServiceCatalog" zuordnen.';
 
     # Template: AgentITSMSLAZoom
@@ -89,11 +89,11 @@ sub Data {
     $Self->{Translation}->{'incident'} = 'Vorfall';
 
     # JS File: Core.Customer.TileServiceCatalog
-    $Self->{Translation}->{'results for %s'} = 'Ergebnisse für %s';
-    $Self->{Translation}->{'results'} = 'Ergebnisse';
+    $Self->{Translation}->{'Results for %s'} = 'Ergebnisse für %s';
+    $Self->{Translation}->{'Results'} = 'Ergebnisse';
 
     # SysConfig
-    $Self->{Translation}->{'This option makes it possible to preconfigure the automatically generated ACL\'s. The aim is to only display the services that have also been assigned to the service in the service catalogue. To use this function, please first enable the "ServiceCatalog::CreateTypeServiceRelatedAcls" option. "GenerateInitalACLToDisableAllServices" generates an ACL that initially hides all services. The value "Possible" or "PossibleAdd" can be set for the key "ConfigChange". The "DeployNewACL" key decides whether the changed ACL should also be deployed immediately. "ACLValidID" (1, 2, 3) sets the ACL\'s to valid, invalid or temporarily invalid.'} =
+    $Self->{Translation}->{'This option makes it possible to preconfigure the automatically generated ACL\'s. The aim is to only display the services that have also been assigned to the service in the service catalog. To use this function, please first enable the "ServiceCatalog::CreateTypeServiceRelatedAcls" option. "GenerateInitalACLToDisableAllServices" generates an ACL that initially hides all services. The value "Possible" or "PossibleAdd" can be set for the key "ConfigChange". The "DeployNewACL" key decides whether the changed ACL should also be deployed immediately. "ACLValidID" (1, 2, 3) sets the ACL\'s to valid, invalid or temporarily invalid.'} =
         'Diese Option ermöglicht es die automatisch generierten ACL\'s vorzukonfigurieren. Ziel ist es, lediglich die Services anzuzeigen, die auch im Servicekatalog dem Service zugewiesen wurden. Um diese Funktion zu verwenden, bitte zuerst die Option "ServiceCatalog::CreateTypeServiceRelatedAcls" aktivieren. "GenerateInitalACLToDisableAllServices" generiert eine ACL, die initial alle Services ausblendet. Für den Key "ConfigChange" kann der Wert "Possible" oder "PossibleAdd" gesetzt werden. Der Key "DeployNewACL" entscheidet darüber, ob die geänderte ACL auch sofort deployed werden soll. "ACLValidID" (1, 2, 3) setzt die ACL\’s auf gültig, ungültig oder temporär ungültig.';
     $Self->{Translation}->{'Additional settings for the service catalog.'} = 'Weitere Einstellungen bezüglich dem OTOBO Servicekatalog Feature.';
     $Self->{Translation}->{'Both'} = 'Beide';
@@ -160,8 +160,8 @@ sub Data {
         'Diese Option erlaubt die automatische Generierung von ACL\'s, die die Anzeige von Services in Abhängigkeit der im Servicekatalog zugewisenen Typen einschränkt. Um ACL\'s für bereits angelegte Services zu erstellen, kann auch das Console-Skript "AddBulkACL\ verwendet werden."';
 
     push @{ $Self->{JavaScriptStrings} // [] }, (
-        'results',
-        'results for %s',
+        'Results',
+        'Results for %s',
         'Additional information',
         'All',
         'Create %s',

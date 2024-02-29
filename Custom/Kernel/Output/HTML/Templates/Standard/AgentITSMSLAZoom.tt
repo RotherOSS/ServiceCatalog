@@ -4,7 +4,7 @@
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
 # --
-# $origin: otobo -  - Kernel/Output/HTML/Templates/Standard/AgentITSMSLAZoom.tt
+# $origin: ITSMCore - 1bbdb2a96cc97aa60ca189b096dbfc99493d8392 - Kernel/Output/HTML/Templates/Standard/AgentITSMSLAZoom.tt
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -141,9 +141,9 @@
                             <tr>
                                 <th>[% Translate("State") | html %]</th>
                                 <th>[% Translate("Service") | html %]</th>
-# Rother OSS
+# Rother OSS / ServiceCatalog
                                 <th>[% Translate("Description (short)") | html %]</th>
-# EO Rother
+# EO ServiceCatalog
                                 <th>[% Translate("Type") | html %]</th>
                                 <th>[% Translate("Criticality") | html %]</th>
                                 <th>[% Translate("Changed") | html %]</th>
@@ -162,9 +162,9 @@
                                         [% Data.Name | html %]
                                     </a>
                                 </td>
-# Rother OSS
+# Rother OSS / ServiceCatalog
                                 <td title="[% Data.DescriptionShort | html %]">[% Data.DescriptionShort | truncate(100) | html %]</td>
-# EO Rother
+# EO ServiceCatalog
                                 <td>[% Translate(Data.Type) | html %]</td>
                                 <td>[% Translate(Data.Criticality) | html %]</td>
                                 <td>[% Data.ChangeTime | Localize("TimeLong") %]</td>

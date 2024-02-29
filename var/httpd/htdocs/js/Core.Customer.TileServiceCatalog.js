@@ -285,9 +285,9 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         var SelectedService = Service[ServiceID];
 
         if (SelectedService) {
-            $l('.oooServiceResult').text(Core.Language.Translate('results for %s', SelectedService.NameShort));
+            $l('.oooServiceResult').text(Core.Language.Translate('Results for %s', SelectedService.NameShort));
         } else {
-            $l('.oooServiceResult').text(Core.Language.Translate('results'));
+            $l('.oooServiceResult').text(Core.Language.Translate('Results'));
         }
 
         var LiString = '';
