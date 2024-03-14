@@ -2,9 +2,9 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
-# $origin: otobo - fa038a38019d88902d7e5fddf3dcdfeb2effbbf0 - Kernel/Modules/AdminService.pm
+# $origin: otobo - 64d95578480e81261eefac7e2fc1c7686ee79038 - Kernel/Modules/AdminService.pm
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -35,6 +35,15 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
+    # set pref for columns key
+    $Self->{PrefKeyIncludeInvalid} = 'IncludeInvalid' . '-' . $Self->{Action};
+
+    my %Preferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences(
+        UserID => $Self->{UserID},
+    );
+
+    $Self->{IncludeInvalid} = $Preferences{ $Self->{PrefKeyIncludeInvalid} };
+
     # ---
     # RotherOSS
     # ---
@@ -59,7 +68,20 @@ sub Run {
 
     my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
+    my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
+
+    $Param{IncludeInvalid} = $ParamObject->GetParam( Param => 'IncludeInvalid' );
+
+    if ( defined $Param{IncludeInvalid} ) {
+        $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
+            UserID => $Self->{UserID},
+            Key    => $Self->{PrefKeyIncludeInvalid},
+            Value  => $Param{IncludeInvalid},
+        );
+
+        $Self->{IncludeInvalid} = $Param{IncludeInvalid};
+    }
 
 # ---
 # RotherOSS
@@ -120,8 +142,6 @@ sub Run {
 
         # challenge token check for write action
         $LayoutObject->ChallengeTokenCheck();
-
-        my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
         # get params
         my %GetParam;
@@ -509,6 +529,13 @@ sub Run {
 
         $LayoutObject->Block( Name => 'ActionList' );
         $LayoutObject->Block( Name => 'ActionAdd' );
+        $LayoutObject->Block(
+            Name => 'IncludeInvalid',
+            Data => {
+                IncludeInvalid        => $Self->{IncludeInvalid},
+                IncludeInvalidChecked => $Self->{IncludeInvalid} ? 'checked' : '',
+            },
+        );
         $LayoutObject->Block( Name => 'Filter' );
 
         # output overview result
@@ -519,7 +546,7 @@ sub Run {
 
         # get service list
         my $ServiceList = $ServiceObject->ServiceListGet(
-            Valid  => 0,
+            Valid  => $Self->{IncludeInvalid} ? 0 : 1,
             UserID => $Self->{UserID},
         );
 
