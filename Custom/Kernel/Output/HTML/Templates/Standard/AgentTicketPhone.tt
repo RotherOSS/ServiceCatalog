@@ -198,7 +198,7 @@
                     </div>
                     <div class="Clear"></div>
 # EO Rother OSS
-[% Data.DynamicFieldHTML %] 
+[% Data.DynamicFieldHTML %]
 [% RenderBlockStart("OwnerSelection") %]
                     <label for="NewUserID">[% Translate("Owner") | html %]:</label>
                     <div class="Field">

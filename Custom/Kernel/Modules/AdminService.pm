@@ -426,6 +426,7 @@ sub Run {
 
                 $UploadCacheObject->FormIDRemove( FormID => $Self->{FormID} );
 
+                DYNAMICFIELD:
                 for my $DynamicField ( @{ $Self->{DynamicFieldLookup} } ) {
                     my $ValueSet = $DynamicFieldBackendObject->ValueSet(
                         DynamicFieldConfig => $DynamicField,
@@ -442,22 +443,22 @@ sub Run {
                                 $DynamicField->{Name},
                             ),
                         );
-                        next;
+                        next DYNAMICFIELD;
                     }
                 }
-# Rother OSS / ServiceCatalog 
-		# Create Acl if config is enabled
-		# We create one Acl per Ticket-Type
-		if ( $ConfigObject->Get('ServiceCatalog::CreateTypeServiceRelatedAcls') ) {
-		    for my $TicketType ( @{ $GetParam{TicketTypeIDs} } ) {
-                        my $Success = $ServiceObject->UpdateTypServiceACL(
-	       	            TicketTypeID => $TicketType,
-                            ServiceID   => $GetParam{ServiceID},
-                            ServiceValid => $GetParam{ValidID},
-			    UserID => 1,
-                        );
-		    }
-	        }
+# Rother OSS / ServiceCatalog
+        # Create Acl if config is enabled
+        # We create one Acl per Ticket-Type
+        if ( $ConfigObject->Get('ServiceCatalog::CreateTypeServiceRelatedAcls') ) {
+            for my $TicketType ( @{ $GetParam{TicketTypeIDs} } ) {
+                    my $Success = $ServiceObject->UpdateTypServiceACL(
+                        TicketTypeID => $TicketType,
+                        ServiceID   => $GetParam{ServiceID},
+                        ServiceValid => $GetParam{ValidID},
+                        UserID => 1,
+                    );
+                }
+            }
 # EO Rother OSS
 # ---
 
@@ -683,7 +684,7 @@ sub _MaskNew {
     # Move Ticket to queue
     my %TicketQueueList = $Kernel::OM->Get('Kernel::System::Queue')->GetAllQueues(
         Valid => 1,
-    );  
+    );
 
     # Build ticket queue selection.
     $ServiceData{TicketQueueOptionStrg} = $LayoutObject->BuildSelection(
@@ -691,14 +692,14 @@ sub _MaskNew {
         Name         => 'DestQueueID',
         Multiple     => 0,
         PossibleNone => 1,
-    	TreeView       => ( $ListType eq 'tree' ) ? 1 : 0,
+        TreeView       => ( $ListType eq 'tree' ) ? 1 : 0,
         SelectedID   => $Param{DestQueueID} || $ServiceData{DestQueueID},
         Class        => 'Modernize',
     );
 
-# Rother OSS: Default Customer Service 
+# Rother OSS: Default Customer Service
     my %DefaultServices = $ServiceObject->CustomerUserServiceMemberList(
-	CustomerUserLogin => '<DEFAULT>',
+        CustomerUserLogin => '<DEFAULT>',
         Result            => 'HASH',
         DefaultServices   => 1,
     );
@@ -707,11 +708,11 @@ sub _MaskNew {
 
     DEFAULTSERVICE:
     for my $DefService ( keys %DefaultServices ) {
-    
+
         if ( $ServiceData{ServiceID} eq $DefService ) {
             $ServiceData{CustomerServiceChecked} = 'checked';
-	    last DEFAULTSERVICE;
-	}
+            last DEFAULTSERVICE;
+        }
     }
 # EO Rother OSS
     # add rich text editor
@@ -793,6 +794,7 @@ sub _MaskNew {
     my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
     my $ParamObject               = $Kernel::OM->Get('Kernel::System::Web::Request');
 
+    DYNAMICFIELD:
     for my $DynamicField ( @{ $Self->{DynamicFieldLookup} } ) {
 
         my $ValueGet = $DynamicFieldBackendObject->ValueGet(
@@ -813,7 +815,7 @@ sub _MaskNew {
             # %{ $Param{Errors}->{ $Entry->[0] } },
         );
 
-        next if !IsHashRefWithData($DynamicFieldHTML);
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldHTML);
 
         $LayoutObject->Block(
             Name => 'DynamicField',

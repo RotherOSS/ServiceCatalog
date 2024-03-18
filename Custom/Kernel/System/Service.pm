@@ -31,9 +31,13 @@ our @ObjectDependencies = (
 # ---
 # ITSMCore
 # ---
+    'Kernel::System::ACL::DB::ACL',
     'Kernel::System::DynamicField',
+    'Kernel::System::Encode',
     'Kernel::System::GeneralCatalog',
     'Kernel::System::LinkObject',
+    'Kernel::System::Service',
+    'Kernel::System::Type',
 # ---
     'Kernel::System::Log',
     'Kernel::System::Main',
@@ -593,7 +597,7 @@ sub ServiceGet {
 # ---
         $ServiceData{DescriptionShort} = $Row[10];
         $ServiceData{DescriptionLong}  = $Row[11];
-	$ServiceData{DestQueueID}  = $Row[12];
+        $ServiceData{DestQueueID}  = $Row[12];
 # ---
     }
 
@@ -1127,8 +1131,9 @@ sub ServiceUpdate {
 # RotherOSS
 # ---
     # Insert new ticket type relations.
+    TICKETTYPEID:
     for my $TicketTypeID ( @{ $Param{TicketTypeIDs} } ) {
-        next if !$TicketTypeID;
+        next TICKETTYPEID if !$TicketTypeID;
         return if !$DBObject->Do(
             SQL => 'INSERT INTO service_type '
                 . '(service_id, ticket_type_id, create_time, create_by) '
@@ -1183,9 +1188,9 @@ return service ids as an array
 # ITSMCore
 # ---
 # Rother OSS
-#	TypeIDs       => 2,
-# EO Rother OSS 
-	Criticalities => [ '2 low', '3 normal' ],
+#         TypeIDs       => 2,
+# EO Rother OSS
+        Criticalities => [ '2 low', '3 normal' ],
 # ---
     );
 
@@ -1735,7 +1740,7 @@ sub _ServiceGetCurrentIncidentState {
     # make local copies
     my %ServiceData = %{ $Param{ServiceData} };
     my %Preferences = %{ $Param{Preferences} };
-# Rother OSS 
+# Rother OSS
 #    # get service type list
 #    my $ServiceTypeList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
 #        Class => 'ITSM::Service::Type',
@@ -1924,10 +1929,12 @@ sub _ServiceGetCurrentIncidentState {
 # ---
 
 
-# --- 
+# ---
 # RotherOSS
 # ---
+=for stopwords image.png
 =head2 AttachmentAdd()
+
 add article attachments, returns the attachment id
     my $AttachmentID = $ServiceObject->AttachmentAdd(
         ServiceID   => $123,
@@ -1988,7 +1995,7 @@ sub AttachmentAdd {
         # if the file name exists
         if ( exists $UsedFile{$NewFileName} ) {
 
-            # filename has a file name extension (e.g. test.jpg)
+            # filename has a file name extension
             if ( $Param{FileName} =~ m{ \A (.*) \. (.+?) \z }xms ) {
                 $NewFileName = "$1-$Count.$2";
             }
@@ -2109,7 +2116,7 @@ sub ServiceInlineAttachmentURLUpdate {
     }
 
     # Cut off sub services from service name
-    $ServiceData{Name} = (split '::', $ServiceData{Name})[-1];
+    $ServiceData{Name} = (split /::/, $ServiceData{Name})[-1];
 
     # update service
     my $Success = $Self->ServiceUpdate(
@@ -2130,7 +2137,10 @@ sub ServiceInlineAttachmentURLUpdate {
     return 1;
 }
 
+=for stopwords Error.jpg
+
 =head2 AttachmentGet()
+
 get attachment of service ID
     my %File = $ServiceObject->AttachmentGet(
         ServiceID => 123,
@@ -2189,6 +2199,8 @@ sub AttachmentGet {
     return %File;
 }
 # ---
+
+=for stopwords Error.jpg Solution.jpg AdditionalComments.txt
 
 =head2 AttachmentIndex()
 return an attachment index of an service id
@@ -2325,6 +2337,8 @@ sub AttachmentDelete {
     return 1;
 }
 
+=for stopwords acl
+
 =head2 UpdateTypServiceACL()
 delete attachment of article
     my $Success = $ServiceObject->UpdateTypServiceACL(
@@ -2372,13 +2386,13 @@ sub UpdateTypServiceACL {
 
     if ( !$TicketType ) {
     # Remove Service from all ACLs.
-   
+
         my %TypeList = $TypeObject->TypeList(
             Valid => 1,
         );
 
-	TYPE:
-	for my $TicketType ( values %TypeList ) {
+    TYPE:
+    for my $TicketType ( values %TypeList ) {
 
             my $ACLRemoveName = 'zzz - Show Service based on Ticket-Type: ' . $TicketType;
 
@@ -2388,22 +2402,22 @@ sub UpdateTypServiceACL {
                 UserID => 1,
             );
 
-	    if (IsHashRefWithData($ACL) ) {
-          
-		my $ConfigChangeHashRefOld = $ACL->{ConfigChange};
-		my $OldServices = $ConfigChangeHashRefOld->{$Possible} && $ConfigChangeHashRefOld->{$Possible}{Ticket} ? $ConfigChangeHashRefOld->{$Possible}{Ticket}{Service} : undef;
-                my @ConfigServices = $OldServices ? $OldServices->@* : ();
-		@ConfigServices = grep(!/$ServiceName/, @ConfigServices);
+        if (IsHashRefWithData($ACL) ) {
+
+            my $ConfigChangeHashRefOld = $ACL->{ConfigChange};
+            my $OldServices = $ConfigChangeHashRefOld->{$Possible} && $ConfigChangeHashRefOld->{$Possible}{Ticket} ? $ConfigChangeHashRefOld->{$Possible}{Ticket}{Service} : undef;
+            my @ConfigServices = $OldServices ? $OldServices->@* : ();
+            @ConfigServices = grep { $_ !~ /$ServiceName/ } @ConfigServices;
 
                 $ConfigChangeHashRefOld->{$Possible}{Ticket}{Service} = [@ConfigServices];
                 $ACL->{ConfigChange} = $ConfigChangeHashRefOld;
 
-    		$Success = $ACLObject->ACLUpdate(
+            $Success = $ACLObject->ACLUpdate(
                     $ACL->%*,
                     UserID => 1,
                 );
-	    }
-	}
+        }
+    }
         return 1;
     }
 
@@ -2412,21 +2426,21 @@ sub UpdateTypServiceACL {
 
         my $ACLDisableName = 'zza - Disable all Services if no Ticket-Type is selected.';
 
-	# Check if disable ACL exists
-	my $ACL = $ACLObject->ACLGet(
+    # Check if disable ACL exists
+    my $ACL = $ACLObject->ACLGet(
             Name   => $ACLDisableName,
             UserID => 1,
         );
 
-	# Create ACL if it not exists
-	if ( !IsHashRefWithData($ACL) ) {
+    # Create ACL if it not exists
+    if ( !IsHashRefWithData($ACL) ) {
 
-	    my $DisableConfigMatchHashRef;
-	    $DisableConfigMatchHashRef->{Properties}->{Frontend}->{Action} = $FrontendAction;
-	    # $DisableConfigMatchHashRef->{Properties}->{Ticket}->{Type} = [];
+        my $DisableConfigMatchHashRef;
+        $DisableConfigMatchHashRef->{Properties}->{Frontend}->{Action} = $FrontendAction;
+        # $DisableConfigMatchHashRef->{Properties}->{Ticket}->{Type} = [];
 
-	    my $DisableConfigChangeHashRef;
-	    $DisableConfigChangeHashRef->{PossibleNot}{Ticket}{Service} = ['[RegExp].*'];
+        my $DisableConfigChangeHashRef;
+        $DisableConfigChangeHashRef->{PossibleNot}{Ticket}{Service} = ['[RegExp].*'];
 
             my %NewACL = (
                 Name           => $ACLDisableName,
@@ -2442,7 +2456,7 @@ sub UpdateTypServiceACL {
                 %NewACL,
                 UserID => 1,
             );
-	}
+    }
     }
 
     $ACLName = 'zzz - Show Service based on Ticket-Type: ' . $TicketType;
@@ -2475,7 +2489,7 @@ sub UpdateTypServiceACL {
 
         my $ConfigChangeHashRef = {};
 
-        if (! grep(/$ServiceName/, @ConfigServices) ) {
+        if (! grep { $_ =~ /$ServiceName/ } @ConfigServices ) {
             push (@ConfigServices, $ServiceName);
             $ConfigChangeHashRef->{$Possible}{Ticket}{Service} = [@ConfigServices];
 
@@ -2486,21 +2500,19 @@ sub UpdateTypServiceACL {
             }
         } else {
             $ConfigChangeHashRef = $ConfigChangeHashRefOld;
-	}
+    }
 
         my %NewACL = (
             Name           => $ACLName,
             Comment        => 'This ACL was generated when a service was added or changed.',
             Description    => 'This ACL is used to restrict Services per Ticket-Type',
-            StopAfterMatch => 0,                    
-            ConfigMatch    => $ConfigMatchHashRef,  
-            ConfigChange   => $ConfigChangeHashRef, 
+            StopAfterMatch => 0,
+            ConfigMatch    => $ConfigMatchHashRef,
+            ConfigChange   => $ConfigChangeHashRef,
             ValidID        => $ACLValidID,
         );
 
         if ( IsHashRefWithData($ACL) ) {
-                use Data::Dumper;
-                print STDERR Dumper(\%NewACL);
             $Success = $ACLObject->ACLUpdate(
                 $ACL->%*,
                 %NewACL,
@@ -2509,8 +2521,6 @@ sub UpdateTypServiceACL {
         }
 
         else {
-		use Data::Dumper;
-		print STDERR Dumper(\%NewACL);
             $Success = $ACLObject->ACLAdd(
                 %NewACL,
                 UserID => 1,

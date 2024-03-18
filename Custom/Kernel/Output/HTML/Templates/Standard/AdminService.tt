@@ -209,7 +209,7 @@
                             <textarea id="RichText" class="RichText" rows="10" cols="60" name="DescriptionLong">[% Data.DescriptionLong | html %]</textarea>
                         </div>
                         <div class="Clear"></div>
-                        [% Data.DynamicFieldHTML %] 
+                        [% Data.DynamicFieldHTML %]
 # ---
 # Rother OSS
 ## ---

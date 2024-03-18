@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
 # $origin: otobo -  - Kernel/Output/HTML/Templates/Standard/AgentITSMServiceZoom.tt
 # --
@@ -130,27 +130,6 @@
                             <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" width="100%" frameborder="0" id="ServiceID[% Data.ServiceID | html %]" onload="ResizeIframe(this);" src="[% Env("Baselink") %]Action=AgentITSMServiceZoom;Subaction=HTMLView;ServiceID=[% Data.ServiceID | html %][% IF !Config("SessionUseCookie") %][% Env("SessionName") | html %]=[% Env("SessionID") | html %][% END %]"></iframe>
                         </div>
                         <div class="Clear"></div>
-
-# Load JavaScript here. Otherwise our API could not be loaded yet.
-<script>
-    function ResizeIframe(Iframe) {
-        Iframe = isJQueryObject(Iframe) ? Iframe.get(0) : Iframe;
-
-        var $IframeContent = $(Iframe.contentDocument || Iframe.contentWindow.document),
-            NewHeight = $IframeContent.height();
-        if (!NewHeight || isNaN(NewHeight)) {
-            NewHeight = 100;
-        }
-        else {
-            if (NewHeight > 600) {
-                NewHeight = 600;
-            }
-        }
-
-        NewHeight = parseInt(NewHeight, 10);
-        $(Iframe).height(NewHeight + 'px');
-    }
-</script>
 
 # ToDo: Move this to a custom CSS when porting into the core.
 <style>
