@@ -28,7 +28,7 @@ Core.Agent = Core.Agent || {};
  */
 Core.Agent.ITSMServiceZoom = (function (TargetNS) {
 
-    function ResizeIframe(Iframe) {
+     TargetNS.ResizeIframe = function(Iframe) {
         Iframe = isJQueryObject(Iframe) ? Iframe.get(0) : Iframe;
 
         var $IframeContent = $(Iframe.contentDocument || Iframe.contentWindow.document),
