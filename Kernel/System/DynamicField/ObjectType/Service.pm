@@ -48,10 +48,7 @@ by using Kernel::System::DynamicField::ObjectType::Service->new();
 sub new {
     my ( $Type, %Param ) = @_;
 
-    my $Self = {};
-    bless( $Self, $Type );
-
-    return $Self;
+    return bless {}, $Type;
 }
 
 =head2 PostValueSet()
@@ -71,7 +68,7 @@ perform specific functions after the Value set for this object type.
 sub PostValueSet {
     my ( $Self, %Param ) = @_;
 
-    # Check needed stuff.
+    # check needed stuff
     for my $Needed (qw(DynamicFieldConfig ObjectID UserID)) {
         if ( !$Param{$Needed} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -82,7 +79,7 @@ sub PostValueSet {
         }
     }
 
-    # Check DynamicFieldConfig (general).
+    # check DynamicFieldConfig (general)
     if ( !IsHashRefWithData( $Param{DynamicFieldConfig} ) ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
@@ -91,7 +88,7 @@ sub PostValueSet {
         return;
     }
 
-    # Check DynamicFieldConfig (internally).
+    # check DynamicFieldConfig (internally)
     for my $Needed (qw(ID FieldType ObjectType)) {
         if ( !$Param{DynamicFieldConfig}->{$Needed} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -165,6 +162,8 @@ sub ObjectDataGet {
     }
 
     my $UserID = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'ID' ) || '';
+
+    return unless $UserID;
 
     my $ObjectID;
 
