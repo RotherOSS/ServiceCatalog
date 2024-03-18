@@ -2,9 +2,9 @@
 // OTOBO is a web-based ticketing system for service organisations.
 // --
 // Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-// Copyright (C) 2019-2023 Rother OSS GmbH, https://otobo.de/
+// Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 // --
-// $origin: otobo - a077e914380d1a13d5aa31472ea687353b614622 - var/httpd/htdocs/js/Core.UI.Dialog.js
+// $origin: otobo - 24af83c5858e3be7ac0ca06aca13ea9503e097a1 - var/httpd/htdocs/js/Core.UI.Dialog.js
 // --
 // This program is free software: you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -132,7 +132,7 @@ Core.UI.Dialog = (function (TargetNS) {
      *      Must be unbinded when closing the dialog.
      */
     function InitKeyEvent(CloseOnEscape) {
-        var $Dialog = () => $('div.Dialog:visible');
+        var $Dialog = $('div.Dialog:visible');
         /*
          * Opera can't prevent the default action of special keys on keydown. That's why we need a special keypress event here,
          * to prevent the default action for the special keys.
@@ -150,7 +150,7 @@ Core.UI.Dialog = (function (TargetNS) {
             // Tab pressed
             if (Event.keyCode === 9) {
                 // :tabbable probably comes from jquery UI
-                $Tabbables = $('a:visible, input:visible, textarea:visible, select:visible, button:visible', $Dialog());
+                $Tabbables = $('a:visible, input:visible, textarea:visible, select:visible, button:visible', $Dialog);
                 $First = $Tabbables.filter(':first');
                 $Last = $Tabbables.filter(':last');
 
@@ -169,7 +169,7 @@ Core.UI.Dialog = (function (TargetNS) {
             }
             // Escape pressed and CloseOnEscape is true
             else if (Event.keyCode === 27 && CloseOnEscape) {
-                TargetNS.CloseDialog($Dialog());
+                TargetNS.CloseDialog($Dialog);
                 Event.preventDefault();
                 Event.stopPropagation();
                 return false;
@@ -226,7 +226,9 @@ Core.UI.Dialog = (function (TargetNS) {
      * @param {String} Params.Buttons.Type - 'Submit'|'Close' (default: none) Special type of the button - invokes a standard function.
      * @param {String} Params.Buttons.Class - Optional class parameters for the button element.
      * @param {Function} Params.Buttons.Function - The function which is executed on click (optional).
+// Rother OSS / ServiceCatalog
      * @param {Boolean} Params.Stacked - If true, then a new dialog appears on top of existing ones (default: false).
+// EO ServiceCatalog
      * @description
      *      The main dialog function used for all different types of dialogs.
      */
@@ -237,7 +239,10 @@ Core.UI.Dialog = (function (TargetNS) {
             FullsizeMode = false,
             CustomerInterface = Core.Config.Get('SessionName') === Core.Config.Get('CustomerPanelSessionName');
 
+// Rother OSS / ServiceCatalog
+//         DialogHTML = '<div class="Dialog">';
         DialogHTML = '<div class="Dialog"' + (Params.Stacked ? ' data-stacked="stacked"' : '') + '>';
+// EO ServiceCatalog
         if (!Params.HideHeader) {
             var CloseIcon = CustomerInterface ? 'ooofo ooofo-close' : 'fa fa-times';
             DialogHTML += '<div class="Header"><a class="Close" title="' + Core.Language.Translate('Close this dialog') + '" href="#"><i class="' + CloseIcon + '"></i></a></div>';
@@ -329,7 +334,10 @@ Core.UI.Dialog = (function (TargetNS) {
         Core.App.Publish('Event.UI.Dialog.ShowDialog.BeforeOpen');
 
         // Close all opened dialogs
+// Rother OSS / ServiceCatalog
+//         if ($('.Dialog:visible').length) {
         if ($('.Dialog:visible').length && !Params.Stacked) {
+// EO ServiceCatalog
             TargetNS.CloseDialog($('.Dialog:visible'));
         }
 
@@ -578,7 +586,14 @@ Core.UI.Dialog = (function (TargetNS) {
             $(document).off('click.Dialog').on('click.Dialog', function (event) {
                 // If target element is removed before this event triggers, the enclosing div.Dialog can't be found anymore
                 // We check, if we can find a parent HTML element to be sure, that the element is not removed
-                if ($(event.target).parents('html').length && $(event.target).closest('div.Dialog').length === 0) {
+                if (
+                    $(event.target).parents('html').length
+                    && $(event.target).closest('div.Dialog').length === 0
+
+                    // Case autocomplete dropdown in modal dialogs
+                    // NOTE: currently only occurs when using dynamic field reference search fields in ticket search or config item search
+                    && !$(event.target).hasClass('ui-menu-item-wrapper')
+                ) {
                     HandleClosingAction();
                 }
             });
@@ -715,6 +730,38 @@ Core.UI.Dialog = (function (TargetNS) {
         // publish close event
         Core.App.Publish('Event.UI.Dialog.CloseDialog.Close', [$Dialog]);
 
+// Rother OSS / ServiceCatalog
+//         $Dialog.remove();
+//         $('#Overlay').remove();
+//         $('body').css({
+//             'overflow': 'auto'
+//         });
+//         $(document).unbind('keydown.Dialog').unbind('keypress.Dialog').unbind('click.Dialog');
+//         $(window).unbind('resize.Dialog');
+//         $('body').css('min-height', 'auto');
+//
+//         // Revert orignal html
+//         if (InternalDialogCounter) {
+//             DialogCopy = Core.Data.Get($('body'), 'DialogCopy');
+//             DialogSelectorData = Core.Data.Get($('body'), 'DialogSelector');
+//             // Get saved HTML
+//             if (typeof DialogCopy !== 'undefined') {
+//                 BackupHTML = DialogCopy[InternalDialogCounter];
+//                 $DialogSelector = DialogSelectorData[InternalDialogCounter];
+//
+//                 // If HTML could be restored, write it back into the page
+//                 if (BackupHTML && BackupHTML.length) {
+//                     $DialogSelector.append(BackupHTML);
+//                 }
+//
+//                 // delete this variable from the object
+//                 delete DialogCopy[InternalDialogCounter];
+//                 delete DialogSelectorData[InternalDialogCounter];
+//             }
+//
+//             // write the new DialogCopy back
+//             Core.Data.Set($('body'), 'DialogCopy', DialogCopy);
+//         }
         if ($Dialog.length > 1 && $Dialog[$Dialog.length - 1].dataset.stacked) {
             $($Dialog[$Dialog.length - 1]).remove();
         } else {
@@ -750,6 +797,7 @@ Core.UI.Dialog = (function (TargetNS) {
                 Core.Data.Set($('body'), 'DialogCopy', DialogCopy);
             }
         }
+// EO ServiceCatalog
     };
 
     return TargetNS;

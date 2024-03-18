@@ -2,7 +2,7 @@
 // OTOBO is a web-based ticketing system for service organisations.
 // --
 // Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-// Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
+// Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 // --
 // This program is free software: you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -71,7 +71,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
         $(document).on('click', '.Dialog .oooServiceContainer', function(Event) {
             if (
                 $(Event.target).hasClass('ooofo-info') || $(Event.target).hasClass('ooofo-add') || $(Event.target).hasClass('oooServiceInformation')
-                || $(Event.target).hasClass('oooServiceActions') || $(Event.target).hasClass('oooServiceActionDetails') ||  $(Event.target).hasClass('oooServiceBottom') || $(Event.target).hasClass('ooofo-arrow_r') 
+                || $(Event.target).hasClass('oooServiceActions') || $(Event.target).hasClass('oooServiceActionDetails') ||  $(Event.target).hasClass('oooServiceBottom') || $(Event.target).hasClass('ooofo-arrow_r')
                 ) {
                 return;
             }
@@ -191,7 +191,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
             }
             var DisplayServiceHTML = TargetNS.DisplayService(SubserviceID, Class);
             $(DisplayServiceHTML).appendTo($l('.oooServiceWrapper'));
-        } 
+        }
 
         TargetNS.CreateBreadcrumb(ServiceID);
     }
@@ -264,7 +264,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
             NumberOfSubservices: TargetNS.GetSubservices(ServiceID).length,
             SubservicesHTML: SubservicesHTML,
         });
-        
+
         $(Detailed).appendTo($l('.oooServiceWrapper'));
 
         // Resize iFrame.
@@ -292,7 +292,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
 
         var LiString = '';
         // var LiString = '<i class="oooScrollLeft ooofo-arrow_l"></i>';
- 
+
         // Add the current service to the list.
         if (ServiceID != 'All') {
             LiString += '<li data-service-id="' + SelectedService.ServiceID + '" class="oooServiceIDAvailable oooServiceIDSelected">' + SelectedService.NameShort + '</li>';
@@ -394,7 +394,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
                     SortByTicketType[ServiceName] = ServiceID;
                 }
             });
-    
+
             // Add all removed subservices back to the main list.
             $.extend(Subservices, SortByTicketType);
         }
@@ -413,7 +413,7 @@ Core.Customer.TileServiceCatalog = (function (TargetNS) {
      */
     TargetNS.GetAllSubservices = function(ServiceID) {
         var Service = JSON.parse(Core.Config.Get('ServiceList'));
-        
+
         // Get all subservices of ServiceID.
         var Subservices = TargetNS.GetSubservices(ServiceID);
         var AllSubservices = Subservices;
