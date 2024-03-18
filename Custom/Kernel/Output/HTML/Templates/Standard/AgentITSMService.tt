@@ -30,6 +30,7 @@
                             <th>[% Translate("State") | html %]</th>
                             <th>[% Translate("Service") | html %]</th>
 # Rother OSS
+#                             <th>[% Translate("Comment") | html %]</th>
                             <th>[% Translate("Description (short)") | html %]</th>
 # EO Rother
                             <th>[% Translate("Type") | html %]</th>
@@ -52,6 +53,7 @@
                                 </a>
                             </td>
 # Rother OSS
+#                             <td title="[% Data.Comment | html %]">[% Data.Comment | truncate(100) | html %]</td>
                             <td title="[% Data.DescriptionShort | html %]">[% Data.DescriptionShort | truncate(100) | html %]</td>
 # EO Rother
                             <td>[% Translate(Data.Type) | html %]</td>
