@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -26,7 +26,7 @@ use strict;
 use warnings;
 use Kernel::System::VariableCheck qw(:all);
 
-our @ObjectDependencies = ( 
+our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::DynamicField',
     'Kernel::System::DynamicField::Backend',
@@ -37,49 +37,48 @@ our @ObjectDependencies = (
 );
 
 sub new {
-    my ( $Type, %Param ) = @_; 
+    my ( $Type, %Param ) = @_;
 
     # allocate new hash for object
-    my $Self = {}; 
+    my $Self = {};
     bless( $Self, $Type );
 
     return $Self;
 }
 
 sub Run {
-    my ( $Self, %Param ) = @_; 
+    my ( $Self, %Param ) = @_;
 
     # check needed stuff
     for my $Needed (qw(Data UserID)) {
-        if ( !$Param{$Needed} ) { 
+        if ( !$Param{$Needed} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Needed!",
-            );  
+            );
             return;
-        }   
-    }   
+        }
+    }
     for my $Needed (qw(TicketID)) {
-        if ( !$Param{Data}->{$Needed} ) { 
+        if ( !$Param{Data}->{$Needed} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Needed! in Data",
-            );  
+            );
             return;
-        }   
-    }   
-
+        }
+    }
 
     # get ticket data
     my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
-        TicketID => $Param{Data}->{TicketID},
+        TicketID      => $Param{Data}->{TicketID},
         DynamicFields => 1,
-        Silence => 1,
-        UserID => 1,
+        Silence       => 1,
+        UserID        => 1,
     );
 
     return if !%Ticket;
-    return if !IsStringWithData($Ticket{DynamicField_ITSMImpact}) || !IsStringWithData($Ticket{DynamicField_ITSMCriticality});
+    return if !IsStringWithData( $Ticket{DynamicField_ITSMImpact} ) || !IsStringWithData( $Ticket{DynamicField_ITSMCriticality} );
 
     my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
 
@@ -91,7 +90,7 @@ sub Run {
     # get dynamic field objects
     my $DynamicFieldObject        = $Kernel::OM->Get('Kernel::System::DynamicField');
     my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-    my $CIPAllocateObject = $Kernel::OM->Get('Kernel::System::ITSMCIPAllocate');
+    my $CIPAllocateObject         = $Kernel::OM->Get('Kernel::System::ITSMCIPAllocate');
 
     my $PriorityID = $CIPAllocateObject->PriorityAllocationGet(
         Criticality => $Ticket{DynamicField_ITSMCriticality},
@@ -101,13 +100,12 @@ sub Run {
     return if $PriorityID eq $Ticket{PriorityID};
 
     my $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketPrioritySet(
-        TicketID => $Param{Data}->{TicketID},
+        TicketID   => $Param{Data}->{TicketID},
         PriorityID => $PriorityID,
-        UserID   => 1,
+        UserID     => 1,
     );
 
     return 1;
 }
 
 1;
-

@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -19,7 +19,7 @@ package Kernel::Output::HTML::CustomerDashboard::TileServiceCatalog;
 use strict;
 use warnings;
 
-use Kernel::Language qw(Translatable);
+use Kernel::Language              qw(Translatable);
 use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
@@ -28,8 +28,12 @@ our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout',
     'Kernel::System::CustomerUser',
     'Kernel::System::DateTime',
+    'Kernel::System::DynamicField',
+    'Kernel::System::DynamicField::Backend',
     'Kernel::System::FAQ',
     'Kernel::System::HTMLUtils',
+    'Kernel::System::LinkObject',
+    'Kernel::System::Package',
     'Kernel::System::Service',
     'Kernel::System::SLA',
     'Kernel::System::Ticket',
@@ -54,7 +58,7 @@ sub Run {
     my $LanguageObject = $Kernel::OM->Get('Kernel::Language');
     my $LayoutObject   = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $SLAObject      = $Kernel::OM->Get('Kernel::System::SLA');
-    my $PackageObject = $Kernel::OM->Get('Kernel::System::Package');
+    my $PackageObject  = $Kernel::OM->Get('Kernel::System::Package');
 
     my $DefaultTimeZone = $Kernel::OM->Create('Kernel::System::DateTime')->OTOBOTimeZoneGet();
 
@@ -65,15 +69,15 @@ sub Run {
 
     # Only get information of SLAs or calendars once and save them in hashes.
     my %SLAIDs = $SLAObject->SLAList(
-        Valid     => 1,
-        UserID    => 1,
+        Valid  => 1,
+        UserID => 1,
     );
 
     # Get all SLA and associated calendar information.
     my %ServiceList;
     my %SLAList;
     my %CalendarList;
-    my @WeekDays = ( 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' );  # FIXME/Improve: Work with CalendarWeekDayStart
+    my @WeekDays = ( 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' );    # FIXME/Improve: Work with CalendarWeekDayStart
     for my $SLAID ( keys %SLAIDs ) {
         my %SLAData = $SLAObject->SLAGet(
             SLAID  => $SLAID,
@@ -88,6 +92,7 @@ sub Run {
 
         # Calendar does not exist yet.
         if ( $SLAData{Calendar} && !$CalendarList{ $SLAData{Calendar} } ) {
+
             # Get the calendar and the time zone.
             my $Calendar = $ConfigObject->Get( 'TimeWorkingHours::Calendar' . $SLAData{Calendar} );
             $Calendar->{TimeZone} = $ConfigObject->Get( 'TimeZone::Calendar' . $SLAData{Calendar} ) || $DefaultTimeZone;
@@ -100,7 +105,7 @@ sub Run {
                 # The day has working hours.
                 if ( IsArrayRefWithData($Day) ) {
                     my $FirstHour = $Day->[0];
-                    my $LastHour  = $Day->[$#$Day];
+                    my $LastHour  = $Day->[-1];
 
                     # We need one hour more, cause the calendar means inclusive the last hour
                     $LastHour++;
@@ -110,32 +115,37 @@ sub Run {
                         $Run{StartDay}  = $WeekDays[$Index];
                         $Run{FirstHour} = $FirstHour;
                         $Run{LastHour}  = $LastHour;
-                    } 
+                    }
+
                     # The current date has different working hours than the last day of the run.
                     elsif ( $FirstHour != $Run{FirstHour} || $LastHour != $Run{LastHour} ) {
+
                         # Set the last day to yesterday and reset the run.
                         $Run{LastDay} = $WeekDays[ ( $Index - 1 ) ];
-                        push @{ $Calendar->{WorkingHours} }, { %Run };
+                        push @{ $Calendar->{WorkingHours} }, {%Run};
                         undef %Run;
 
                         $Run{StartDay}  = $WeekDays[$Index];
                         $Run{FirstHour} = $FirstHour;
                         $Run{LastHour}  = $LastHour;
                     }
-                } else {
+                }
+                else {
                     # No data for the day. Check if the run needs to be stopped.
                     if ( $Run{StartDay} ) {
                         $Run{LastDay} = $WeekDays[ ( $Index - 1 ) ];
-                        push @{ $Calendar->{WorkingHours} }, { %Run };
+                        push @{ $Calendar->{WorkingHours} }, {%Run};
                         undef %Run;
-                    } 
+                    }
                 }
+
                 # It's the last day of the week.
                 if ( $Index == 6 ) {
+
                     # If the run is still going on, close it.
                     if ( $Run{StartDay} ) {
                         $Run{LastDay} = $WeekDays[$Index];
-                        push @{ $Calendar->{WorkingHours} }, { %Run };
+                        push @{ $Calendar->{WorkingHours} }, {%Run};
                     }
                 }
             }
@@ -163,21 +173,24 @@ sub Run {
         QueueID        => 1,
     );
 
-    my $Settings = $ConfigObject->Get( 'CustomerDashboard::Configuration::ServiceCatalog' ) || {}; 
+    my $Settings = $ConfigObject->Get('CustomerDashboard::Configuration::ServiceCatalog') || {};
+    SERVICEREF:
     for my $ServiceRef ( @{$ServiceListRefArray} ) {
         $ServiceListRef{ $ServiceRef->{ServiceID} } = $ServiceRef;
 
         # Check if the customer has permission on this service.
-        next if !$ServiceIDs{ $ServiceRef->{ServiceID} };
+        next SERVICEREF if !$ServiceIDs{ $ServiceRef->{ServiceID} };
         my %Service = ();
 
         # Get all needed parameters
-        for my $Needed ( qw(ServiceID NameShort DescriptionShort DescriptionLong TicketTypeIDs ParentID) ) {
+        for my $Needed (qw(ServiceID NameShort DescriptionShort DescriptionLong TicketTypeIDs ParentID)) {
             if ( $ServiceRef->{$Needed} ) {
                 if ( $Needed eq 'TicketTypeIDs' ) {
+
                     # Get names of all assigned types.
                     for my $TypeID ( @{ $ServiceRef->{$Needed} } ) {
-                        my $TypeName =  $LanguageObject->Translate( $TypeList{$TypeID} );
+                        my $TypeName = $LanguageObject->Translate( $TypeList{$TypeID} );
+
                         # Check if the assigned type ID is still valid.
                         if ($TypeName) {
                             $Service{TicketType}{$TypeName} = {
@@ -186,7 +199,8 @@ sub Run {
                             };
                         }
                     }
-                } else {
+                }
+                else {
                     $Service{$Needed} = $ServiceRef->{$Needed};
                 }
             }
@@ -196,15 +210,17 @@ sub Run {
         my $SLAIDs = $ServiceList{ $Service{ServiceID} }{SLAIDs};
 
         my %DontSet;
-        for my $SLAID ( @{ $SLAIDs } ) {
-            my $SLA = $SLAList{$SLAID};
+        SLAID:
+        for my $SLAID ( @{$SLAIDs} ) {
+            my $SLA      = $SLAList{$SLAID};
             my $Calendar = $CalendarList{ $SLA->{Calendar} };
 
             # This service is linked to at least two SLAs with different first response times.
             if ( $Service{FirstResponseTime} && $Service{FirstResponseTime} ne $SLA->{FirstResponseTime} ) {
                 undef $Service{FirstResponseTime};
                 $DontSet{FirstResponseTime} = 1;
-            } elsif ( !$DontSet{FirstResponseTime} ) {
+            }
+            elsif ( !$DontSet{FirstResponseTime} ) {
                 $Service{FirstResponseTime} = $SLA->{FirstResponseTime};
             }
 
@@ -212,69 +228,75 @@ sub Run {
             if ( $Service{SolutionTime} && $Service{SolutionTime} ne $SLA->{SolutionTime} ) {
                 undef $Service{SolutionTime};
                 $DontSet{SolutionTime} = 1;
-            } elsif ( !$DontSet{SolutionTime} ) {
+            }
+            elsif ( !$DontSet{SolutionTime} ) {
                 $Service{SolutionTime} = $SLA->{SolutionTime};
             }
 
             # SLA does not have a calendar.
-            next if !$Calendar;
+            next SLAID if !$Calendar;
 
-            # This service is linked to at least two SLA calendars with different time zones. 
+            # This service is linked to at least two SLA calendars with different time zones.
             if ( $Service{TimeZone} && $Calendar->{TimeZone} && $Service{TimeZone} ne $Calendar->{TimeZone} ) {
                 undef $Service{TimeZone};
                 undef $Service{WorkingHours};
-                $DontSet{TimeZone} = 1;
+                $DontSet{TimeZone}     = 1;
                 $DontSet{WorkingHours} = 1;
-            } elsif ( !$DontSet{TimeZone} ) {
+            }
+            elsif ( !$DontSet{TimeZone} ) {
                 $Service{TimeZone} = $Calendar->{TimeZone};
             }
 
             # This service is linked to at least two different calendars.
             if ( $Service{WorkingHours} ) {
+
                 # Check if working hours are the same.
+                INDEX:
                 for my $Index ( 0 .. ( scalar @{ $Service{WorkingHours} } - 1 ) ) {
                     if (
-                        !$Service{WorkingHours}[$Index] || !$Calendar->{WorkingHours}[$Index] # Check if runs exist.
-                        || $#{ $Service{WorkingHours} } != $#{ $Calendar->{WorkingHours} }    # One run is longer or shorter.
-                        # Check if they have the same values.
-                        || $Service{WorkingHours}[$Index]{StartDay}  ne $Calendar->{WorkingHours}[$Index]{StartDay}
-                        || $Service{WorkingHours}[$Index]{LastDay}   ne $Calendar->{WorkingHours}[$Index]{LastDay}
+                        !$Service{WorkingHours}[$Index] || !$Calendar->{WorkingHours}[$Index]    # Check if runs exist.
+                        || $#{ $Service{WorkingHours} } != $#{ $Calendar->{WorkingHours} }       # One run is longer or shorter.
+                                                                                                 # Check if they have the same values.
+                        || $Service{WorkingHours}[$Index]{StartDay} ne $Calendar->{WorkingHours}[$Index]{StartDay}
+                        || $Service{WorkingHours}[$Index]{LastDay} ne $Calendar->{WorkingHours}[$Index]{LastDay}
                         || $Service{WorkingHours}[$Index]{FirstHour} ne $Calendar->{WorkingHours}[$Index]{FirstHour}
-                        || $Service{WorkingHours}[$Index]{LastHour}  ne $Calendar->{WorkingHours}[$Index]{LastHour}
-                        ) {
-                            undef $Service{WorkingHours};
-                            $DontSet{WorkingHours} = 1;
-                            last;
-                        } 
+                        || $Service{WorkingHours}[$Index]{LastHour} ne $Calendar->{WorkingHours}[$Index]{LastHour}
+                        )
+                    {
+                        undef $Service{WorkingHours};
+                        $DontSet{WorkingHours} = 1;
+                        last INDEX;
+                    }
                 }
-            } elsif ( !$DontSet{WorkingHours} ) {
+            }
+            elsif ( !$DontSet{WorkingHours} ) {
                 $Service{WorkingHours} = $Calendar->{WorkingHours};
             }
         }
 
         # Check if FAQ modul is installed, if yes we check service related faq messages
         my $FAQInstalled = $PackageObject->PackageIsInstalled(
-            Name   => 'FAQ',
+            Name => 'FAQ',
         );
 
         # FAQ package is installed
-        if ( $FAQInstalled ) {
-  
-            my $FAQObject      = $Kernel::OM->Get('Kernel::System::FAQ');
+        if ($FAQInstalled) {
+
+            my $FAQObject = $Kernel::OM->Get('Kernel::System::FAQ');
 
             # Get FAQ interface state list
             my $InterfaceStates = $FAQObject->StateTypeList(
                 Types  => $ConfigObject->Get('FAQ::Customer::StateTypes'),
                 UserID => $Param{UserID},
-                );
+            );
 
             # Get all linked FAQ articles.
             my %LinkKeyList = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkKeyList(
-                Object1   => 'Service',
-                Key1      => $Service{ServiceID},
-                Object2   => 'FAQ',
-                State     => 'Valid',
-                UserID    => 1,
+                Object1 => 'Service',
+                Key1    => $Service{ServiceID},
+                Object2 => 'FAQ',
+                State   => 'Valid',
+                UserID  => 1,
             );
 
             # For each LinkKeyList, get the FAQ article.
@@ -306,12 +328,15 @@ sub Run {
                 {
                     # Filter out information we don't need.
                     my %FilteredFAQData = ();
+
                     # Get the config for the FAQ fields we want to display.
                     my $DescriptionFieldToDisplay = $Settings->{FAQDescriptionField} || 'Field1';
+                    KEY:
                     for my $Key ( ( 'ItemID', 'Title', $DescriptionFieldToDisplay, 'CategoryName' ) ) {
-                        next if !$FAQData{$Key};
+                        next KEY if !$FAQData{$Key};
 
                         if ( $Key eq $DescriptionFieldToDisplay ) {
+
                             # Remove HTML tags.
                             $FilteredFAQData{Description} = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii(
                                 String => $FAQData{$Key},
@@ -321,7 +346,8 @@ sub Run {
                             if ( length( $FilteredFAQData{Description} ) > 45 ) {
                                 $FilteredFAQData{Description} = substr( $FilteredFAQData{Description}, 0, 45 ) . '...';
                             }
-                        } else {
+                        }
+                        else {
                             $FilteredFAQData{$Key} = $FAQData{$Key};
                         }
                     }
@@ -329,12 +355,12 @@ sub Run {
                 }
             }
         }
+
         # Save the service in a list.
         $ServiceList{ $Service{ServiceID} } = \%Service;
     }
 
     # Add support for dynamic fields.
-    my @DynamicFieldList;
     my $DynamicFieldFilter = {
         %{ $ConfigObject->Get("CustomerDashboard::Configuration::ServiceCatalog")->{DynamicField} || {} },
     };
@@ -349,11 +375,12 @@ sub Run {
 
     # Get the dynamic field values for every service.
     for my $ServiceID ( keys %ServiceList ) {
-        my %DynamicFieldList; 
+        my %DynamicFieldList;
 
         # # Get the dynamic field values for this service.
+        DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{$DynamicFieldLookup} ) {
-            next if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             # Get the label;
             my $Label = $DynamicFieldConfig->{Label};
@@ -373,7 +400,7 @@ sub Run {
 
             # Set field value.
             if ( $Label && $ValueStrg->{Value} ) {
-                $DynamicFieldList{ $Label } = $ValueStrg->{Value};
+                $DynamicFieldList{$Label} = $ValueStrg->{Value};
             }
         }
 
@@ -384,54 +411,60 @@ sub Run {
     }
 
     # Get the basic information for every parent Service, even if the the customer user does not have permission to see it.
+    SERVICEID:
     for my $ServiceID ( keys %ServiceList ) {
         my $ParentID = $ServiceList{$ServiceID}{ParentID};
-        next if !$ParentID;
+        next SERVICEID if !$ParentID;
 
         if ( $ServiceList{$ParentID} && $ServiceList{$ParentID}{ServiceID} ) {
-            next;
+            next SERVICEID;
         }
 
         # Get sure that we can select every subservice of this service.
+        SERVICEDATA:
         while (1) {
             my %Service = ();
 
-            for my $Needed ( qw(ServiceID NameShort DescriptionShort DescriptionLong ParentID) ) {
+            for my $Needed (qw(ServiceID NameShort DescriptionShort DescriptionLong ParentID)) {
                 if ( $ServiceListRef{$ParentID}{$Needed} ) {
                     $Service{$Needed} = $ServiceListRef{$ParentID}{$Needed};
                 }
             }
 
-            $Service{NotSelectable} = 1;
+            $Service{NotSelectable}             = 1;
             $ServiceList{ $Service{ServiceID} } = \%Service;
-            $ParentID = $Service{ParentID};
+            $ParentID                           = $Service{ParentID};
 
             # Parent reached.
             if ( !$Service{ParentID} || ( $ServiceList{$ParentID} && $ServiceList{$ParentID}{ServiceID} ) ) {
-                last;
+                last SERVICEDATA;
             }
         }
     }
 
     # Show all first level services, sorted by the name.
     my %ParentIDs;
+    SERVICEID:
     for my $ServiceID ( keys %ServiceList ) {
-        next if $ServiceList{$ServiceID}{ParentID};
+        next SERVICEID if $ServiceList{$ServiceID}{ParentID};
+
         # One of these can be undef if the parent service is disabled.
-        next if !$ServiceList{$ServiceID};
-        next if !$ServiceList{$ServiceID}{NameShort};
+        next SERVICEID if !$ServiceList{$ServiceID};
+        next SERVICEID if !$ServiceList{$ServiceID}{NameShort};
 
         $ParentIDs{$ServiceID} = $ServiceList{$ServiceID}{NameShort};
     }
 
     my %ReversedParentIDs = reverse %ParentIDs;
-    my $NumberOfServices = 0;
-    for my $ServiceName (sort values %ParentIDs) {
+    my $NumberOfServices  = 0;
+    SERVICENAME:
+    for my $ServiceName ( sort values %ParentIDs ) {
         my $ServiceID = $ReversedParentIDs{$ServiceName};
-        next if !$ServiceID;
-        $NumberOfServices ++;
+        next SERVICENAME if !$ServiceID;
+        $NumberOfServices++;
 
         if ( $NumberOfServices <= 3 ) {
+
             # Create the parent list.
             $LayoutObject->Block(
                 Name => 'ParentService',
@@ -452,9 +485,9 @@ sub Run {
     # Create navigation field for services.
     $ServiceIDs{'All'} = $LayoutObject->{LanguageObject}->Translate('All');
     my $ServiceStrg = $LayoutObject->BuildSelection(
-        Data       => \%ServiceIDs,
-        Name       => 'ServiceID',
-        Class      => 'Modernize ',
+        Data         => \%ServiceIDs,
+        Name         => 'ServiceID',
+        Class        => 'Modernize ',
         PossibleNone => 1,
         TreeView     => 1,
         Sort         => 'TreeView',

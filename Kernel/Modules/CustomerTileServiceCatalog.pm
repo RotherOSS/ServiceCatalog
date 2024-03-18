@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -19,6 +19,7 @@ package Kernel::Modules::CustomerTileServiceCatalog;
 use strict;
 use warnings;
 
+use Kernel::Language              qw(Translatable);
 use Kernel::System::VariableCheck qw(IsHashRefWithData);
 
 our $ObjectManagerDisabled = 1;
@@ -36,7 +37,7 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $ConfigObject    = $Kernel::OM->Get('Kernel::Config');
     my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
     my $LayoutObject    = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ParamObject     = $Kernel::OM->Get('Kernel::System::Web::Request');
@@ -69,7 +70,7 @@ sub Run {
             Result            => 'HASH',
         );
 
-        if ( !$ServiceList{$Service{ServiceID}} ) {
+        if ( !$ServiceList{ $Service{ServiceID} } ) {
             return $LayoutObject->CustomerNoPermission( WithHeader => 'yes' );
         }
 
@@ -113,6 +114,7 @@ sub Run {
         );
     }
     elsif ( $Self->{Subaction} eq 'DynamicFieldView' ) {
+
         # add support for dynamic fields
         my @DynamicFieldList;
         my $DynamicFieldFilter = {
@@ -231,7 +233,7 @@ sub Run {
 
         my $Output = $LayoutObject->Output(
             TemplateFile => 'Dashboard/TileServiceCatalogDynamicFields',
-            Data         => { %Param },
+            Data         => {%Param},
         );
 
         # return complete HTML as an attachment
@@ -241,11 +243,12 @@ sub Run {
             Content     => $Output,
         );
     }
+
     # ---------------------------------------------------------- #
     # DownloadAttachment Subaction
     # ---------------------------------------------------------- #
     elsif ( $Self->{Subaction} eq 'DownloadAttachment' ) {
-        my $FileID    = $ParamObject->GetParam( Param => 'FileID' );
+        my $FileID = $ParamObject->GetParam( Param => 'FileID' );
 
         if ( !defined $FileID ) {
             return $LayoutObject->CustomerFatalError(
@@ -259,7 +262,7 @@ sub Run {
             FileID    => $FileID,
             UserID    => $Self->{UserID},
         );
-        
+
         if (%File) {
             return $LayoutObject->Attachment(%File);
         }

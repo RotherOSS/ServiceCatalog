@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2022 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
 # $origin: otobo - e894aef610208fdc401a4df814ca59658292fbba - Kernel/System/Console/Command/Admin/Service/Add.pm
 # --
@@ -51,8 +51,6 @@ sub Run {
     my $TypeObject = $Kernel::OM->Get('Kernel::System::Type');
     my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
 
-    my %TicketTypeService;
-
     # Get all services.
     my $ServiceList = $Kernel::OM->Get('Kernel::System::Service')->ServiceListGet(
         Valid  => 1,
@@ -65,7 +63,6 @@ sub Run {
 
         my @TicketTypeIDs = $ServiceGet->{TicketTypeIDs}->@*;
         for my $TID ( @TicketTypeIDs ) {
-		#            my $TicketType = $TypeObject->TypeLookup( TypeID => $TID);
 
             # Create Acl if config is enabled
             # We create one Acl per Ticket-Type
@@ -75,7 +72,6 @@ sub Run {
                 ServiceValid => $ServiceGet->{ValidID},
                 UserID => 1,
             );
-	    #push ($TicketTypeService{$TicketType}->@*, $ServiceGet->{Name});
 
         }
     }
