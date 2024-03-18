@@ -1932,13 +1932,12 @@ sub _ServiceGetCurrentIncidentState {
 # ---
 # RotherOSS
 # ---
-=for stopwords image.png
 =head2 AttachmentAdd()
 
 add article attachments, returns the attachment id
     my $AttachmentID = $ServiceObject->AttachmentAdd(
         ServiceID   => $123,
-        FileName    => 'image.png',
+        FileName    => 'F<image.png>',
         ContentSize => '123',
         ContentType => 'image/png;',
         Content     => $Content,
@@ -2137,8 +2136,6 @@ sub ServiceInlineAttachmentURLUpdate {
     return 1;
 }
 
-=for stopwords Error.jpg
-
 =head2 AttachmentGet()
 
 get attachment of service ID
@@ -2151,7 +2148,7 @@ Returns:
     %File = (
         Filesize    => '540286',                # file size in bytes
         ContentType => 'image/jpeg',
-        Filename    => 'Error.jpg',
+        Filename    => 'F<Error.jpg>',
         Content     => '...'                    # file binary content
     );
 =cut
@@ -2200,8 +2197,6 @@ sub AttachmentGet {
 }
 # ---
 
-=for stopwords Error.jpg Solution.jpg AdditionalComments.txt
-
 =head2 AttachmentIndex()
 return an attachment index of an service id
     my @Index = $ServiceObject->AttachmentIndex(
@@ -2214,7 +2209,7 @@ Returns:
         {
             Filesize    => '527.6 KBytes',
             ContentType => 'image/jpeg',
-            Filename    => 'Error.jpg',
+            Filename    => 'F<Error.jpg>',
             FilesizeRaw => 540286,
             FileID      => 6,
             Inline      => 0,
@@ -2222,7 +2217,7 @@ Returns:
         {,
             Filesize => '430.0 KBytes',
             ContentType => 'image/jpeg',
-            Filename => 'Solution.jpg',
+            Filename => 'F<Solution.jpg>',
             FilesizeRaw => 440286,
             FileID => 5,
             Inline => 1,
@@ -2230,7 +2225,7 @@ Returns:
         {
             Filesize => '296 Bytes',
             ContentType => 'text/plain',
-            Filename => 'AdditionalComments.txt',
+            Filename => 'F<AdditionalComments.txt>',
             FilesizeRaw => 296,
             FileID => 7,
             Inline => 0,
