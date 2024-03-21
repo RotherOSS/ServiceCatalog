@@ -4,7 +4,7 @@
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
-# $origin: otobo - 9bbf86da448bcff2bcc655fde9320646bc2950f2 - Kernel/Modules/CustomerTicketMessage.pm
+# $origin: otobo - a2fa2f68cb2f84541f12b4482d1203a653982dd9 - Kernel/Modules/CustomerTicketMessage.pm
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -1746,8 +1746,8 @@ sub _MaskNew {
             Size       => 0,
             Name       => 'Dest',
 # Rother OSS / ServiceCatalog
-#            Class      => "Validate_Required Modernize " . $Param{Errors}->{QueueInvalid},
-            Class      => "Validate_Required Modernize " . ( $Param{Errors}->{QueueInvalid} || '' ),
+#            Class      => "Validate_Required Modernize FormUpdate " . $Param{Errors}->{QueueInvalid},
+            Class      => "Validate_Required Modernize FormUpdate " . ( $Param{Errors}->{QueueInvalid} || '' ),
             SelectedID => $Param{ToSelected} || $Param{QueueID},
             TreeView   => $TreeView,
         );
@@ -1822,7 +1822,7 @@ sub _MaskNew {
             PossibleNone => 1,
             Sort         => 'AlphanumericValue',
             Translation  => 1,
-            Class        => "Validate_Required Modernize " . ( $Param{Errors}->{TypeIDInvalid} || '' ),
+            Class        => "Validate_Required Modernize FormUpdate " . ( $Param{Errors}->{TypeIDInvalid} || '' ),
         );
         $LayoutObject->Block(
             Name => 'TicketType',
