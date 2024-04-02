@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otobo_package version="1.1">
     <Name>ServiceCatalog</Name>
-    <Version>11.0.1.1</Version>
+    <Version>11.0.0</Version>
     <Framework>11.0.x</Framework>
-    <Vendor>Rother OSS GmbH</Vendor>
-    <URL>https://rother-oss.com/</URL>
-    <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
     <PackageRequired Version="11.0.0">ITSMCore</PackageRequired>
-    <PackageMerge Name="RotherOSS-ServiceCatalog" TargetVersion="10.0.4"></PackageMerge>
+    <Vendor>Rother OSS GmbH</Vendor>
+    <URL>https://otobo.de/</URL>
+    <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
     <Description Lang="en">A detailed service catalog.</Description>
     <Filelist>
         <File Permission="660" Location="Custom/Kernel/Modules/AdminService.pm" />
@@ -41,8 +40,9 @@
         <File Permission="660" Location="var/httpd/htdocs/js/Core.UI.Dialog.js" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.ITSMServiceZoom.js" />
     </Filelist>
+    <PackageMerge Name="RotherOSS-ServiceCatalog" TargetVersion="10.0.4"></PackageMerge>
     <DatabaseInstall Type="post">
-        <TableCreate Type="post" Name="service_type">
+        <TableCreate Name="service_type">
             <Column Name="service_id" Required="true" Type="INTEGER"></Column>
             <Column Name="ticket_type_id" Required="false" Type="SMALLINT"></Column>
             <Column Name="create_time" Required="true" Type="DATE"></Column>
@@ -60,7 +60,7 @@
                 </Reference>
             </ForeignKey>
         </TableCreate>
-        <TableCreate Type="post" Name="service_attachment">
+        <TableCreate Name="service_attachment">
             <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="BIGINT"></Column>
             <Column Name="service_id" Required="true" Size="11" Type="INTEGER"></Column>
             <Column Name="filename" Required="false" Size="250" Type="VARCHAR"></Column>
@@ -77,14 +77,14 @@
                 </IndexColumn>
             </Index>
         </TableCreate>
-        <TableAlter Type="post" Name="service">
+        <TableAlter Name="service">
             <ColumnAdd Name="description_short" Required="false" Size="191" Type="VARCHAR"></ColumnAdd>
             <ColumnAdd Name="description_long" Required="false" Size="3000" Type="VARCHAR"></ColumnAdd>
             <ColumnAdd Name="dest_queueid" Required="false" Size="255" Type="VARCHAR"></ColumnAdd>
         </TableAlter>
     </DatabaseInstall>
     <DatabaseUpgrade>
-        <TableCreate Type="post" Name="service_attachment" Version="10.0.2">
+        <TableCreate Name="service_attachment" Version="10.0.2">
             <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="BIGINT"></Column>
             <Column Name="service_id" Required="true" Size="11" Type="INTEGER"></Column>
             <Column Name="filename" Required="false" Size="250" Type="VARCHAR"></Column>
@@ -101,16 +101,16 @@
                 </IndexColumn>
             </Index>
         </TableCreate>
-        <TableAlter Type="post" Name="service">
+        <TableAlter Name="service">
             <ColumnAdd Name="description_short" Required="false" Size="191" Type="VARCHAR"></ColumnAdd>
             <ColumnAdd Name="description_long" Required="false" Size="3000" Type="VARCHAR"></ColumnAdd>
             <ColumnAdd Name="dest_queueid" Required="false" Size="255" Type="VARCHAR"></ColumnAdd>
         </TableAlter>
     </DatabaseUpgrade>
     <DatabaseUninstall Type="pre">
-        <TableDrop Type="pre" Name="service_type">
+        <TableDrop Name="service_type">
         </TableDrop>
-        <TableAlter Type="pre" Name="service">
+        <TableAlter Name="service">
             <ColumnDrop Name="description_short"></ColumnDrop>
             <ColumnDrop Name="description_long"></ColumnDrop>
             <ColumnDrop Name="dest_queueid"></ColumnDrop>
