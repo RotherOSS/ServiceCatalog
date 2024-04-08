@@ -249,8 +249,8 @@ fieldset.DynamicFieldSet {
 }
 
 .MultiValue .DFSetOuterField ~ .AddRemoveValueRow {
-    vertical-align: bottom;
-    padding-bottom: 16px;
+    vertical-align: top;
+    padding-top: 16px;
 }
 
 a.InputField_Action {
