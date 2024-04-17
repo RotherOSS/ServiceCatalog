@@ -2491,8 +2491,6 @@ sub UpdateTypServiceACL {
         );
 
         if ( IsHashRefWithData($ACL) ) {
-                use Data::Dumper;
-                print STDERR Dumper(\%NewACL);
             $Success = $ACLObject->ACLUpdate(
                 $ACL->%*,
                 %NewACL,
@@ -2501,8 +2499,6 @@ sub UpdateTypServiceACL {
         }
 
         else {
-		use Data::Dumper;
-		print STDERR Dumper(\%NewACL);
             $Success = $ACLObject->ACLAdd(
                 %NewACL,
                 UserID => 1,
