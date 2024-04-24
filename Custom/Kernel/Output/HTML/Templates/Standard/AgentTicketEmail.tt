@@ -4,7 +4,7 @@
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 # --
-# $origin: otobo - 4cdd2f2766468573cc2970dfbd38a6c9781f0bd0 - Kernel/Output/HTML/Templates/Standard/AgentTicketEmail.tt
+# $origin: otobo - 944bdbf7c3155baa1829985fb01ee1f14dd25fed - Kernel/Output/HTML/Templates/Standard/AgentTicketEmail.tt
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -440,7 +440,7 @@
                     <div class="Clear"></div>
 
                     <label for="Signature">[% Translate("Signature") | html %]:</label>
-                    <div class="RichTextField">
+                    <div class="Field">
                         <input type="hidden" name="Signature" value="[% Data.Signature | html %]"/>
                         <iframe height="140" width="620" frameborder="0" id="Signature" class="Signature" src="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Signature;QueueID=[% Data.QueueID | html %]"></iframe>
                     </div>
