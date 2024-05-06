@@ -19,6 +19,7 @@ package Kernel::Modules::CustomerTileServiceCatalog;
 use strict;
 use warnings;
 
+use Kernel::Language qw(Translatable);
 use Kernel::System::VariableCheck qw(IsHashRefWithData);
 
 our $ObjectManagerDisabled = 1;
@@ -74,7 +75,10 @@ sub Run {
         }
 
         # rewrite handle and action for
-        $Service{DescriptionLong} ||= '';
+        $Service{DescriptionLong} = $Service{Descriptions}{$LayoutObject->{UserLanguage}}{DescriptionLong} || 
+                $Service{Descriptions}{$Kernel::OM->Get('Kernel::Config')->Get('DefaultLanguage')}{DescriptionLong} || 
+                    $Service{Descriptions}{'en'}{DescriptionLong} || $LayoutObject->{LanguageObject}->Translate( 'Description not available.' );
+        
         $Service{DescriptionLong}
             =~ s{ index[.]pl [?] Action=AgentITSMServiceZoom }{customer.pl?Action=CustomerTileServiceCatalog}gxms;
 

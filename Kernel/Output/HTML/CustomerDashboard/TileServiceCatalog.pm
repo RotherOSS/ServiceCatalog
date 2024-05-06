@@ -35,6 +35,10 @@ our @ObjectDependencies = (
     'Kernel::System::Ticket',
     'Kernel::System::Type',
     'Kernel::System::Valid',
+    'Kernel::System::DynamicField',
+    'Kernel::System::DynamicField::Backend',
+    'Kernel::System::LinkObject',
+    'Kernel::System::Package'
 );
 
 sub new {
@@ -164,15 +168,16 @@ sub Run {
     );
 
     my $Settings = $ConfigObject->Get( 'CustomerDashboard::Configuration::ServiceCatalog' ) || {}; 
+    SERVICEREF:
     for my $ServiceRef ( @{$ServiceListRefArray} ) {
         $ServiceListRef{ $ServiceRef->{ServiceID} } = $ServiceRef;
 
         # Check if the customer has permission on this service.
-        next if !$ServiceIDs{ $ServiceRef->{ServiceID} };
+        next SERVICEREF if !$ServiceIDs{ $ServiceRef->{ServiceID} };
         my %Service = ();
 
         # Get all needed parameters
-        for my $Needed ( qw(ServiceID NameShort DescriptionShort DescriptionLong TicketTypeIDs ParentID) ) {
+        for my $Needed (qw(ServiceID NameShort Descriptions TicketTypeIDs ParentID Keywords)) {
             if ( $ServiceRef->{$Needed} ) {
                 if ( $Needed eq 'TicketTypeIDs' ) {
                     # Get names of all assigned types.
@@ -186,7 +191,16 @@ sub Run {
                             };
                         }
                     }
-                } else {
+                } elsif ( $Needed eq 'Descriptions' ) {
+                    $Service{DescriptionShort} = $ServiceRef->{$Needed}->{$LayoutObject->{UserLanguage}}->{DescriptionShort} || 
+                        $ServiceRef->{$Needed}->{$Kernel::OM->Get('Kernel::Config')->Get('DefaultLanguage')}->{DescriptionShort} || 
+                            $ServiceRef->{$Needed}->{'en'}->{DescriptionShort} || $LayoutObject->{LanguageObject}->Translate( 'Description not available.' );
+
+                    $Service{DescriptionLong} = $ServiceRef->{$Needed}->{$LayoutObject->{UserLanguage}}->{DescriptionLong} || 
+                        $ServiceRef->{$Needed}->{$Kernel::OM->Get('Kernel::Config')->Get('DefaultLanguage')}->{DescriptionLong} || 
+                            $ServiceRef->{$Needed}->{'en'}->{DescriptionLong} || $LayoutObject->{LanguageObject}->Translate( 'Description not available.' );
+                }
+                else {
                     $Service{$Needed} = $ServiceRef->{$Needed};
                 }
             }
@@ -196,6 +210,8 @@ sub Run {
         my $SLAIDs = $ServiceList{ $Service{ServiceID} }{SLAIDs};
 
         my %DontSet;
+
+        SLAS:
         for my $SLAID ( @{ $SLAIDs } ) {
             my $SLA = $SLAList{$SLAID};
             my $Calendar = $CalendarList{ $SLA->{Calendar} };
@@ -217,7 +233,7 @@ sub Run {
             }
 
             # SLA does not have a calendar.
-            next if !$Calendar;
+            next SLAS if !$Calendar;
 
             # This service is linked to at least two SLA calendars with different time zones. 
             if ( $Service{TimeZone} && $Calendar->{TimeZone} && $Service{TimeZone} ne $Calendar->{TimeZone} ) {
@@ -232,6 +248,7 @@ sub Run {
             # This service is linked to at least two different calendars.
             if ( $Service{WorkingHours} ) {
                 # Check if working hours are the same.
+                WORKINGHOURS:
                 for my $Index ( 0 .. ( scalar @{ $Service{WorkingHours} } - 1 ) ) {
                     if (
                         !$Service{WorkingHours}[$Index] || !$Calendar->{WorkingHours}[$Index] # Check if runs exist.
@@ -244,7 +261,7 @@ sub Run {
                         ) {
                             undef $Service{WorkingHours};
                             $DontSet{WorkingHours} = 1;
-                            last;
+                            last WORKINGHOURS;
                         } 
                 }
             } elsif ( !$DontSet{WorkingHours} ) {
@@ -308,8 +325,10 @@ sub Run {
                     my %FilteredFAQData = ();
                     # Get the config for the FAQ fields we want to display.
                     my $DescriptionFieldToDisplay = $Settings->{FAQDescriptionField} || 'Field1';
+
+                    CATEGORY:
                     for my $Key ( ( 'ItemID', 'Title', $DescriptionFieldToDisplay, 'CategoryName' ) ) {
-                        next if !$FAQData{$Key};
+                        next CATEGORY if !$FAQData{$Key};
 
                         if ( $Key eq $DescriptionFieldToDisplay ) {
                             # Remove HTML tags.
@@ -334,7 +353,6 @@ sub Run {
     }
 
     # Add support for dynamic fields.
-    my @DynamicFieldList;
     my $DynamicFieldFilter = {
         %{ $ConfigObject->Get("CustomerDashboard::Configuration::ServiceCatalog")->{DynamicField} || {} },
     };
@@ -352,8 +370,9 @@ sub Run {
         my %DynamicFieldList; 
 
         # # Get the dynamic field values for this service.
+        DFLOOKUP:
         for my $DynamicFieldConfig ( @{$DynamicFieldLookup} ) {
-            next if !IsHashRefWithData($DynamicFieldConfig);
+            next DFLOOKUP if !IsHashRefWithData($DynamicFieldConfig);
 
             # Get the label;
             my $Label = $DynamicFieldConfig->{Label};
@@ -384,18 +403,20 @@ sub Run {
     }
 
     # Get the basic information for every parent Service, even if the the customer user does not have permission to see it.
+    PARENT:
     for my $ServiceID ( keys %ServiceList ) {
         my $ParentID = $ServiceList{$ServiceID}{ParentID};
-        next if !$ParentID;
+        next PARENT if !$ParentID;
 
         if ( $ServiceList{$ParentID} && $ServiceList{$ParentID}{ServiceID} ) {
-            next;
+            next PARENT;
         }
 
         # Get sure that we can select every subservice of this service.
         while (1) {
             my %Service = ();
 
+            PARAMETER:
             for my $Needed ( qw(ServiceID NameShort DescriptionShort DescriptionLong ParentID) ) {
                 if ( $ServiceListRef{$ParentID}{$Needed} ) {
                     $Service{$Needed} = $ServiceListRef{$ParentID}{$Needed};
@@ -408,27 +429,30 @@ sub Run {
 
             # Parent reached.
             if ( !$Service{ParentID} || ( $ServiceList{$ParentID} && $ServiceList{$ParentID}{ServiceID} ) ) {
-                last;
+                last PARAMETER;
             }
         }
     }
 
     # Show all first level services, sorted by the name.
     my %ParentIDs;
+    SERVICELIST:
     for my $ServiceID ( keys %ServiceList ) {
-        next if $ServiceList{$ServiceID}{ParentID};
+        next SERVICELIST if $ServiceList{$ServiceID}{ParentID};
         # One of these can be undef if the parent service is disabled.
-        next if !$ServiceList{$ServiceID};
-        next if !$ServiceList{$ServiceID}{NameShort};
+        next SERVICELIST if !$ServiceList{$ServiceID};
+        next SERVICELIST if !$ServiceList{$ServiceID}{NameShort};
 
         $ParentIDs{$ServiceID} = $ServiceList{$ServiceID}{NameShort};
     }
 
     my %ReversedParentIDs = reverse %ParentIDs;
     my $NumberOfServices = 0;
+
+    PARENTIDS:
     for my $ServiceName (sort values %ParentIDs) {
         my $ServiceID = $ReversedParentIDs{$ServiceName};
-        next if !$ServiceID;
+        next PARENTIDS if !$ServiceID;
         $NumberOfServices ++;
 
         if ( $NumberOfServices <= 3 ) {
