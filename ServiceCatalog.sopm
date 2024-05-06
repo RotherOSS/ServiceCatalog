@@ -122,10 +122,9 @@
             </Index>
         </TableCreate>
         <TableAlter Name="service" Version="10.1.15">
-            <ColumnAdd Name="description_short" Required="false" Size="191" Type="VARCHAR"></ColumnAdd>
-            <ColumnAdd Name="description_long" Required="false" Size="3000" Type="VARCHAR"></ColumnAdd>
             <ColumnAdd Name="dest_queueid" Required="false" Size="255" Type="VARCHAR"></ColumnAdd>
             <ColumnAdd Name="keywords" Required="false" Size="255" Type="VARCHAR"></ColumnAdd>
+            <ColumnChange Name="description_short" NameNew="description_short" Required="false" Size="255" Type="VARCHAR"></ColumnChange>
         </TableAlter>
     </DatabaseUpgrade>
     <DatabaseUninstall Type="pre">
