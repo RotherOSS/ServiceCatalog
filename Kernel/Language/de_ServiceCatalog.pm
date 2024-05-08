@@ -140,7 +140,7 @@ sub Data {
         'Parameter für die zugriffsberechtigte Gruppe der General Katalog-Attribute.';
     $Self->{Translation}->{'Parameters for the incident states in the preference view.'} = 'Parameter für den Vorfallsstatus in der Ansicht für die Einstellungen.';
     $Self->{Translation}->{'Part of'} = 'Teil von';
-    $Self->{Translation}->{'Permission Group'} = 'Berechtigungsgruppe \*';
+    $Self->{Translation}->{'Permission Group'} = 'Berechtigungsgruppe';
     $Self->{Translation}->{'Relevant to'} = 'Relevant für';
     $Self->{Translation}->{'Required for'} = 'Benötigt für';
     $Self->{Translation}->{'SLA Overview'} = 'SLA-Übersicht';
