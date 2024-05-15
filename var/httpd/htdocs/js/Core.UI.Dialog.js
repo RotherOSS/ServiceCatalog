@@ -4,7 +4,7 @@
 // Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 // Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
 // --
-// $origin: otobo - 24af83c5858e3be7ac0ca06aca13ea9503e097a1 - var/httpd/htdocs/js/Core.UI.Dialog.js
+// $origin: otobo - 0406c5de2d344ee100ca410d3e7f01c73e7ae632 - var/httpd/htdocs/js/Core.UI.Dialog.js
 // --
 // This program is free software: you can redistribute it and/or modify it under
 // the terms of the GNU General Public License as published by the Free Software
@@ -209,8 +209,8 @@ Core.UI.Dialog = (function (TargetNS) {
      * @param {Boolean} Params.Modal - Shows a dark background overlay behind the dialog (default: false)
      * @param {String} Params.Type - Alert|Search (default: undefined) Defines a special type of dialog.
      * @param {String} Params.Title - Defines the title of the dialog window (default: undefined).
-     * @param {String} Params.Headline - Defines a special headline within the dialog window (default: undefined).
-     * @param {String} Params.Text - The text which is outputtet in the dialog window (default: undefined).
+     * @param {String} Params.Headline - Defines a special headline within the dialog window (default: undefined). Only used for Type Alert.
+     * @param {String} Params.Text - The text which is outputtet in the dialog window (default: undefined). Only used for Type Alert.
      * @param {String} Params.HTML - Used for content dialog windows. Contains a complete HTML snippet or an jQuery object with containing HTML (default: undefined).
      * @param {Number} Params.PositionTop - Defines the top position of the dialog window (default: undefined).
      * @param {Number} Params.PositionBottom - Defines the bottom position of the dialog window (default: undefined).
