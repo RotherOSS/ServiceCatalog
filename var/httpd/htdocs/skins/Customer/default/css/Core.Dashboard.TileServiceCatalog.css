@@ -70,12 +70,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     height: 128px;
     background: #ffffff;
     border-radius: 16px;
-    /* 
-    flex-direction: row;
-    flex: none;
-    order: 0;
-    align-self: stretch;
-    flex-grow: 1; */
 }
 
 .oooParentServiceList > .oooServiceMore {
@@ -133,13 +127,6 @@ ul.oooChildServiceList > li:not(:first-child) {
     padding: 4px 4px;
 }
 
-/* ul.oooBreadcrumbServiceList > i {
-    position: relative;
-    top: 1px;
-    font-size: 12px;
-    padding: 0px 8px;
-} */
-
 ul.oooBreadcrumbServiceList > li:first-child {
     margin-left: 8px;
 }
@@ -157,17 +144,9 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooServiceBreadcrumbField {
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* align-items: flex-start; */
-    /* padding: 0px; */
-    /* width: 830px; */
     height: 50px;
     overflow-x: hidden;
     overflow-y: hidden;
-    /* flex: none; */
-    /* order: 1; */
-    /* flex-grow: 0; */
 }
 
 .oooScrollLeft, .oooScrollRight {
@@ -202,8 +181,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
     align-items: center;
     padding: 0px;
     gap: 8px;
-    /* width: 527px; */
-    /* height: 29px; */
     flex: none;
     order: 0;
     flex-grow: 0;
@@ -245,26 +222,8 @@ ul.oooBreadcrumbServiceList > li:first-child {
     color: var(--colTextLight);
 }
 
-/* .oooBreadcrumbServiceList > li:last-child {
-    color: var(--colTextDark);
-} */
-
 .oooServiceBreadcrumbField .ooofo.ooofo-arrow_r::before {
     font-weight: bold;
-}
-
-.oooServiceWrapper {
-    /* width: calc( 100% + 32px ); */
-    /* display: flex; */
-    /* gap: 24px; */
-    /* flex-direction: row;
-    align-items: flex-start;
-    padding: 0px;
-    width: 1005px;
-    height: 280px;
-    flex: none; */
-    /* order: 0;
-    flex-grow: 0; */
 }
 
 .oooDetailedView {
@@ -301,18 +260,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooServiceContainer {
-    /* display: grid; */
-    /* grid-template-columns: 220px 40px; */
-    /* grid-template-rows: 54px 40px 6px 18px; */
-    /* border-radius: 15px; */
-    /* margin: 0 32px 32px 0; */
-    /* float: left; */
-    /* padding: 0 32px 24px 32px; */
-    /* background: #fff; */
-    /* width: 276px; */
-    /* gap: 16px 16px; */
-    /* grid-auto-flow: row; */
-    /* cursor: pointer; */
     gap: 16px 16px;
     margin: 8px;
     float: left;
@@ -326,9 +273,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
     height: 280px;
     background: #ffffff;
     border-radius: 16px;
-    /* flex: none; */
-    /* order: 0; */
-    /* flex-grow: 0; */
 }
 
 .oooServiceContainer:hover, .oooDetailedTicketTypeList > a:hover {
@@ -359,7 +303,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooDetailedSubservices > .oooServiceContainer {
-    /* margin-left: -10px; */
     height: 160px;
     gap: 0;
 }
@@ -436,7 +379,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
     align-items: center;
     padding: 14px 24px 11px;
     gap: 16px;
-    /* width: 205px; */
     width: auto;
     max-width: 270px;
     height: 41px;
@@ -458,7 +400,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooDescriptionBody { 
-    /* grid-area: 2 / 1 / 4 / 2;
     overflow: hidden; */
     display: flex;
     flex-direction: column;
@@ -481,7 +422,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
     flex-direction: row;
     align-items: flex-end;
     padding: 16px 24px;
-/* //    width: 319px; */
     height: 48px;
     border-top: 1px solid rgba(127, 128, 157, 0.16);
     flex: none;
@@ -533,7 +473,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooSubservices { 
-    /* grid-area: 4 / 1 / 5 / 2; */
     text-decoration-line: underline;
     color: var(--colTextLight);
     font-size: 16px;
@@ -542,18 +481,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
 
 .oooSubservices:hover {
     color: var(--colMainLight);
-}
-
-.oooDetailedServiceContainer {
-    /* display: grid;
-    grid-template-columns: 7fr 3fr;
-    grid-template-rows: 72px auto auto;
-    gap: 24px 24px;
-    grid-auto-flow: row;
-    border-radius: 15px;
-    padding: 0 32px 24px 32px;
-    background: #fff;
-    width: calc( 100% - 96px ); */
 }
 
 .oooDetailedLeft {
@@ -581,22 +508,10 @@ ul.oooBreadcrumbServiceList > li:first-child {
     bottom: 0px;
 }
 
-.oooDetailedServiceContainer h3 {
-    /* font-weight: bold; */
-}
-
 .oooDetailedServiceName {
     left: 7px;
     position: relative;
     margin: 10px 0;
-    /* grid-area: 1 / 1 / 2 / 3; */
-    /* position: relative;
-    left: -32px;
-    width: 100%; */
-    /* padding: 12px 32px 0 32px; */
-    /* padding: 12px 32px 0 38px;
-    border-radius: 15px 15px 0 0; */
-    /* background: #dfdfe7; */
 }
 
 .oooDetailedServiceName > p {
@@ -605,16 +520,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
 
 .oooDetailedServiceName > h2 {
     font-size: 24px;
-}
-
-/*  
-.oooDetailedDescriptionShort {
-    margin: 16px 0;
-    grid-area: 2 / 1 / 3 / 3;
-}*/
-
-.oooDetailedDescriptionLong { 
-    /* grid-area: 2 / 1 / 4 / 2;  */
 }
 
 .oooDetailedDescriptionLong > * {
@@ -631,23 +536,11 @@ ul.oooBreadcrumbServiceList > li:first-child {
     padding-top: 8px;
 }
 
-.oooDetailedSLA { 
-    /* grid-area: 3 / 2 / 4 / 3; 
-    align-self: end; */
-}
-
-/* .oooSLALabel {
-    font-size: 12px;
-} */
-
 .oooDetailedAdditionalInformation > div:last-child {
     margin-top: 15px;
 }
 
 .oooDetailedTicketTypeList {
-    /* font-weight: bold;
-    grid-area: 2 / 2 / 3 / 3; 
-    align-self: start; */
     width: 364px;
     height: 100px;
     flex: none;
@@ -662,14 +555,11 @@ ul.oooBreadcrumbServiceList > li:first-child {
     display: inline-flex;
     flex-direction: column;
     margin: 3px;
-    /* justify-content: center; */
     align-items: center;
     padding: 16px 32px;
     gap: 8px;
-    /* position: absolute; */
     width: 110.67px;
     height: 100px;
-    /* left: 126.67px; */
     top: 0px;
     border: 1px solid rgba(127, 128, 157, 0.16);
     border-radius: 10px;
@@ -709,9 +599,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
     align-items: flex-start;
     padding: 24px 16px;
     border-bottom: 1px solid #7F809D08;
-    /* width: 332px; */
-    /* height: 84px; */
-    /* border-radius: 10px; */
     flex: none;
     order: 1;
     align-self: stretch;
@@ -737,12 +624,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
     left: 280px;
     margin-top: -19px;
     transform: rotate(180deg); /* fix this, should't be needed */
-
-    /*
-    position: absolute;
-    right: 90px;
-    margin-top: -19px;
-    transform: rotate(180deg); fix this, should't be needed */
 }
 
 .oooDetailedAccordion i.ooofo-arrow_d {
@@ -773,7 +654,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
     font-weight: 700;
     font-size: 12px;
     display: flex;
-    /* padding-top: 8px; */
 }
 
 .oooDetailedAccordion > .Content {
@@ -812,7 +692,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
 
 .oooDetailedFAQItem {
     width: 288px;
-    /* margin-left: -20px; */
     line-height: 150%;
     padding: 13px 0px 20px 20px;
     position: relative;
@@ -841,15 +720,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
 
 .oooFAQDescription {
     font-size: 12px;
-}
-
-/* .oooDetailedFAQItem > span {
-    font-size: 12px;
-} */
-
-span.oooSLAValue {
-    /* flex-basis: 40%;
-    margin-left: auto; */
 }
 
 /* TODO: Could/Should be transfered to other CSS classes */
@@ -889,7 +759,6 @@ span.oooSLAValue {
     background-color: var(--colBGLight);
     width: 95%;
     max-width: 1212px;
-    /* min-height: 80%; */
 }
 
 .Dialog > .Content {
@@ -924,11 +793,8 @@ span.oooSLAValue {
 }
 
 .Dialog > .Header .oooServiceFieldSearch > input {
-    /* width: 788px !important; */
-    /* width: 968px; */
     border-radius: 30px;
     background: transparent;
-    /* border-radius: 0px 30px 30px 0px; */
     height: 54px;
     border: 1px solid var(--colTextLight);
     box-shadow: 0px 29px 49px 8px rgb(0 0 0 / 4%);
@@ -1066,17 +932,7 @@ span.oooSLAValue {
         grid-area: 7 / 1 / 10 / 7;
     }
 
-    .Dialog > .Header .oooServiceFieldSearch > input {
-        /* width: 668px; */
-    }
-
-    .oooServiceBreadcrumbField {
-        /* width: calc(100% - 200px); */
-    }
-
     .oooServiceBreadcrumb {
-        /* left: 124px; */
-        /* width: 640px; */
         width: calc(100% - 200px);
     }
 
@@ -1115,17 +971,8 @@ span.oooSLAValue {
         flex-grow: 0;
     }
 
-    .Dialog > .Header .oooServiceFieldSearch > input {
-        /* width: 550px; */
-    }
-
     .oooServiceBreadcrumbField {
         width: 530px;
-    }
-
-    .oooServiceBreadcrumb {
-        /* left: 124px;
-        width: 530px; */
     }
 
     .oooScrollLeft {
@@ -1218,7 +1065,6 @@ span.oooSLAValue {
     }
 
     .Dialog > .Header .oooServiceFieldSearch > input {
-        /* width: 312px; */
         border-radius: 0;
         border: none;
         border-bottom: 1px solid var(--colBGLight);
