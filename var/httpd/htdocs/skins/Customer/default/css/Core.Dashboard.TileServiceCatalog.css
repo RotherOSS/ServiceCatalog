@@ -914,23 +914,11 @@ ul.oooBreadcrumbServiceList > li:first-child {
     zoom: 0.3;
 }
 
-#oooTile07 {
+.oooTile_ServiceCatalog {
     padding: 24px 32px;
 }
 
-@media only screen and (min-width: 1280px) {
-    
-    #oooTile07 {
-        grid-area: 5 / 13 / 9 / 5;
-        padding: 24px 32px;
-    }
-}
-
 @media only screen and (min-width: 880px) and (max-width: 1279px) {
-
-    #oooTile07 {
-        grid-area: 7 / 1 / 10 / 7;
-    }
 
     .oooServiceBreadcrumb {
         width: calc(100% - 200px);
@@ -942,10 +930,6 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 @media only screen and (min-width: 768px) and (max-width: 879px) {
-    
-    #oooTile07 {
-        grid-area: 3 / 1 / 4 / 2;
-    }
     
     .oooParentServiceList {
         flex-direction: row;
@@ -1097,20 +1081,8 @@ ul.oooBreadcrumbServiceList > li:first-child {
     }
 }
 
-@media only screen and (min-width: 436px) and (max-width: 767px) {
-    
-    #oooTile07 {
-        grid-area: 3 / 1 / 2 / 2;
-    }
-}
-
 @media only screen and (max-width: 435px) {
     
-    #oooTile07 {
-        grid-area: 3 / 1 / 2 / 2;
-        display: grid;
-    }
-
     .oooParentServiceList {
         max-width: 360px;
     }

@@ -116,4 +116,18 @@
             <ColumnDrop Name="dest_queueid"></ColumnDrop>
         </TableAlter>
     </DatabaseUninstall>
+    <IntroInstall Type="post" Title="Installation Information" Lang="en"><![CDATA[
+
+        <br/>
+        <strong>NOTICE</strong>
+        <br/>
+        <br/>
+        For the service catalog to show in the customer dashboard, please activate CustomerDashboard::Tiles###ServiceCatalog-01, optionally change the order (default 7) and/or adapt
+        var/httpd/htdocs/skins/Customer/default/css/Core.Dashboard.Default.css to show #Tile07 (or the respective order you chose) to show in the desired position.
+        <br/>
+        <br/>
+        ((enjoy))<br/>
+        <br/>
+
+    ]]></IntroInstall>
 </otobo_package>
