@@ -1114,44 +1114,16 @@ span.oooSLAValue {
     zoom: 0.3;
 }
 
-/* Rother OSS custom layout */
-
-#oooTile01 {
-    grid-area: 5 / 9 / 5 / 13;
-}
-
-/* EO custom layout */
 #oooTile07 {
     /* padding: 24px 32px; */
 }
 
 @media only screen and (min-width: 1280px) {
     
-/* Rother OSS custom layout
     #oooTile07 {
         grid-area: 5 / 13 / 9 / 5;
-    } */
-    #oooTile01 {
-        grid-area: 1 / 1 / 5 / 5;
+        /* padding: 24px 32px; */
     }
-
-    #oooTile02 {
-        grid-area: 5 / 1 / 14 / 5;
-    }
-
-    #oooTile03 {
-        grid-area: 9 / 5 / 20 / 13;
-    }
-
-    #oooTile04 {
-        grid-area: 5 / 5 / 9 / 13;
-    }
-
-    #oooTile07 {
-        grid-area: 1 / 5  / 9 / 13;
-    }
-/* EO custom layout */
-
 }
 
 @media only screen and (min-width: 880px) and (max-width: 1279px) {
@@ -1232,33 +1204,6 @@ span.oooSLAValue {
 }
 
 @media only screen and (max-width: 1279px) {
-
-/* Rother OSS custom layout */
-    #oooTile01 {
-        grid-area: 1 / 4 / 4 / 7;
-    }
-
-    #oooTile02 {
-        grid-area: 1 / 1 / 7 / 4;
-    }
-    
-    #oooTile03 {
-        grid-area: 10 / 1 / 20 / 7;
-    }
-    
-    #oooTile04 {
-        grid-area: 1 / 4 / 7 / 7;
-    }
-    
-    #oooTile06 {
-        grid-area: 10 / 4 / 13 / 7;
-    }
-
-    #oooTile07 {
-        grid-area: 7 / 1 / 10 / 7;
-    }
-/* EO custom layout */
-
     .Dialog:not(.oooDetailedView) > .Header .ooofo {
         top: 5px;
     }
@@ -1419,62 +1364,18 @@ span.oooSLAValue {
 }
 
 @media only screen and (min-width: 436px) and (max-width: 767px) {
-/* Rother OSS - custom layout */    
-    #oooTile02 {
-        grid-area: 3 / 1 / 5 / 2;
-    }
     
-    #oooTile03 {
-        grid-area: 5 / 1 / 9 / 2;
-    }
-    
-    #oooTile04 {
-        grid-area: 1 / 1 / 2 / 2;
-    }
- 
-    #oooTile06 {
-        grid-area: 7 / 1 / 8 / 2;
-    }
-/* EO custom layout */
-
     #oooTile07 {
         grid-area: 3 / 1 / 2 / 2;
     }
 }
 
 @media only screen and (max-width: 435px) {
-/* Rother OSS - custom layout    
+    
     #oooTile07 {
         grid-area: 3 / 1 / 2 / 2;
         display: grid;
     }
-*/
-
-    #oooTile02 {
-        grid-area: 3 / 1 / 5 / 2;
-        display: block;
-    }
-    
-    #oooTile03 {
-        grid-area: 5 / 1 / 9 / 2;
-        display: block;
-    }
-    
-    #oooTile04 {
-        grid-area: 1 / 1 / 2 / 2;
-        display: block;
-    }
- 
-    #oooTile06 {
-        grid-area: 7 / 1 / 8 / 2;
-        display: block;
-    }
-    
-    #oooTile07 {
-        grid-area: 3 / 1 / 2 / 2;
-        display: block;
-    }
-/* EO custom layout */
 
     .oooParentServiceList {
         max-width: 360px;

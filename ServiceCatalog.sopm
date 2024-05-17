@@ -4,7 +4,6 @@
     <Version>10.1.15</Version>
     <Framework>10.1.x</Framework>
     <PackageRequired Version="10.1.1">ITSMCore</PackageRequired>
-    <PackageMerge TargetVersion="10.1.11.8" Name="ServiceCatalog"></PackageMerge>
     <Vendor>Rother OSS GmbH</Vendor>
     <URL>https://rother-oss.com/</URL>
     <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
@@ -22,7 +21,6 @@
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentITSMSLAZoom.tt" />
         <File Permission="660" Location="Custom/Kernel/System/Service.pm" />
         <File Permission="660" Location="Kernel/Config/Files/XML/ServiceCatalog.xml" />
-        <File Permission="660" Location="Kernel/Config/Files/XML/DinslakenServiceCatalogAdditions.xml" />
         <File Permission="660" Location="Kernel/Language/de_ServiceCatalog.pm" />
         <File Permission="660" Location="Kernel/Language/es_ServiceCatalog.pm" />
         <File Permission="660" Location="Kernel/Language/es_CO_ServiceCatalog.pm" />

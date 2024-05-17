@@ -792,29 +792,6 @@ sub Run {
                 $Error{BodyInvalid} = 'ServerError';
             }
         }
-# Rother OSS OptionalCustomerMessage
-        elsif ( !$GetParam{Subject} ) {
-                if ( $Config->{ServiceAsSubject} && $GetParam{ServiceID} ) {
-                    my $ServiceList = $Self->_GetServices(
-                        %GetParam,
-                        CustomerUserID => $Self->{UserLogin} || '',
-                        QueueID        => $NewQueueID,
-                    );
-                    $GetParam{Subject} = $ServiceList->{ $GetParam{ServiceID} };
-
-                    if ( $Config->{'ServiceAsSubject-Substitutions'} ) {
-                        for my $RegEx ( sort keys %{ $Config->{'ServiceAsSubject-Substitutions'} } ) {
-                            my $Sub = $Config->{'ServiceAsSubject-Substitutions'}{$RegEx} // '';
-
-                            $GetParam{Subject} =~ s/$RegEx/$Sub/;
-                        }
-                    }
-                }
-                else {
-                    $GetParam{Subject} = "-";
-                }
-        }
-# EO Rother OSS OptionalCustomerMessage
 
         # check mandatory service
         if (
@@ -930,47 +907,23 @@ sub Run {
             );
         }
 
-# Rother OSS / OptionalCustomerMessage
-# We need an article, so we don't skip.
-#        # if no article has to be created clean up and return
-#        if ( !$VisibilityStd{Article} ) {
-#
-#            # remove pre submitted attachments
-#            $UploadCacheObject->FormIDRemove( FormID => $Self->{FormID} );
-#
-#            # delete hidden fields cache
-#            $Kernel::OM->Get('Kernel::System::Cache')->Delete(
-#                Type => 'HiddenFields',
-#                Key  => $Self->{FormID},
-#            );
-#
-#            # redirect
-#            return $LayoutObject->Redirect(
-#                OP => "Action=$NextScreen;TicketID=$TicketID",
-#            );
-#        }
-
-        # Article is not visible, we use the field DynamicFieldAsBody as body
+        # if no article has to be created clean up and return
         if ( !$VisibilityStd{Article} ) {
 
-            DYNAMICFIELD:
-            for my $DynamicFieldConfig ( @{$DynamicField} ) {
-                next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
-                next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
-                next DYNAMICFIELD if !$DynamicFieldConfig->{Name} eq $Config->{'DynamicFieldAsBody'};
+            # remove pre submitted attachments
+            $UploadCacheObject->FormIDRemove( FormID => $Self->{FormID} );
 
-                # set the value
-                my $Value = $BackendObject->ValueGet(
-                    DynamicFieldConfig => $DynamicFieldConfig,
-                    ObjectID           => $TicketID,
-                    UserID             => $ConfigObject->Get('CustomerPanelUserID'),
-                );   
+            # delete hidden fields cache
+            $Kernel::OM->Get('Kernel::System::Cache')->Delete(
+                Type => 'HiddenFields',
+                Key  => $Self->{FormID},
+            );
 
-                $GetParam{Body} = $Value || '-'; 
-            }    
-        }    
-
-# EO Rother OSS
+            # redirect
+            return $LayoutObject->Redirect(
+                OP => "Action=$NextScreen;TicketID=$TicketID",
+            );
+        }
 
         my $MimeType = 'text/plain';
         if ( $LayoutObject->{BrowserRichText} ) {
@@ -1474,34 +1427,6 @@ sub Run {
                 Max          => 100,
             }
         );
-# Rother OSS / OptionalCustomerMessage
-        if ( $ChangedStdFields{ServiceID} && $Config->{ServiceAsSubject} ) {
-            $Attributes{Subject} = {
-                PossibleNone => 1,
-                Translation  => 0,
-            };
-            if ( $StdFieldValues{ServiceID} ) {
-                $StdFieldValues{Subject} = $StdFieldValues{ServiceID}{ $GetParam{ServiceID} } // '';
-            }
-            elsif ( $ElementChanged && $ElementChanged eq 'ServiceID' ) {
-                my $ServiceList = $Self->_GetServices(
-                    %GetParam,
-                    CustomerUserID => $CustomerUser || '',
-                    QueueID        => $GetParam{QueueID},
-                );
-                $StdFieldValues{Subject} = $ServiceList->{ $GetParam{ServiceID} } // '';
-            }
-
-            if ( $StdFieldValues{Subject} && $Config->{'ServiceAsSubject-Substitutions'} ) {
-                for my $RegEx ( sort keys %{ $Config->{'ServiceAsSubject-Substitutions'} } ) {
-                    my $Sub = $Config->{'ServiceAsSubject-Substitutions'}{$RegEx} // '';
-
-                    $StdFieldValues{Subject} =~ s/$RegEx/$Sub/;
-                }
-            }
-        }
-# EO OptionalCustomerMessage
-
         delete $StdFieldValues{QueueID};
         for my $Field ( sort keys %StdFieldValues ) {
             push @StdFieldAJAX, {
