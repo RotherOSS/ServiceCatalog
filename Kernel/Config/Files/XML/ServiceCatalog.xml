@@ -10,11 +10,6 @@
                 <Item Key="Config">
                     <Hash>
                         <Item Key="HeaderText">Find the right service for your ticket</Item>
-                        <!-- <Item Key="MainText" ValueType="Textarea">Erstellen Sie ein Ticket über den Service-Katalog.</Item> -->
-                        <!-- <Item Key="TextColor">#00023c</Item> -->
-                        <!-- <Item Key="BackgroundColor">#fff</Item> -->
-                        <!-- <Item Key="ServiceColor">#001bff</Item> -->
-                        <!-- <Item Key="ServiceBackgroundColor">#fff</Item> -->
                     </Hash>
                 </Item>
             </Hash>
@@ -137,18 +132,18 @@
         <Navigation>Core::Acl</Navigation>
         <Value>
             <Hash>
-		        <Item Key="FrontendAction">
+                <Item Key="FrontendAction">
                     <Array>
-			            <Item>CustomerTicketMessage</Item>
+                        <Item>CustomerTicketMessage</Item>
                         <Item>AgentTicketPhone</Item>
-			            <Item>AgentTicketEmail</Item>	
-	                    <Item>AgentTicketFreeText</Item>		
-	                </Array>
-	            </Item>
+                        <Item>AgentTicketEmail</Item>    
+                        <Item>AgentTicketFreeText</Item>        
+                    </Array>
+                </Item>
                 <Item Key="GenerateInitalACLToDisableAllServices">1</Item>
                 <Item Key="ConfigChange">Possible</Item>
-		        <Item Key="ACLDeploy">1</Item>
-		        <Item Key="ACLValidID">1</Item>
+                <Item Key="ACLDeploy">1</Item>
+                <Item Key="ACLValidID">1</Item>
             </Hash>
         </Value>
     </Setting>
