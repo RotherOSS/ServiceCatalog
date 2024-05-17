@@ -1,0 +1,227 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
+# This file is distributed under the same license as the OTOBO Installation Guide package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: OTOBO Installation Guide rel-10.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-17 04:54+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../content/index.rst:20
+msgid "Sacrifice to Sphinx"
+msgstr ""
+
+#: ../../content/index.rst:23
+msgid "Description"
+msgstr ""
+
+#: ../../content/index.rst:24
+msgid "A detailed service catalog."
+msgstr ""
+
+#: ../../content/index.rst:27
+msgid "System requirements"
+msgstr ""
+
+#: ../../content/index.rst:30
+msgid "Framework"
+msgstr ""
+
+#: ../../content/index.rst:31
+msgid "OTOBO 10.1.x"
+msgstr ""
+
+#: ../../content/index.rst:34
+msgid "Packages"
+msgstr ""
+
+#: ../../content/index.rst:38
+msgid "Third-party software"
+msgstr ""
+
+#: ../../content/index.rst:39
+msgid "\\-"
+msgstr ""
+
+#: ../../content/index.rst:42
+msgid "Configuration Reference"
+msgstr ""
+
+#: ../../content/index.rst:45
+msgid "Core::Acl"
+msgstr ""
+
+#: ../../content/index.rst:48
+msgid "ServiceCatalog::CreateTypeServiceRelatedAcls"
+msgstr ""
+
+#: ../../content/index.rst:49
+msgid "This option allows you to automatically generate ACLs for different interfaces when creating services. Services will then only be displayed if the ticket type stored in the service has been selected."
+msgstr ""
+
+#: ../../content/index.rst:52
+msgid "ServiceCatalog::CreateTypeServiceRelatedAcls::Options"
+msgstr ""
+
+#: ../../content/index.rst:53
+msgid "Acl configuration für Type - Service restrictions. Please activate ServiceCatalog::CreateTypeServiceRelatedAcls before. For the key ConfigChange please use Possible or PossibleAdd. DeployNewACL deploy the changed acl Immediately."
+msgstr ""
+
+#: ../../content/index.rst:56
+msgid "Core::DynamicFields::ObjectTypeRegistration"
+msgstr ""
+
+#: ../../content/index.rst:59
+msgid "DynamicFields::ObjectType###Service"
+msgstr ""
+
+#: ../../content/index.rst:60
+msgid "DynamicField object registration."
+msgstr ""
+
+#: ../../content/index.rst:63
+msgid "Core::Event::Ticket"
+msgstr ""
+
+#: ../../content/index.rst:66
+msgid "Ticket::EventModulePost###9700-SetDynamicFieldCriticalityFromService"
+msgstr ""
+
+#: ../../content/index.rst:67
+msgid "Event module registration. Currently, the criticality of the service can also be set in the service, but this has no effect. Therefore, this event module has been implemented that automatically updates the DynamicField Criticality in a ticket as soon as a service has been assigned. Please activate the SysConfig option SetPriorityFromCriticalityAndImpactMatrix to set the priority in the next step based an Criticality and Impact."
+msgstr ""
+
+#: ../../content/index.rst:70
+msgid "Ticket::EventModulePost###9800-SetPriorityFromCriticalityAndImpactMatrix"
+msgstr ""
+
+#: ../../content/index.rst:71
+msgid "Event module registration. Currently, the criticality of the service can also be set in the service, but this has no effect. Therefore, this event module has been implemented that automatically updates the priority regarding Criticality and Impact in a ticket."
+msgstr ""
+
+#: ../../content/index.rst:74
+msgid "Frontend::Base::DynamicFieldScreens"
+msgstr ""
+
+#: ../../content/index.rst:77
+msgid "DynamicFieldScreens###ServiceCatalog"
+msgstr ""
+
+#: ../../content/index.rst:78
+msgid "This configuration defines all possible screens to enable or disable dynamic fields."
+msgstr ""
+
+#: ../../content/index.rst:81
+msgid "Frontend::Customer::ModuleRegistration"
+msgstr ""
+
+#: ../../content/index.rst:84
+msgid "CustomerFrontend::Module###CustomerTileServiceCatalog"
+msgstr ""
+
+#: ../../content/index.rst:85
+msgid "Frontend module registration for the customer interface."
+msgstr ""
+
+#: ../../content/index.rst:88
+msgid "Frontend::Customer::ModuleRegistration::Loader"
+msgstr ""
+
+#: ../../content/index.rst:91
+msgid "Loader::Module::CustomerDashboard###003-CustomerDashboard"
+msgstr ""
+
+#: ../../content/index.rst:92
+msgid "Loader module registration for the customer interface."
+msgstr ""
+
+#: ../../content/index.rst:95
+msgid "Frontend::Customer::View::Dashboard::Configuration"
+msgstr ""
+
+#: ../../content/index.rst:98
+msgid "CustomerDashboard::Configuration::ServiceCatalog"
+msgstr ""
+
+#: ../../content/index.rst:99
+msgid "Additional settings for the service catalog."
+msgstr ""
+
+#: ../../content/index.rst:102
+msgid "CustomerDashboard::Configuration::ServiceCatalog###SortByTicketType"
+msgstr ""
+
+#: ../../content/index.rst:103
+msgid "Show services with the following ticket type last."
+msgstr ""
+
+#: ../../content/index.rst:106
+msgid "CustomerDashboard::Configuration::ServiceCatalog###FAQDescriptionField"
+msgstr ""
+
+#: ../../content/index.rst:107
+msgid "The FAQ field that should be used as the description of an FAQ article in the sidebar (e.g. Field1, Field2, Field3...)."
+msgstr ""
+
+#: ../../content/index.rst:110
+msgid "CustomerDashboard::Configuration::ServiceCatalog###DynamicField"
+msgstr ""
+
+#: ../../content/index.rst:111
+msgid "Dynamic fields shown in the service catalog screen of the customer interface."
+msgstr ""
+
+#: ../../content/index.rst:114
+msgid "Frontend::Customer::View::Dashboard::Tiles"
+msgstr ""
+
+#: ../../content/index.rst:117
+msgid "CustomerDashboard::Tiles###ServiceCatalog-01"
+msgstr ""
+
+#: ../../content/index.rst:118
+#: ../../content/index.rst:122
+msgid "Tile registration for the CustomerDashboard. Module is required."
+msgstr ""
+
+#: ../../content/index.rst:121
+msgid "CustomerDashboard::Tiles###FeaturedLink-01"
+msgstr ""
+
+#: ../../content/index.rst:125
+msgid "About"
+msgstr ""
+
+#: ../../content/index.rst:128
+msgid "Contact"
+msgstr ""
+
+#: ../../content/index.rst:129
+msgid "Rother OSS GmbH"
+msgstr ""
+
+#: ../../content/index.rst:130
+msgid "Email: hello@otobo.de"
+msgstr ""
+
+#: ../../content/index.rst:131
+msgid "Web: https://otobo.de"
+msgstr ""
+
+#: ../../content/index.rst:134
+msgid "Version"
+msgstr ""
+
+#: ../../content/index.rst:135
+msgid "Author: |doc-vendor| / Version: |doc-version| / Date of release: |doc-datestamp|"
+msgstr ""
+
