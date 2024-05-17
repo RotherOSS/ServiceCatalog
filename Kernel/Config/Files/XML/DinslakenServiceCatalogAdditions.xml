@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otobo_config version="2.0" init="Application">
+    <Setting Name="Ticket::Frontend::CustomerTicketMessage###ServiceAsSubject" Required="0" Valid="1">
+        <Description Translatable="1">Copy the chosen service into the subject field.</Description>
+        <Navigation>Frontend::Customer::View::TicketMessage</Navigation>
+        <Value>
+            <Item ValueType="Checkbox">1</Item>
+        </Value>
+    </Setting>
+    <Setting Name="Ticket::Frontend::CustomerTicketMessage###ServiceAsSubject-Substitutions" Required="0" Valid="0">
+        <Description Translatable="1">Substitutes the regular expression in the key with the value (can be empty) for services which are set as subject.</Description>
+        <Navigation>Frontend::Customer::View::TicketMessage</Navigation>
+        <Value>
+            <Hash></Hash>
+        </Value>
+    </Setting>
+    <Setting Name="Ticket::Frontend::CustomerTicketMessage###DynamicFieldAsBody" Required="0" Valid="1">
+        <Description Translatable="1">Copy the chosen dynamicfield content into the body field (Please add the name of the field). If no value exists we use "-". </Description>   
+        <Navigation>Frontend::Customer::View::TicketMessage</Navigation>
+        <Value>
+        <Hash>SonstigeMitteilung</Hash>
+        </Value>
+    </Setting>
+</otobo_config>
