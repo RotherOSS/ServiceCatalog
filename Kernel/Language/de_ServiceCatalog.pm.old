@@ -52,14 +52,14 @@ sub Data {
         '';
 
     # Template: AgentITSMSLAZoom
-    $Self->{Translation}->{'SLA Information'} = '';
-    $Self->{Translation}->{'Last changed'} = '';
-    $Self->{Translation}->{'Last changed by'} = '';
+    $Self->{Translation}->{'SLA Information'} = 'SLA-Informationen';
+    $Self->{Translation}->{'Last changed'} = 'Zuletzt geändert';
+    $Self->{Translation}->{'Last changed by'} = 'Zuletzt geändert von';
     $Self->{Translation}->{'Minimum Time Between Incidents'} = '';
     $Self->{Translation}->{'Associated Services'} = '';
 
     # Template: AgentITSMServiceZoom
-    $Self->{Translation}->{'Service Information'} = '';
+    $Self->{Translation}->{'Service Information'} = 'Service-Informationen';
     $Self->{Translation}->{'Current incident state'} = '';
     $Self->{Translation}->{'Associated SLAs'} = '';
 
@@ -85,8 +85,8 @@ sub Data {
     # Perl Module: Kernel/Modules/AgentITSMServiceZoom.pm
     $Self->{Translation}->{'No ServiceID is given!'} = '';
     $Self->{Translation}->{'ServiceID %s not found in database!'} = '';
-    $Self->{Translation}->{'operational'} = '';
-    $Self->{Translation}->{'warning'} = '';
+    $Self->{Translation}->{'operational'} = 'Operativ';
+    $Self->{Translation}->{'warning'} = 'Warnung';
     $Self->{Translation}->{'incident'} = '';
 
     # JS File: Core.Customer.TileServiceCatalog
