@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2021 Rother OSS GmbH, https://otobo.de/
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -23,191 +23,267 @@ use utf8;
 sub Data {
     my $Self = shift;
 
-    # Template: General
-    $Self->{Translation}->{'All'} = 'Todo';
-    $Self->{Translation}->{'Details'} = 'Detalles';
-    $Self->{Translation}->{'Find the right service for your ticket'} = 'Encuentre el servicio apropiado para crear su ticket';
-
     # Template: TileServiceCatalog
-    $Self->{Translation}->{'Show details of this service.'} = 'Mostrar detalles de este servicio.';
-    $Self->{Translation}->{'Description not available.'} = 'Descripción no disponible.';
-    $Self->{Translation}->{'Search catalog'} = 'Buscar ... (puede usar palabras clave para encontrar el servicio)';
+    $Self->{Translation}->{'Show details of this service.'} = '';
 
     # Template: AdminService
-    $Self->{Translation}->{'Service depends on the following ticket types'} = 'El servicio depende de los siguientes tipos de ticket';
-    $Self->{Translation}->{'Ticket destination queue'} = 'Cola del Ticket';
-    $Self->{Translation}->{'Customer default service'} = 'Servicio por defecto del Cliente';
-    $Self->{Translation}->{'Criticality'} = 'Criticidad';
-    $Self->{Translation}->{'Option Reference'} = 'Referencia de Opciones';
-    $Self->{Translation}->{'You can use the following options'} = 'Puede usar las siguientes opciones';
-    $Self->{Translation}->{'Show services for the following ticket types'} = 'Mostrar servicios de los siguientes tipos de ticket';
-    $Self->{Translation}->{'Service descriptions (short & long) specified by User Language.'} = 'Descripción del servicio (corta & larga) especificada por el Idioma del Usuario.';
-
-    $Self->{Translation}->{'Service Description'} = 'Descripción del Servicio';
-    $Self->{Translation}->{'Keywords'} = 'Palabras clave';
-    $Self->{Translation}->{'Add new service description language'} = 'Agregar nuevo lenguaje de descripción del servicio';
-
-
+    $Self->{Translation}->{'Service depends on the following ticket types'} = '';
+    $Self->{Translation}->{'Ticket destination queue'} = '';
+    $Self->{Translation}->{'Customer default service'} = '';
+    $Self->{Translation}->{'Criticality'} = '';
+    $Self->{Translation}->{'Keywords'} = '';
+    $Self->{Translation}->{'Service Description'} = '';
+    $Self->{Translation}->{'This language is not present or enabled on the system. This service description could be deleted if it is not needed anymore.'} =
+        '';
+    $Self->{Translation}->{'Remove Service Description Language'} = '';
+    $Self->{Translation}->{'Add new service description language'} = '';
+    $Self->{Translation}->{'Option Reference'} = '';
+    $Self->{Translation}->{'You can use the following options'} = '';
     $Self->{Translation}->{'Within the ServiceCatalogue tile in the customer dashboard, it is possible to show ticket types for preconfigured ticket creation inside the service description. Furthermore, it is possible to restrict the services for other screens using the ticket types set here. If you wish to do this, please activate the options "ServiceCatalog::CreateTypeServiceRelatedAcls" and "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" in the OTOBO system configuration. The restriction is made via automatically generated ACLs, which can be viewed under "Admin -> Access Control Lists (ACL)". If necessary, please adjust the option "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" according to your requirements.'} =
-        'Dentro del Catálogo de servicios en el panel del cliente, es posible mostrar tipos de tickets para la creación de tickets preconfigurados dentro de la descripción del servicio. Además, es posible restringir los servicios para otras pantallas utilizando los tipos de entradas aquí configuradas. Si desea hacer esto, active las opciones "ServiceCatalog::CreateTypeServiceRelatedAcls" y "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" en la configuración del sistema de OTOBO. La restricción se realiza mediante ACL generadas automáticamente, que se pueden ver en "Admin -> Listas de control de acceso (ACL)". Si es necesario, ajuste la opción "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" según sus requerimientos.';
+        '';
     $Self->{Translation}->{'If we work service-based, we do not want to offer the customer a choice of queues in the customer portal when creating a ticket, but decide on the basis of the service into which queue (or which team of agents) the ticket should be processed first. In order to use this option sensibly, please deactivate the option "Ticket::Frontend::CustomerTicketMessage###Queue" and set a sensible default queue in the option "Ticket::Frontend::CustomerTicketMessage###QueueDefault". As soon as you set a "Ticket destination queue" here in the service, the ticket will immediately be created in this queue. If the field remains empty, the default queue configured above will be used.'} =
-        'Si trabajamos en función del servicio, y no queremos ofrecer al cliente la posibilidad de elegir entre colas en el portal del cliente al crear un ticket, sino decidir, en función del servicio, en qué cola (o en qué equipo de agentes) debe colocarse el ticket para procesarse primero. Para utilizar esta opción de forma adecuada, desactive la opción "Ticket::Frontend::CustomerTicketMessage###Queue" y establezca una cola predeterminada en la opción "Ticket::Frontend::CustomerTicketMessage###QueueDefault". Tan pronto como establezca una "cola de destino del ticket" aquí en el servicio, el ticket se creará inmediatamente en esta cola. Si el campo permanece vacío, se utilizará la cola predeterminada configurada anteriormente.';
+        '';
     $Self->{Translation}->{'If you do not assign services to customers or companies individually, but all services are initially offered to your customers for selection, the step of releasing each service as a "default" service under "Admin -> Customer user <-> Service" (or "Customer <-> Service") can be bypassed here. Of course, in the next step it is possible to restrict the services via ACLs.'} =
-        'Si no asigna servicios a clientes o empresas individualmente, pero todos los servicios se ofrecen inicialmente a sus clientes para su selección, el paso de publicar cada servicio como un servicio "predeterminado" en "Administrador -> Usuario del cliente <-> Servicio" (o en "Servicio al cliente <->") se puede omitir aqui. Por supuesto, en el siguiente paso es posible restringir los servicios mediante ACL.';
+        '';
     $Self->{Translation}->{'Here, there is the possibility to automatically calculate the correct ticket priority in the background based on the dynamic field "ITSMCriticality" and "ITSMImpact". Please activate the option "Ticket::EventModulePost###9700-SetDynamicFieldCriticalityFromService" and the option "Ticket::EventModulePost###9800-SetPriorityFromCriticalityAndImpactMatrix". In the next step, you have the possibility using "Admin -> Criticality ↔ Impact ↔ Priority" to set the priority using a matrix.'} =
-        'Aquí existe la posibilidad de calcular automáticamente la prioridad correcta del ticket en segundo plano basándose en el campo dinámico "ITSMCriticality" y "ITSMImpact". Active la opción "Ticket::EventModulePost###9700-SetDynamicFieldCriticalityFromService" y la opción "Ticket::EventModulePost###9800-SetPriorityFromCriticalityAndImpactMatrix". En el siguiente paso, tiene la posibilidad de utilizar "Admin -> Criticidad ↔ Impacto ↔ Prioridad" para establecer la prioridad mediante una matriz.';
+        '';
+    $Self->{Translation}->{'Keywords to facilitate the search for services within the service catalog.'} =
+        '';
+    $Self->{Translation}->{'Service descriptions (short & long) specified by User Language.'} =
+        '';
     $Self->{Translation}->{'Short summary of the service, mainly used in the CustomerDashboard.'} =
-        'Descripción corta del servicio, utilizada principalmente en el panel del cliente.';
-    
-    $Self->{Translation}->{'Keywords to facilitate the search for services within the service catalog.'} = 'Palabras clave para facilitar la búsqueda de servicios dentro del catálogo de servicios.';
-    $Self->{Translation}->{'Description (long)'} = 'Descripción (larga)';
+        '';
     $Self->{Translation}->{'Description of the service. Screenshots and tables are also allowed. Please ensure the correct width of the image for screenshots. This can be adjusted in the ckeditor after uploading the screenshot. A width of 600px has proven to be useful or you can configure a "max-width" of 95% under Advanced.'} =
-        'Descripción detallada del servicio. También se permiten capturas de pantalla y tablas. Asegúrese de que la imagen tenga el ancho correcto para las capturas de pantalla. Esto se puede ajustar en el ckeditor después de cargar la captura de pantalla. Un ancho de 600 px ha demostrado ser útil o puede configurar un "ancho máximo" del 95% en Avanzado.';
-    $Self->{Translation}->{'Add more service catalog fields'} = 'Agregar más campos al catálogo de servicios';
-    $Self->{Translation}->{'You have the option of adding further fields here in the service catalogue at any time. To do this, please go to "Admin -> DynamicFields" and create the new field of the object type "Service". You can then activate the field for the customer dashboard under "Admin -> DynamicField Screens" by assigning it under "CustomerDashboardTile ServiceCatalog".'} =
-        'Tiene la opción de agregar más campos aquí en el catálogo de servicios en cualquier momento. Para hacer esto, vaya a "Admin -> DynamicFields" y cree el nuevo campo del tipo de objeto "Servicio". Luego puede activar el campo para el panel del cliente en "Admin -> Pantallas de campo dinámico" asignándolo en "CustomerDashboardTile ServiceCatalog".';
+        '';
+    $Self->{Translation}->{'Add more service catalog fields'} = '';
+    $Self->{Translation}->{'You have the option of adding further fields here in the service catalog at any time. To do this, please go to "Admin -> DynamicFields" and create the new field of the object type "Service". You can then activate the field for the customer dashboard under "Admin -> DynamicField Screens" by assigning it under "CustomerDashboardTile ServiceCatalog".'} =
+        '';
 
     # Template: AgentITSMSLAZoom
-    $Self->{Translation}->{'SLA Information'} = 'Información del SLA';
-    $Self->{Translation}->{'Last changed'} = 'Modificado';
-    $Self->{Translation}->{'Last changed by'} = 'Modificado por';
-    $Self->{Translation}->{'Minimum Time Between Incidents'} = 'Tiempo mínimo entre Incidentes';
-    $Self->{Translation}->{'Associated Services'} = 'Servicios Asociados';
+    $Self->{Translation}->{'SLA Information'} = '';
+    $Self->{Translation}->{'Last changed'} = '';
+    $Self->{Translation}->{'Last changed by'} = '';
+    $Self->{Translation}->{'Minimum Time Between Incidents'} = '';
+    $Self->{Translation}->{'Associated Services'} = '';
 
     # Template: AgentITSMServiceZoom
-    $Self->{Translation}->{'Service Information'} = 'Información del Servicio';
-    $Self->{Translation}->{'Current incident state'} = 'Estado actual del Incidente';
-    $Self->{Translation}->{'Associated SLAs'} = 'SLAs Asociados';
+    $Self->{Translation}->{'Service Information'} = '';
+    $Self->{Translation}->{'Current incident state'} = '';
+    $Self->{Translation}->{'Associated SLAs'} = '';
 
     # JS Template: TileServiceCatalogContainer
-    $Self->{Translation}->{'Create a new ticket for this service.'} = 'Crear nuevo ticket para este servicio.';
-    $Self->{Translation}->{'Create %s'} = 'Crear %s';
-    $Self->{Translation}->{'Show %s sub-service(s)'} = 'Mostrar %s sub-servicio(s)';
-    $Self->{Translation}->{'More details'} = 'Mas detalles';
-    $Self->{Translation}->{'Sub-Service(s)'} = 'Sub-servicio(s)';
+    $Self->{Translation}->{'Create a new ticket for this service.'} = '';
+    $Self->{Translation}->{'Create %s'} = '';
+    $Self->{Translation}->{'Show %s sub-service(s)'} = '';
+    $Self->{Translation}->{'More details'} = '';
+    $Self->{Translation}->{'Sub-Service(s)'} = '';
 
     # JS Template: TileServiceCatalogDetailed
-    $Self->{Translation}->{'sub-service(s) available'} = 'Sub-servicio(s) disponibles';
-    $Self->{Translation}->{'Create a new ticket of type %s.'} = 'Crear un nuevo ticket de tipo %s.';
-    $Self->{Translation}->{'FAQ article on this topic'} = 'Articulo del FAQ relacionado';
-    $Self->{Translation}->{'Additional information'} = 'Información Adicional';
-    $Self->{Translation}->{'No additional data are available.'} = 'No hay información adicional disponible.';
-    $Self->{Translation}->{'Service hours'} = 'Horario del Servicio';
-    $Self->{Translation}->{'o\'clock'} = 'en punto';
-    $Self->{Translation}->{'Further information'} = 'Más información';
+    $Self->{Translation}->{'sub-service(s) available'} = '';
+    $Self->{Translation}->{'Create a new ticket of type %s.'} = '';
+    $Self->{Translation}->{'FAQ article on this topic'} = '';
+    $Self->{Translation}->{'Additional information'} = '';
+    $Self->{Translation}->{'Service hours'} = '';
+    $Self->{Translation}->{'o\'clock'} = '';
+    $Self->{Translation}->{'No additional data are available.'} = '';
+    $Self->{Translation}->{'Further information'} = '';
+
+    # JS Template: TileServiceCatalogModal
+    $Self->{Translation}->{'Search catalog'} = '';
 
     # Perl Module: Kernel/Modules/CustomerTileServiceCatalog.pm
+    $Self->{Translation}->{'Description not available.'} = '';
+    $Self->{Translation}->{'Need FileID!'} = '';
 
     # Perl Module: Kernel/Modules/AgentITSMServiceZoom.pm
-    $Self->{Translation}->{'No ServiceID is given!'} = 'No se suministro un ID del Servicio!';
-    $Self->{Translation}->{'ServiceID %s not found in database!'} = 'ServiceID "%s" no encontrado!';
-    $Self->{Translation}->{'operational'} = 'operacional';
-    $Self->{Translation}->{'warning'} = 'advertencia';
-    $Self->{Translation}->{'incident'} = 'incidente';
+    $Self->{Translation}->{'No ServiceID is given!'} = '';
+    $Self->{Translation}->{'ServiceID %s not found in database!'} = '';
+    $Self->{Translation}->{'operational'} = '';
+    $Self->{Translation}->{'warning'} = '';
+    $Self->{Translation}->{'incident'} = '';
+
+    # Perl Module: Kernel/Modules/CustomerTicketMessage.pm
+    $Self->{Translation}->{'You don\'t have sufficient permissions for ticket creation in default queue.'} =
+        '';
+
+    # JS File: Core.Agent.Admin.Service
+    $Self->{Translation}->{'Do you really want to delete this service description language?'} =
+        '';
 
     # JS File: Core.Customer.TileServiceCatalog
-    $Self->{Translation}->{'Results for %s'} = 'Resultados para %s';
-    $Self->{Translation}->{'Results'} = 'Resultados';
+    $Self->{Translation}->{'Results for %s'} = '';
 
     # SysConfig
-    $Self->{Translation}->{'This option makes it possible to preconfigure the automatically generated ACL\'s. The aim is to only display the services that have also been assigned to the service in the service catalogue. To use this function, please first enable the "ServiceCatalog::CreateTypeServiceRelatedAcls" option. "GenerateInitalACLToDisableAllServices" generates an ACL that initially hides all services. The value "Possible" or "PossibleAdd" can be set for the key "ConfigChange". The "DeployNewACL" key decides whether the changed ACL should also be deployed immediately. "ACLValidID" (1, 2, 3) sets the ACL\'s to valid, invalid or temporarily invalid.'} =
-        'Esta opción permite preconfigurar las ACL generadas automáticamente. El objetivo es mostrar únicamente los servicios que también han sido asignados al servicio en el catálogo de servicios. Para utilizar esta función, primero habilite la opción "ServiceCatalog::CreateTypeServiceRelatedAcls". "GenerateInitalACLToDisableAllServices" genera una ACL que inicialmente oculta todos los servicios. Para la clave "ConfigChange" se puede establecer el valor "Posible" o "PossibleAdd". La clave "DeployNewACL" decide si la ACL modificada también debe implementarse inmediatamente. "ACLValidID" (1, 2, 3) establece las ACL como válidas, no válidas o temporalmente no válidas.';
-    
-    $Self->{Translation}->{'Additional settings for the service catalog.'} = 'Configuraciones adicionales para el catálogo de servicios.';
-    $Self->{Translation}->{'Both'} = 'Ambos';
-    $Self->{Translation}->{'Comment 2'} = 'Comentario 2';
-    $Self->{Translation}->{'Dynamic fields shown in the service catalog screen of the customer interface.'} =
-        'Campos dinámicos mostrados en el catálogo de servicios de la interfaz del cliente.';
+    $Self->{Translation}->{'A precentage value of the minimal translation progress per language, to be usable for documentations.'} =
+        '';
+    $Self->{Translation}->{'Access repos via http or https.'} = '';
+    $Self->{Translation}->{'Autoloading of Znuny4OTRSRepo extensions.'} = '';
+    $Self->{Translation}->{'Backend module registration for the config conflict check module.'} =
+        '';
+    $Self->{Translation}->{'Backend module registration for the file conflict check module.'} =
+        '';
+    $Self->{Translation}->{'Backend module registration for the function redefine check module.'} =
+        '';
+    $Self->{Translation}->{'Backend module registration for the manual set module.'} = '';
+    $Self->{Translation}->{'Block hooks to be created for BS ad removal.'} = '';
+    $Self->{Translation}->{'Block hooks to be created for package manager output filter.'} =
+        '';
+    $Self->{Translation}->{'Branch View commit limit'} = '';
+    $Self->{Translation}->{'CodePolicy'} = '';
+    $Self->{Translation}->{'Commit limit per page for Branch view screen'} = '';
+    $Self->{Translation}->{'Create analysis file'} = '';
+    $Self->{Translation}->{'Creates a analysis file from this ticket and sends to Znuny.'} =
+        '';
+    $Self->{Translation}->{'Creates a analysis file from this ticket.'} = '';
+    $Self->{Translation}->{'Define private addon repos.'} = '';
+    $Self->{Translation}->{'Defines the filter that processes the HTML templates.'} = '';
+    $Self->{Translation}->{'Defines the test module for checking code policy.'} = '';
+    $Self->{Translation}->{'Definition of GIT clone/push URL Prefix.'} = '';
+    $Self->{Translation}->{'Definition of a Dynamic Field: Group => Group with access to the Dynamic Fields; AlwaysVisible => Field can be removed (0|1); InformationAreaName => Name of the Widgets; InformationAreaSize => Size and position of the widgets (Large|Small); Name => Name of the Dynamic Field which should be used; Priority => Order of the Dynamic Fields; State => State of the Fields (0 = disabled, 1 = active, 2 = mandatory), FilterRelease => Regex which the repository name has to match to be displayed, FilterPackage => Regex which the package name has to match to be displayed, FilterBranch => Regex which the branch name has to match to be displayed, FilterRelease => Regex which the repelase version string has to match to be displayed.'} =
+        '';
+    $Self->{Translation}->{'Definition of a Dynamic Field: Group => Group with access to the Dynamic Fields; AlwaysVisible => Field can be removed (0|1); InformationAreaName => Name of the Widgets; InformationAreaSize => Size and position of the widgets (Large|Small); Name => Name of the Dynamic Field which should be used; Priority => Order of the Dynamic Fields; State => State of the Fields (0 = disabled, 1 = active, 2 = mandatory), FilterRepository => Regex which the repository name has to match to be displayed, FilterPackage => Regex which the package name has to match to be displayed, FilterBranch => Regex which the branch name has to match to be displayed, FilterRelease => Regex which the repelase version string has to match to be displayed.'} =
+        '';
+    $Self->{Translation}->{'Definition of external MD5 sums (key => MD5, Value => Vendor, PackageName, Version, Date).'} =
+        '';
+    $Self->{Translation}->{'Definition of mappings between public repository requests and internal OPMS repositories.'} =
+        '';
+    $Self->{Translation}->{'Definition of package states.'} = '';
+    $Self->{Translation}->{'Definition of renamed OPMS packages.'} = '';
+    $Self->{Translation}->{'Directory, which is used by Git to cache repositories.'} = '';
+    $Self->{Translation}->{'Directory, which is used by Git to store temporary data.'} = '';
+    $Self->{Translation}->{'Directory, which is used by Git to store working copies.'} = '';
+    $Self->{Translation}->{'Disable online repositories.'} = '';
+    $Self->{Translation}->{'Do not log git ssh connection authorization results for these users. Useful for automated stuff.'} =
+        '';
+    $Self->{Translation}->{'Dynamic Fields Screens'} = '';
+    $Self->{Translation}->{'DynamicFieldScreen'} = '';
+    $Self->{Translation}->{'Export all available public keys to authorized_keys file.'} = '';
+    $Self->{Translation}->{'Export all relevant releases to ftp server.'} = '';
+    $Self->{Translation}->{'Frontend module registration for the OPMS object in the agent interface.'} =
+        '';
+    $Self->{Translation}->{'Frontend module registration for the PublicOPMSRepository object in the public interface.'} =
+        '';
+    $Self->{Translation}->{'Frontend module registration for the PublicOPMSRepositoryLookup object in the public interface.'} =
+        '';
+    $Self->{Translation}->{'Frontend module registration for the PublicOPMSTestBuild object in the public interface.'} =
+        '';
+    $Self->{Translation}->{'Frontend module registration for the PublicPackageVerification object in the public interface.'} =
+        '';
+    $Self->{Translation}->{'Frontend module registration for the admin interface.'} = '';
+    $Self->{Translation}->{'GIT Author registration.'} = '';
+    $Self->{Translation}->{'Generate HTML comment hooks for the specified blocks so that filters can use them.'} =
+        '';
+    $Self->{Translation}->{'Generate documentations once per night.'} = '';
+    $Self->{Translation}->{'Git'} = '';
+    $Self->{Translation}->{'Git Management'} = '';
+    $Self->{Translation}->{'Git Repository'} = '';
+    $Self->{Translation}->{'Group, whose members have delete admin permissions in OPMS.'} = '';
+    $Self->{Translation}->{'Group, whose members have repository admin permissions in OPMS.'} =
+        '';
+    $Self->{Translation}->{'Group, whose members will see CI test result information in OPMS screens.'} =
+        '';
+    $Self->{Translation}->{'Groups an authenticated user (by user login and password) must be member of to build test packages via the public interface.'} =
+        '';
+    $Self->{Translation}->{'Groups which will be set during git project creation processes while adding OPMS repositories.'} =
+        '';
+    $Self->{Translation}->{'Manage dynamic field in screens.'} = '';
+    $Self->{Translation}->{'Manage your public SSH key(s) for Git access here. Make sure to save this preference when you add a new key.'} =
+        '';
+    $Self->{Translation}->{'Module to generate statistics about the added code lines.'} = '';
+    $Self->{Translation}->{'Module to generate statistics about the growth of code.'} = '';
+    $Self->{Translation}->{'Module to generate statistics about the number of git commits.'} =
+        '';
+    $Self->{Translation}->{'Module to generate statistics about the removed code lines.'} = '';
+    $Self->{Translation}->{'OPMS'} = '';
+    $Self->{Translation}->{'Only users who have rw permissions in one of these groups may access git.'} =
+        '';
+    $Self->{Translation}->{'Option to set a package compatibility manually.'} = '';
+    $Self->{Translation}->{'Parameters for the pages in the BranchView screen.'} = '';
+    $Self->{Translation}->{'Pre-Definition of the \'GITProjectName\' Dynamic Field: Group => Group with access to the Dynamic Fields; AlwaysVisible => Field can be removed (0|1); InformationAreaName => Name of the Widgets; InformationAreaSize => Size and position of the widgets (Large|Small); Name => Name of the Dynamic Field which should be used; Priority => Order of the Dynamic Fields; State => State of the Fields (0 = disabled, 1 = active, 2 = mandatory), FilterRepository => Regex which the repository name has to match to be displayed, FilterPackage => Regex which the package name has to match to be displayed, FilterBranch => Regex which the branch name has to match to be displayed, FilterRelease => Regex which the repelase version string has to match to be displayed.'} =
+        '';
+    $Self->{Translation}->{'Pre-Definition of the \'GITRepositoryName\' Dynamic Field: Group => Group with access to the Dynamic Fields; AlwaysVisible => Field can be removed (0|1); InformationAreaName => Name of the Widgets; InformationAreaSize => Size and position of the widgets (Large|Small); Name => Name of the Dynamic Field which should be used; Priority => Order of the Dynamic Fields; State => State of the Fields (0 = disabled, 1 = active, 2 = mandatory), FilterRepository => Regex which the repository name has to match to be displayed, FilterPackage => Regex which the package name has to match to be displayed, FilterBranch => Regex which the branch name has to match to be displayed, FilterRelease => Regex which the repelase version string has to match to be displayed.'} =
+        '';
+    $Self->{Translation}->{'Pre-Definition of the \'PackageDeprecated\' Dynamic Field: Group => Group with access to the Dynamic Fields; AlwaysVisible => Field can be removed (0|1); InformationAreaName => Name of the Widgets; InformationAreaSize => Size and position of the widgets (Large|Small); Name => Name of the Dynamic Field which should be used; Priority => Order of the Dynamic Fields; State => State of the Fields (0 = disabled, 1 = active, 2 = mandatory), FilterRepository => Regex which the repository name has to match to be displayed, FilterPackage => Regex which the package name has to match to be displayed, FilterBranch => Regex which the branch name has to match to be displayed, FilterRelease => Regex which the repelase version string has to match to be displayed.'} =
+        '';
+    $Self->{Translation}->{'Recipients that will be informed by email in case of errors.'} =
+        '';
+    $Self->{Translation}->{'SSH Keys for Git Access'} = '';
+    $Self->{Translation}->{'Send analysis file'} = '';
+    $Self->{Translation}->{'Sets the git clone address to be used in repository listings.'} =
+        '';
+    $Self->{Translation}->{'Sets the home directory for git repositories.'} = '';
+    $Self->{Translation}->{'Sets the path for the BugzillaAddComment post receive script location.'} =
+        '';
+    $Self->{Translation}->{'Sets the path for the OTRSCodePolicy  script location. It is recommended to have a separate clone of the OTRSCodePolicy module that is updated via cron.'} =
+        '';
+    $Self->{Translation}->{'Sets the path for the OTRSCodePolicy pre receive script location. It is recommended to have a separate clone of the OTRSCodePolicy module that is updated via cron.'} =
+        '';
+    $Self->{Translation}->{'Show latest commits in git repositories.'} = '';
+    $Self->{Translation}->{'Shows a link in the menu to go create a unit test from the current ticket.'} =
+        '';
+    $Self->{Translation}->{'Synchronize OPMS tables with a remote database.'} = '';
+    $Self->{Translation}->{'The minimum version of the sphinx library.'} = '';
+    $Self->{Translation}->{'The name of the sphinx theme to be used.'} = '';
+    $Self->{Translation}->{'The path to the OTRS CSS file (relative below the static path).'} =
+        '';
+    $Self->{Translation}->{'The path to the OTRS logo (relative below the static path).'} = '';
+    $Self->{Translation}->{'The path to the static folder, containing images and css files.'} =
+        '';
+    $Self->{Translation}->{'The path to the theme folder, containing the sphinx themes.'} = '';
+    $Self->{Translation}->{'This configuration defines all possible screens to enable or disable default columns.'} =
+        '';
+    $Self->{Translation}->{'This configuration defines all possible screens to enable or disable dynamic fields.'} =
+        '';
+    $Self->{Translation}->{'This configuration defines if only valids or all (invalids) dynamic fields should be shown.'} =
+        '';
+    $Self->{Translation}->{'This configuration defines if the OTRS package verification should be active or disabled. If disabled all packages are shown as verified. It\'s still recommended to use only verified packages.'} =
+        '';
+    $Self->{Translation}->{'This configuration defines the URL to the OTRS CloudService Proxy service. The http or https prefix will be added, depending on selection SysConfig \'Znuny4OTRSRepoType\'.'} =
+        '';
+    $Self->{Translation}->{'This configuration registers a Output post-filter to extend package verification.'} =
+        '';
+    $Self->{Translation}->{'This configuration registers an OutputFilter module that removes OTRS Business Solution TM advertisements.'} =
+        '';
+    $Self->{Translation}->{'This configuration registers an output filter to hide online repository selection in package manager.'} =
+        '';
+    $Self->{Translation}->{'Tidy unprocessed release that not passed test pomules checks for a long time.'} =
+        '';
+    $Self->{Translation}->{'Users who have rw permissions in one of these groups are permitted to execute force pushes \'git push --force\'.'} =
+        '';
+    $Self->{Translation}->{'Users who have rw permissions in one of these groups are permitted to manage projects. Additionally the members have administration permissions to the git management.'} =
+        '';
 
-    $Self->{Translation}->{'Event module registration. Currently, the criticality of the service can also be set in the service, but this has no effect. Therefore, this event module has been implemented that automatically updates the DynamicField Criticality in a ticket as soon as a service has been assigned. Please activate the SysConfig option SetPriorityFromCriticalityAndImpactMatrix to set the priority in the next step based an Criticality and Impact.'} =
-        'Registro del módulo de eventos. Actualmente, la criticidad del servicio también se puede establecer en el servicio, pero esto no tiene ningún efecto. Por lo tanto, se ha implementado este módulo de eventos que actualiza automáticamente la Criticidad del Campo Dinámico en un ticket tan pronto como se asigna un servicio. Active la opción SysConfig SetPriorityFromCriticalityAndImpactMatrix para establecer la prioridad en el siguiente paso según la criticidad y el impacto.';
-    $Self->{Translation}->{'Event module registration. Currently, the criticality of the service can also be set in the service, but this has no effect. Therefore, this event module has been implemented that automatically updates the priority regarding Criticality and Impact in a ticket.'} =
-        'Registro del módulo de eventos. Actualmente, la criticidad del servicio también se puede establecer en el servicio, pero esto no tiene ningún efecto. Por lo tanto, se ha implementado este módulo de eventos que actualiza automáticamente la prioridad en cuanto a Criticidad e Impacto en un ticket.';
-    $Self->{Translation}->{'Frontend module registration for the AdminGeneralCatalog configuration in the admin area.'} =
-        'Registro del módulo frontend para la configuración de AdminGeneralCatalog en el área de administración.';   
-    $Self->{Translation}->{'Frontend module registration for the AdminITSMCIPAllocate configuration in the admin area.'} =
-        'Registro del módulo frontend para AdminITSMCIPAloque la configuración en el área de administración.';
-    $Self->{Translation}->{'Frontend module registration for the AgentITSMSLA object in the agent interface.'} =
-        'Registro del módulo frontend para el objeto AgentITSMSLA en la interfaz del agente.';
-    $Self->{Translation}->{'Frontend module registration for the AgentITSMSLAPrint object in the agent interface.'} =
-        'Registro del módulo frontend para el objeto AgentITSMSLAPrint en la interfaz del agente.';
-    $Self->{Translation}->{'Frontend module registration for the AgentITSMSLAZoom object in the agent interface.'} =
-        'Registro del módulo frontend para el objeto AgentITSMSLAZoom en la interfaz del agente.';
-    $Self->{Translation}->{'Frontend module registration for the AgentITSMService object in the agent interface.'} =
-        'Registro del módulo frontend para el objeto AgentITSMService en la interfaz del agente.';
-    $Self->{Translation}->{'Frontend module registration for the AgentITSMServicePrint object in the agent interface.'} =
-        'Registro del módulo frontend para el objeto AgentITSMServicePrint en la interfaz del agente.';
-    $Self->{Translation}->{'Frontend module registration for the AgentITSMServiceZoom object in the agent interface.'} =
-        'Registro del módulo frontend para el objeto AgentITSMServiceZoom en la interfaz del agente.';
-
-    $Self->{Translation}->{'General Catalog'} = 'Catálogo General';
-    $Self->{Translation}->{'ITSM SLA Overview.'} = 'Resumen ITSM SLA.';
-    $Self->{Translation}->{'ITSM Service Overview.'} = 'Resumen ITSM Servicios.';
-    $Self->{Translation}->{'Incident'} = 'Incident';
-    $Self->{Translation}->{'Incident State Type'} = 'Tipo de estado del Incidente';
-    $Self->{Translation}->{'Includes'} = 'Incluye';
-    $Self->{Translation}->{'Manage priority matrix.'} = 'Aministrar la matriz de prioridad';
-    $Self->{Translation}->{'Manage the criticality - impact - priority matrix.'} = 'Administrar la criticidad - impacto - prioridad';
-    $Self->{Translation}->{'Module to show the Back menu item in SLA menu.'} = 'Módulo para motrar el botón Volver en el menú del SLA.';
-    $Self->{Translation}->{'Module to show the Back menu item in service menu.'} = 'Módulo para motrar el botón Volver en el menú del Servicio.';
-    $Self->{Translation}->{'Module to show the Link menu item in service menu.'} = 'Módulo para motrar el botón Vincular en el menú del SLA.';
-    $Self->{Translation}->{'Module to show the Print menu item in SLA menu.'} = 'Módulo para motrar el botón Imprimir en el menú del SLA.';
-    $Self->{Translation}->{'Module to show the Print menu item in service menu.'} = 'Módulo para motrar el botón Imprimir en el menú del Servicio.';
-    $Self->{Translation}->{'Operational'} = 'Operacional';
-    $Self->{Translation}->{'Parameters for the example comment 2 of the general catalog attributes.'} =
-        'Parámetros para el ejemplo comentario 2 de los atributos del catálogo general.';
-    $Self->{Translation}->{'Parameters for the example permission groups of the general catalog attributes.'} =
-        'Parámetros para los grupos de permisos de ejemplo de los atributos del catálogo general.';
-    $Self->{Translation}->{'Parameters for the incident states in the preference view.'} = 'Parámetros para los estados del incidente en la vista de preferencias.';
-
-    $Self->{Translation}->{'Part of'} = 'Parte de';
-    $Self->{Translation}->{'Permission Group'} = 'Permisos de Grupo';
-    $Self->{Translation}->{'Relevant to'} = 'Relevante a';
-    $Self->{Translation}->{'Required for'} = 'Requerido para';
-    $Self->{Translation}->{'SLA Overview'} = 'Resumen de SLA';
-    $Self->{Translation}->{'SLA Print.'} = 'Imprimrir SLA.';
-    $Self->{Translation}->{'SLA Zoom.'} = 'Visualizar SLA.';
-    $Self->{Translation}->{'Service Overview'} = 'Resumen del Servicio';
-    $Self->{Translation}->{'Service Print.'} = 'Imprimir Servicio.';
-    $Self->{Translation}->{'Service Zoom.'} = 'Visualizar Servicio';
-    $Self->{Translation}->{'Service-Area'} = 'Servicio-Area';
-    $Self->{Translation}->{'Set the type and direction of links to be used to calculate the incident state. The key is the name of the link type (as defined in LinkObject::Type), and the value is the direction of the IncidentLinkType that should be followed to calculate the incident state. For example if the IncidentLinkType is set to \'DependsOn\', and the Direction is \'Source\', only \'Depends on\' links will be followed (and not the opposite link \'Required for\') to calculate the incident state. You can add more link types ad directions as you like, e.g. \'Includes\' with the direction \'Target\'. All link types defined in the sysconfig options LinkObject::Type are possible and the direction can be \'Source\', \'Target\', or \'Both\'. IMPORTANT: AFTER YOU MAKE CHANGES TO THIS SYSCONFIG OPTION YOU NEED TO RUN THE CONSOLE COMMAND bin/otobo.Console.pl Admin::ITSM::IncidentState::Recalculate SO THAT ALL INCIDENT STATES WILL BE RECALCULATED BASED ON THE NEW SETTINGS!'} =
-        'Establezca el tipo y la dirección de los enlaces que se utilizarán para calcular el estado del incidente. La clave es el nombre del tipo de vínculo (como se define en LinkObject::Type) y el valor es la dirección del IncidentLinkType que se debe seguir para calcular el estado del incidente. Por ejemplo, si IncidentLinkType está establecido en \'DependsOn\' y la dirección es \'Source\', solo se seguirán los enlaces \'Depends on\' (y no el enlace opuesto \'Requerido para\') para calcular el estado del incidente. Puede agregar más tipos de enlaces de direcciones de anuncios según lo desee, p. \'Incluye\' con la dirección \'Destino\'. Todos los tipos de vínculo definidos en las opciones de sysconfig LinkObject::Type son posibles y la dirección puede ser \'Fuente\', \'Destino\' o \'Ambos\'. IMPORTANTE: DESPUÉS DE REALIZAR CAMBIOS EN ESTA OPCIÓN SYSCONFIG, DEBE EJECUTAR EL COMANDO DE CONSOLA bin/otobo.Console.pl Admin::ITSM::IncidentState::Recalculate PARA QUE TODOS LOS ESTADOS DEL INCIDENTE SE RECALCULEN EN FUNCIÓN DE LAS NUEVAS CONFIGURACIONES.';
-    $Self->{Translation}->{'Show services with the following ticket type last.'} = 'Mostrar servicios con el siguiente tipo de entrada al final.';
-    $Self->{Translation}->{'Source'} = 'Origen';
-    $Self->{Translation}->{'The FAQ field that should be used as the description of an FAQ article in the sidebar (e.g. Field1, Field2, Field3...).'} =
-        'El campo de preguntas frecuentes que debe usarse como descripción de un artículo de preguntas frecuentes en la barra lateral (por ejemplo, Campo1, Campo2, Campo3...).';
-
-    $Self->{Translation}->{'This option allows you to automatically generate ACLs for different interfaces when creating services. Services will then only be displayed if the ticket type stored in the service has been selected. The "AddBulkACL" console script can also be used to create ACLs for services that have already been created.'} =
-        'Esta opción le permite generar automáticamente ACL para diferentes interfaces al crear servicios. Los servicios solo se mostrarán si se ha seleccionado el tipo de ticket almacenado en el servicio. El script de consola "AddBulkACL" también se puede utilizar para crear ACL para servicios que ya se han creado.';
 
     push @{ $Self->{JavaScriptStrings} // [] }, (
-        'Results',
-        'Results for %s',
-        'Additional information',
-        'No additional data are available.',
-        'All',
-        'Create %s',
-        'Create Ticket',
-        'Create a new ticket for this service.',
-        'Create a new ticket of type %s.',
-        'Details',
-        'FAQ article on this topic',
-        'First Response Time',
-        'More details',
-        'Search',
-        'Search catalog',
-        'Service Information',
-        'Service hours',
-        'Show %s sub-service(s)',
-        'Show details of this service.',
-        'Show or hide the content',
-        'Solution Time',
-        'Sub-Service(s)',
-        'hour(s)',
-        'o\'clock',
-        'Further information',
-        'sub-service(s) available',
+    'Additional information',
+    'All',
+    'Close this dialog',
+    'Create %s',
+    'Create Ticket',
+    'Create a new ticket for this service.',
+    'Create a new ticket of type %s.',
+    'Details',
+    'Do you really want to delete this service description language?',
+    'FAQ article on this topic',
+    'First Response Time',
+    'Further information',
+    'More details',
+    'No additional data are available.',
+    'OK',
+    'Results',
+    'Results for %s',
+    'Search',
+    'Search catalog',
+    'Service Information',
+    'Service hours',
+    'Show %s sub-service(s)',
+    'Show details of this service.',
+    'Show or hide the content',
+    'Solution Time',
+    'Sub-Service(s)',
+    'hour(s)',
+    'o\'clock',
+    'sub-service(s) available',
     );
 
 }

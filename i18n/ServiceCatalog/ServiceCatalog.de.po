@@ -590,3 +590,51 @@ msgstr "Benutzer, die rw-Berechtigungen in einer dieser Gruppen haben, dürfen F
 msgid "Users who have rw permissions in one of these groups are permitted to manage projects. Additionally the members have administration permissions to the git management."
 msgstr "Benutzer die über rw-Berechtigungen in einer dieser Gruppen verfügen, können Projekte verwalten. Zusätzlich haben die Mitglieder Administrationsberechtigungen für die Git-Verwaltung."
 
+#. Template: AdminService
+msgid "Keywords"
+msgstr ""
+
+#. Template: AdminService
+msgid "Service Description"
+msgstr ""
+
+#. Template: AdminService
+msgid "This language is not present or enabled on the system. This service description could be deleted if it is not needed anymore."
+msgstr ""
+
+#. Template: AdminService
+msgid "Remove Service Description Language"
+msgstr ""
+
+#. Template: AdminService
+msgid "Add new service description language"
+msgstr ""
+
+#. Template: AdminService
+msgid "Within the ServiceCatalogue tile in the customer dashboard, it is possible to show ticket types for preconfigured ticket creation inside the service description. Furthermore, it is possible to restrict the services for other screens using the ticket types set here. If you wish to do this, please activate the options \"ServiceCatalog::CreateTypeServiceRelatedAcls\" and \"ServiceCatalog::CreateTypeServiceRelatedAcls::Options\" in the OTOBO system configuration. The restriction is made via automatically generated ACLs, which can be viewed under \"Admin -> Access Control Lists (ACL)\". If necessary, please adjust the option \"ServiceCatalog::CreateTypeServiceRelatedAcls::Options\" according to your requirements."
+msgstr ""
+
+#. Template: AdminService
+msgid "Keywords to facilitate the search for services within the service catalog."
+msgstr ""
+
+#. Template: AdminService
+msgid "Service descriptions (short & long) specified by User Language."
+msgstr ""
+
+#. JS Template: TileServiceCatalogDetailed
+msgid "No additional data are available."
+msgstr ""
+
+#. JS Template: TileServiceCatalogModal
+msgid "Search catalog"
+msgstr ""
+
+#. Perl Module: Kernel/Modules/CustomerTileServiceCatalog.pm
+msgid "Description not available."
+msgstr ""
+
+#. JS File: Core.Agent.Admin.Service
+msgid "Do you really want to delete this service description language?"
+msgstr ""
+

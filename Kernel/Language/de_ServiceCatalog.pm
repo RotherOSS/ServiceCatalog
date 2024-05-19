@@ -31,16 +31,25 @@ sub Data {
     $Self->{Translation}->{'Ticket destination queue'} = '';
     $Self->{Translation}->{'Customer default service'} = '';
     $Self->{Translation}->{'Criticality'} = '';
+    $Self->{Translation}->{'Keywords'} = '';
+    $Self->{Translation}->{'Service Description'} = '';
+    $Self->{Translation}->{'This language is not present or enabled on the system. This service description could be deleted if it is not needed anymore.'} =
+        '';
+    $Self->{Translation}->{'Remove Service Description Language'} = '';
+    $Self->{Translation}->{'Add new service description language'} = '';
     $Self->{Translation}->{'Option Reference'} = '';
     $Self->{Translation}->{'You can use the following options'} = '';
-    $Self->{Translation}->{'Show services for the following ticket types'} = '';
-    $Self->{Translation}->{'Within the ServiceCatalog tile in the customer dashboard, it is possible to show ticket types for preconfigured ticket creation inside the service description. Furthermore, it is possible to restrict the services for other screens using the ticket types set here. If you wish to do this, please activate the options "ServiceCatalog::CreateTypeServiceRelatedAcls" and "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" in the OTOBO system configuration. The restriction is made via automatically generated ACLs, which can be viewed under "Admin -> Access Control Lists (ACL)". If necessary, please adjust the option "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" according to your requirements.'} =
+    $Self->{Translation}->{'Within the ServiceCatalogue tile in the customer dashboard, it is possible to show ticket types for preconfigured ticket creation inside the service description. Furthermore, it is possible to restrict the services for other screens using the ticket types set here. If you wish to do this, please activate the options "ServiceCatalog::CreateTypeServiceRelatedAcls" and "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" in the OTOBO system configuration. The restriction is made via automatically generated ACLs, which can be viewed under "Admin -> Access Control Lists (ACL)". If necessary, please adjust the option "ServiceCatalog::CreateTypeServiceRelatedAcls::Options" according to your requirements.'} =
         '';
     $Self->{Translation}->{'If we work service-based, we do not want to offer the customer a choice of queues in the customer portal when creating a ticket, but decide on the basis of the service into which queue (or which team of agents) the ticket should be processed first. In order to use this option sensibly, please deactivate the option "Ticket::Frontend::CustomerTicketMessage###Queue" and set a sensible default queue in the option "Ticket::Frontend::CustomerTicketMessage###QueueDefault". As soon as you set a "Ticket destination queue" here in the service, the ticket will immediately be created in this queue. If the field remains empty, the default queue configured above will be used.'} =
         '';
     $Self->{Translation}->{'If you do not assign services to customers or companies individually, but all services are initially offered to your customers for selection, the step of releasing each service as a "default" service under "Admin -> Customer user <-> Service" (or "Customer <-> Service") can be bypassed here. Of course, in the next step it is possible to restrict the services via ACLs.'} =
         '';
     $Self->{Translation}->{'Here, there is the possibility to automatically calculate the correct ticket priority in the background based on the dynamic field "ITSMCriticality" and "ITSMImpact". Please activate the option "Ticket::EventModulePost###9700-SetDynamicFieldCriticalityFromService" and the option "Ticket::EventModulePost###9800-SetPriorityFromCriticalityAndImpactMatrix". In the next step, you have the possibility using "Admin -> Criticality ↔ Impact ↔ Priority" to set the priority using a matrix.'} =
+        '';
+    $Self->{Translation}->{'Keywords to facilitate the search for services within the service catalog.'} =
+        '';
+    $Self->{Translation}->{'Service descriptions (short & long) specified by User Language.'} =
         '';
     $Self->{Translation}->{'Short summary of the service, mainly used in the CustomerDashboard.'} =
         '';
@@ -76,9 +85,14 @@ sub Data {
     $Self->{Translation}->{'Additional information'} = '';
     $Self->{Translation}->{'Service hours'} = '';
     $Self->{Translation}->{'o\'clock'} = '';
+    $Self->{Translation}->{'No additional data are available.'} = '';
     $Self->{Translation}->{'Further information'} = '';
 
+    # JS Template: TileServiceCatalogModal
+    $Self->{Translation}->{'Search catalog'} = '';
+
     # Perl Module: Kernel/Modules/CustomerTileServiceCatalog.pm
+    $Self->{Translation}->{'Description not available.'} = '';
     $Self->{Translation}->{'Need FileID!'} = '';
 
     # Perl Module: Kernel/Modules/AgentITSMServiceZoom.pm
@@ -90,6 +104,10 @@ sub Data {
 
     # Perl Module: Kernel/Modules/CustomerTicketMessage.pm
     $Self->{Translation}->{'You don\'t have sufficient permissions for ticket creation in default queue.'} =
+        '';
+
+    # JS File: Core.Agent.Admin.Service
+    $Self->{Translation}->{'Do you really want to delete this service description language?'} =
         '';
 
     # JS File: Core.Customer.TileServiceCatalog
@@ -245,14 +263,17 @@ sub Data {
     'Create a new ticket for this service.',
     'Create a new ticket of type %s.',
     'Details',
+    'Do you really want to delete this service description language?',
     'FAQ article on this topic',
     'First Response Time',
     'Further information',
     'More details',
+    'No additional data are available.',
     'OK',
     'Results',
     'Results for %s',
     'Search',
+    'Search catalog',
     'Service Information',
     'Service hours',
     'Show %s sub-service(s)',

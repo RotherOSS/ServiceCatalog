@@ -14,7 +14,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 # --
 
-package Kernel::Language::de_ServiceCatalog;
+package Kernel::Language::es_ServiceCatalog;
 
 use strict;
 use warnings;
