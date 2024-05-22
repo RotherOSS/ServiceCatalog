@@ -413,6 +413,7 @@ sub Run {
         }
 
         # Get sure that we can select every subservice of this service.
+        SERVICEDATA:
         while (1) {
             my %Service = ();
 
@@ -429,7 +430,7 @@ sub Run {
 
             # Parent reached.
             if ( !$Service{ParentID} || ( $ServiceList{$ParentID} && $ServiceList{$ParentID}{ServiceID} ) ) {
-                last PARAMETER;
+                last SERVICEDATA;
             }
         }
     }
