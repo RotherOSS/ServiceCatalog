@@ -94,7 +94,7 @@ sub Data {
     $Self->{Translation}->{'ServiceID %s not found in database!'} = '';
     $Self->{Translation}->{'operational'} = 'Operativ';
     $Self->{Translation}->{'warning'} = 'Warnung';
-    $Self->{Translation}->{'incident'} = '';
+    $Self->{Translation}->{'incident'} = 'Vorfall';
 
     # Perl Module: Kernel/Modules/CustomerTicketMessage.pm
     $Self->{Translation}->{'You don\'t have sufficient permissions for ticket creation in default queue.'} =

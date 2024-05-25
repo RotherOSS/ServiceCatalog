@@ -87,7 +87,7 @@ sub Data {
     $Self->{Translation}->{'ServiceID %s not found in database!'} = '';
     $Self->{Translation}->{'operational'} = 'Operativ';
     $Self->{Translation}->{'warning'} = 'Warnung';
-    $Self->{Translation}->{'incident'} = '';
+    $Self->{Translation}->{'incident'} = 'Vorfall';
 
     # JS File: Core.Customer.TileServiceCatalog
     $Self->{Translation}->{'results for %s'} = '';
