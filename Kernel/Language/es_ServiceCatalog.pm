@@ -102,10 +102,6 @@ sub Data {
     $Self->{Translation}->{'warning'} = '';
     $Self->{Translation}->{'incident'} = '';
 
-    # Perl Module: Kernel/Modules/CustomerTicketMessage.pm
-    $Self->{Translation}->{'You don\'t have sufficient permissions for ticket creation in default queue.'} =
-        '';
-
     # JS File: Core.Agent.Admin.Service
     $Self->{Translation}->{'Do you really want to delete this service description language?'} =
         '';
@@ -114,143 +110,20 @@ sub Data {
     $Self->{Translation}->{'Results for %s'} = '';
 
     # SysConfig
-    $Self->{Translation}->{'A precentage value of the minimal translation progress per language, to be usable for documentations.'} =
+    $Self->{Translation}->{'Additional settings for the service catalog.'} = '';
+    $Self->{Translation}->{'CustomerTileServiceCatalog AJAX Module.'} = '';
+    $Self->{Translation}->{'Dynamic fields shown in the service catalog screen of the customer interface.'} =
         '';
-    $Self->{Translation}->{'Access repos via http or https.'} = '';
-    $Self->{Translation}->{'Autoloading of Znuny4OTRSRepo extensions.'} = '';
-    $Self->{Translation}->{'Backend module registration for the config conflict check module.'} =
+    $Self->{Translation}->{'Event module registration. Currently, the criticality of the service can also be set in the service, but this has no effect. Therefore, this event module has been implemented that automatically updates the DynamicField Criticality in a ticket as soon as a service has been assigned. Please activate the SysConfig option SetPriorityFromCriticalityAndImpactMatrix to set the priority in the next step based an Criticality and Impact.'} =
         '';
-    $Self->{Translation}->{'Backend module registration for the file conflict check module.'} =
+    $Self->{Translation}->{'Event module registration. Currently, the criticality of the service can also be set in the service, but this has no effect. Therefore, this event module has been implemented that automatically updates the priority regarding Criticality and Impact in a ticket.'} =
         '';
-    $Self->{Translation}->{'Backend module registration for the function redefine check module.'} =
+    $Self->{Translation}->{'Show services with the following ticket type last.'} = '';
+    $Self->{Translation}->{'The FAQ field that should be used as the description of an FAQ article in the sidebar (e.g. Field1, Field2, Field3...).'} =
         '';
-    $Self->{Translation}->{'Backend module registration for the manual set module.'} = '';
-    $Self->{Translation}->{'Block hooks to be created for BS ad removal.'} = '';
-    $Self->{Translation}->{'Block hooks to be created for package manager output filter.'} =
+    $Self->{Translation}->{'This option allows you to automatically generate ACLs for different interfaces when creating services. Services will then only be displayed if the ticket type stored in the service has been selected. The \"AddBulkACL\" console script can also be used to create ACLs for services that have already been create.'} =
         '';
-    $Self->{Translation}->{'Branch View commit limit'} = '';
-    $Self->{Translation}->{'CodePolicy'} = '';
-    $Self->{Translation}->{'Commit limit per page for Branch view screen'} = '';
-    $Self->{Translation}->{'Create analysis file'} = '';
-    $Self->{Translation}->{'Creates a analysis file from this ticket and sends to Znuny.'} =
-        '';
-    $Self->{Translation}->{'Creates a analysis file from this ticket.'} = '';
-    $Self->{Translation}->{'Define private addon repos.'} = '';
-    $Self->{Translation}->{'Defines the filter that processes the HTML templates.'} = '';
-    $Self->{Translation}->{'Defines the test module for checking code policy.'} = '';
-    $Self->{Translation}->{'Definition of GIT clone/push URL Prefix.'} = '';
-    $Self->{Translation}->{'Definition of a Dynamic Field: Group => Group with access to the Dynamic Fields; AlwaysVisible => Field can be removed (0|1); InformationAreaName => Name of the Widgets; InformationAreaSize => Size and position of the widgets (Large|Small); Name => Name of the Dynamic Field which should be used; Priority => Order of the Dynamic Fields; State => State of the Fields (0 = disabled, 1 = active, 2 = mandatory), FilterRelease => Regex which the repository name has to match to be displayed, FilterPackage => Regex which the package name has to match to be displayed, FilterBranch => Regex which the branch name has to match to be displayed, FilterRelease => Regex which the repelase version string has to match to be displayed.'} =
-        '';
-    $Self->{Translation}->{'Definition of a Dynamic Field: Group => Group with access to the Dynamic Fields; AlwaysVisible => Field can be removed (0|1); InformationAreaName => Name of the Widgets; InformationAreaSize => Size and position of the widgets (Large|Small); Name => Name of the Dynamic Field which should be used; Priority => Order of the Dynamic Fields; State => State of the Fields (0 = disabled, 1 = active, 2 = mandatory), FilterRepository => Regex which the repository name has to match to be displayed, FilterPackage => Regex which the package name has to match to be displayed, FilterBranch => Regex which the branch name has to match to be displayed, FilterRelease => Regex which the repelase version string has to match to be displayed.'} =
-        '';
-    $Self->{Translation}->{'Definition of external MD5 sums (key => MD5, Value => Vendor, PackageName, Version, Date).'} =
-        '';
-    $Self->{Translation}->{'Definition of mappings between public repository requests and internal OPMS repositories.'} =
-        '';
-    $Self->{Translation}->{'Definition of package states.'} = '';
-    $Self->{Translation}->{'Definition of renamed OPMS packages.'} = '';
-    $Self->{Translation}->{'Directory, which is used by Git to cache repositories.'} = '';
-    $Self->{Translation}->{'Directory, which is used by Git to store temporary data.'} = '';
-    $Self->{Translation}->{'Directory, which is used by Git to store working copies.'} = '';
-    $Self->{Translation}->{'Disable online repositories.'} = '';
-    $Self->{Translation}->{'Do not log git ssh connection authorization results for these users. Useful for automated stuff.'} =
-        '';
-    $Self->{Translation}->{'Dynamic Fields Screens'} = '';
-    $Self->{Translation}->{'DynamicFieldScreen'} = '';
-    $Self->{Translation}->{'Export all available public keys to authorized_keys file.'} = '';
-    $Self->{Translation}->{'Export all relevant releases to ftp server.'} = '';
-    $Self->{Translation}->{'Frontend module registration for the OPMS object in the agent interface.'} =
-        '';
-    $Self->{Translation}->{'Frontend module registration for the PublicOPMSRepository object in the public interface.'} =
-        '';
-    $Self->{Translation}->{'Frontend module registration for the PublicOPMSRepositoryLookup object in the public interface.'} =
-        '';
-    $Self->{Translation}->{'Frontend module registration for the PublicOPMSTestBuild object in the public interface.'} =
-        '';
-    $Self->{Translation}->{'Frontend module registration for the PublicPackageVerification object in the public interface.'} =
-        '';
-    $Self->{Translation}->{'Frontend module registration for the admin interface.'} = '';
-    $Self->{Translation}->{'GIT Author registration.'} = '';
-    $Self->{Translation}->{'Generate HTML comment hooks for the specified blocks so that filters can use them.'} =
-        '';
-    $Self->{Translation}->{'Generate documentations once per night.'} = '';
-    $Self->{Translation}->{'Git'} = '';
-    $Self->{Translation}->{'Git Management'} = '';
-    $Self->{Translation}->{'Git Repository'} = '';
-    $Self->{Translation}->{'Group, whose members have delete admin permissions in OPMS.'} = '';
-    $Self->{Translation}->{'Group, whose members have repository admin permissions in OPMS.'} =
-        '';
-    $Self->{Translation}->{'Group, whose members will see CI test result information in OPMS screens.'} =
-        '';
-    $Self->{Translation}->{'Groups an authenticated user (by user login and password) must be member of to build test packages via the public interface.'} =
-        '';
-    $Self->{Translation}->{'Groups which will be set during git project creation processes while adding OPMS repositories.'} =
-        '';
-    $Self->{Translation}->{'Manage dynamic field in screens.'} = '';
-    $Self->{Translation}->{'Manage your public SSH key(s) for Git access here. Make sure to save this preference when you add a new key.'} =
-        '';
-    $Self->{Translation}->{'Module to generate statistics about the added code lines.'} = '';
-    $Self->{Translation}->{'Module to generate statistics about the growth of code.'} = '';
-    $Self->{Translation}->{'Module to generate statistics about the number of git commits.'} =
-        '';
-    $Self->{Translation}->{'Module to generate statistics about the removed code lines.'} = '';
-    $Self->{Translation}->{'OPMS'} = '';
-    $Self->{Translation}->{'Only users who have rw permissions in one of these groups may access git.'} =
-        '';
-    $Self->{Translation}->{'Option to set a package compatibility manually.'} = '';
-    $Self->{Translation}->{'Parameters for the pages in the BranchView screen.'} = '';
-    $Self->{Translation}->{'Pre-Definition of the \'GITProjectName\' Dynamic Field: Group => Group with access to the Dynamic Fields; AlwaysVisible => Field can be removed (0|1); InformationAreaName => Name of the Widgets; InformationAreaSize => Size and position of the widgets (Large|Small); Name => Name of the Dynamic Field which should be used; Priority => Order of the Dynamic Fields; State => State of the Fields (0 = disabled, 1 = active, 2 = mandatory), FilterRepository => Regex which the repository name has to match to be displayed, FilterPackage => Regex which the package name has to match to be displayed, FilterBranch => Regex which the branch name has to match to be displayed, FilterRelease => Regex which the repelase version string has to match to be displayed.'} =
-        '';
-    $Self->{Translation}->{'Pre-Definition of the \'GITRepositoryName\' Dynamic Field: Group => Group with access to the Dynamic Fields; AlwaysVisible => Field can be removed (0|1); InformationAreaName => Name of the Widgets; InformationAreaSize => Size and position of the widgets (Large|Small); Name => Name of the Dynamic Field which should be used; Priority => Order of the Dynamic Fields; State => State of the Fields (0 = disabled, 1 = active, 2 = mandatory), FilterRepository => Regex which the repository name has to match to be displayed, FilterPackage => Regex which the package name has to match to be displayed, FilterBranch => Regex which the branch name has to match to be displayed, FilterRelease => Regex which the repelase version string has to match to be displayed.'} =
-        '';
-    $Self->{Translation}->{'Pre-Definition of the \'PackageDeprecated\' Dynamic Field: Group => Group with access to the Dynamic Fields; AlwaysVisible => Field can be removed (0|1); InformationAreaName => Name of the Widgets; InformationAreaSize => Size and position of the widgets (Large|Small); Name => Name of the Dynamic Field which should be used; Priority => Order of the Dynamic Fields; State => State of the Fields (0 = disabled, 1 = active, 2 = mandatory), FilterRepository => Regex which the repository name has to match to be displayed, FilterPackage => Regex which the package name has to match to be displayed, FilterBranch => Regex which the branch name has to match to be displayed, FilterRelease => Regex which the repelase version string has to match to be displayed.'} =
-        '';
-    $Self->{Translation}->{'Recipients that will be informed by email in case of errors.'} =
-        '';
-    $Self->{Translation}->{'SSH Keys for Git Access'} = '';
-    $Self->{Translation}->{'Send analysis file'} = '';
-    $Self->{Translation}->{'Sets the git clone address to be used in repository listings.'} =
-        '';
-    $Self->{Translation}->{'Sets the home directory for git repositories.'} = '';
-    $Self->{Translation}->{'Sets the path for the BugzillaAddComment post receive script location.'} =
-        '';
-    $Self->{Translation}->{'Sets the path for the OTRSCodePolicy  script location. It is recommended to have a separate clone of the OTRSCodePolicy module that is updated via cron.'} =
-        '';
-    $Self->{Translation}->{'Sets the path for the OTRSCodePolicy pre receive script location. It is recommended to have a separate clone of the OTRSCodePolicy module that is updated via cron.'} =
-        '';
-    $Self->{Translation}->{'Show latest commits in git repositories.'} = '';
-    $Self->{Translation}->{'Shows a link in the menu to go create a unit test from the current ticket.'} =
-        '';
-    $Self->{Translation}->{'Synchronize OPMS tables with a remote database.'} = '';
-    $Self->{Translation}->{'The minimum version of the sphinx library.'} = '';
-    $Self->{Translation}->{'The name of the sphinx theme to be used.'} = '';
-    $Self->{Translation}->{'The path to the OTRS CSS file (relative below the static path).'} =
-        '';
-    $Self->{Translation}->{'The path to the OTRS logo (relative below the static path).'} = '';
-    $Self->{Translation}->{'The path to the static folder, containing images and css files.'} =
-        '';
-    $Self->{Translation}->{'The path to the theme folder, containing the sphinx themes.'} = '';
-    $Self->{Translation}->{'This configuration defines all possible screens to enable or disable default columns.'} =
-        '';
-    $Self->{Translation}->{'This configuration defines all possible screens to enable or disable dynamic fields.'} =
-        '';
-    $Self->{Translation}->{'This configuration defines if only valids or all (invalids) dynamic fields should be shown.'} =
-        '';
-    $Self->{Translation}->{'This configuration defines if the OTRS package verification should be active or disabled. If disabled all packages are shown as verified. It\'s still recommended to use only verified packages.'} =
-        '';
-    $Self->{Translation}->{'This configuration defines the URL to the OTRS CloudService Proxy service. The http or https prefix will be added, depending on selection SysConfig \'Znuny4OTRSRepoType\'.'} =
-        '';
-    $Self->{Translation}->{'This configuration registers a Output post-filter to extend package verification.'} =
-        '';
-    $Self->{Translation}->{'This configuration registers an OutputFilter module that removes OTRS Business Solution TM advertisements.'} =
-        '';
-    $Self->{Translation}->{'This configuration registers an output filter to hide online repository selection in package manager.'} =
-        '';
-    $Self->{Translation}->{'Tidy unprocessed release that not passed test pomules checks for a long time.'} =
-        '';
-    $Self->{Translation}->{'Users who have rw permissions in one of these groups are permitted to execute force pushes \'git push --force\'.'} =
-        '';
-    $Self->{Translation}->{'Users who have rw permissions in one of these groups are permitted to manage projects. Additionally the members have administration permissions to the git management.'} =
+    $Self->{Translation}->{'This option makes it possible to preconfigure the automatically generated ACL\\'s. The aim is to only display the services that have also been assigned to the service in the service catalog. To use this function, please first enable the \"ServiceCatalog::CreateTypeServiceRelatedAcls\" option. \"GenerateInitalACLToDisableAllServices\" generates an ACL that initially hides all services. The value \"Possible\" or \"PossibleAdd\" can be set for the key \"ConfigChange\". The \"DeployNewACL"\ key decides whether the changed ACL should also be deployed immediately. \"ACLValidID"\ (1, 2, 3) sets the ACL\\'s to valid, invalid or temporarily invalid.'} =
         '';
 
 
