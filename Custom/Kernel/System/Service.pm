@@ -2,7 +2,7 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.de/
+# Copyright (C) 2019-2024 Rother OSS GmbH, https://otobo.io/
 # --
 # $origin: otobo - 739b3be62b71991d6571cc1f091e6d96f6bff498 - Kernel/System/Service.pm
 # --
@@ -932,7 +932,8 @@ sub ServiceAdd {
 # RotherOSS
 # ---
     # Insert new ticket type relations.
-    for my $TicketTypeID ( @{ $Param{TicketTypeIDs} } ) {
+    my @TicketTypeIDs = grep { $_ } $Param{TicketTypeIDs}->@*;
+    for my $TicketTypeID ( @TicketTypeIDs ) {
         return if !$DBObject->Do(
             SQL => 'INSERT INTO service_type '
                 . '(service_id, ticket_type_id, create_time, create_by) '
