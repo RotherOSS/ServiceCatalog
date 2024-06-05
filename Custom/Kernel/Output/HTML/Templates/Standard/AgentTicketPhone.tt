@@ -187,8 +187,6 @@
                     <div class="Clear"></div>
 [% RenderBlockEnd("TicketSLA") %]
 
-[% Data.DynamicFieldHTML %]
-
 # Rother OSS
                     <label class="Mandatory" for="Dest"><span class="Marker">*</span> [% Translate("To queue") | html %]:</label>
                     <div class="Field">
@@ -198,7 +196,9 @@
                     </div>
                     <div class="Clear"></div>
 # EO Rother OSS
+
 [% Data.DynamicFieldHTML %]
+
 [% RenderBlockStart("OwnerSelection") %]
                     <label for="NewUserID">[% Translate("Owner") | html %]:</label>
                     <div class="Field">
