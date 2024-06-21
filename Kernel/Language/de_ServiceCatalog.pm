@@ -24,7 +24,7 @@ sub Data {
     my $Self = shift;
 
     # Template: TileServiceCatalog
-    $Self->{Translation}->{'Show details of this service.'} = '';
+    $Self->{Translation}->{'Show details of this service.'} = 'Zeige Servicedetails';
 
     # Template: AdminService
     $Self->{Translation}->{'Service depends on the following ticket types'} = '';
@@ -72,28 +72,28 @@ sub Data {
     $Self->{Translation}->{'Associated SLAs'} = '';
 
     # JS Template: TileServiceCatalogContainer
-    $Self->{Translation}->{'Create a new ticket for this service.'} = '';
-    $Self->{Translation}->{'Create %s'} = '';
-    $Self->{Translation}->{'Show %s sub-service(s)'} = '';
-    $Self->{Translation}->{'More details'} = '';
-    $Self->{Translation}->{'Sub-Service(s)'} = '';
+    $Self->{Translation}->{'Create a new ticket for this service.'} = 'Erstelle ein neues Ticket für diesen Service';
+    $Self->{Translation}->{'Create %s'} = 'Erstelle %s';
+    $Self->{Translation}->{'Show %s sub-service(s)'} = 'Zeige %s Unterservice(s)';
+    $Self->{Translation}->{'More details'} = 'Mehr';
+    $Self->{Translation}->{'Sub-Service(s)'} = 'Unterservice(s)';
 
     # JS Template: TileServiceCatalogDetailed
-    $Self->{Translation}->{'sub-service(s) available'} = '';
-    $Self->{Translation}->{'Create a new ticket of type %s.'} = '';
-    $Self->{Translation}->{'FAQ article on this topic'} = '';
-    $Self->{Translation}->{'Additional information'} = '';
-    $Self->{Translation}->{'Service hours'} = '';
-    $Self->{Translation}->{'o\'clock'} = '';
-    $Self->{Translation}->{'No additional data are available.'} = '';
-    $Self->{Translation}->{'Further information'} = '';
+    $Self->{Translation}->{'sub-service(s) available'} = 'Verfügbare Unterservice(s)';
+    $Self->{Translation}->{'Create a new ticket of type %s.'} = 'Erstelle ein Ticket vom Typ %s.';
+    $Self->{Translation}->{'FAQ article on this topic'} = 'FAQ-Artikel zu diesem Thema';
+    $Self->{Translation}->{'Additional information'} = 'Zusätzliche Informationen';
+    $Self->{Translation}->{'Service hours'} = 'Servicezeiten';
+    $Self->{Translation}->{'o\'clock'} = 'Uhr';
+    $Self->{Translation}->{'No additional data are available.'} = 'Keine zusätzlichen Informationen verfügbar.';
+    $Self->{Translation}->{'Further information'} = 'Weitere Informationen';
 
     # JS Template: TileServiceCatalogModal
-    $Self->{Translation}->{'Search catalog'} = '';
+    $Self->{Translation}->{'Search catalog'} = 'Durchsuche den Katalog';
 
     # Perl Module: Kernel/Modules/CustomerTileServiceCatalog.pm
-    $Self->{Translation}->{'Description not available.'} = '';
-    $Self->{Translation}->{'Need FileID!'} = '';
+    $Self->{Translation}->{'Description not available.'} = 'Beschreibung nicht verfügbar.';
+    $Self->{Translation}->{'Need FileID!'} = 'Benötige FileID!';
 
     # Perl Module: Kernel/Modules/AgentITSMServiceZoom.pm
     $Self->{Translation}->{'No ServiceID is given!'} = '';
@@ -107,7 +107,7 @@ sub Data {
         '';
 
     # JS File: Core.Customer.TileServiceCatalog
-    $Self->{Translation}->{'Results for %s'} = '';
+    $Self->{Translation}->{'Results for %s'} = 'Ergebnisse für %s';
 
     # SysConfig
     $Self->{Translation}->{'Additional settings for the service catalog.'} = '';
