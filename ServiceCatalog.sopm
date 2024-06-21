@@ -45,6 +45,22 @@
         <File Permission="660" Location="var/packagesetup/ServiceCatalog.pm" />
     </Filelist>    
     <DatabaseInstall Type="post">
+        <TableCreate Name="service_description">
+            <Column AutoIncrement="true" Name="id" PrimaryKey="true" Required="true" Type="BIGINT"></Column>
+            <Column Name="service_id" Required="true" Size="11" Type="INTEGER"></Column>
+            <Column Name="description_short" Required="true" Size="191" Type="VARCHAR"></Column>
+            <Column Name="description_long" Required="false" Size="3000" Type="VARCHAR"></Column>
+            <Column Name="content_type" Required="true" Size="250" Type="VARCHAR"></Column>
+            <Column Name="language" Required="true" Size="60" Type="VARCHAR"></Column>
+            <Index Name="service_description_language">
+                <IndexColumn Name="language">
+                </IndexColumn>
+            </Index>
+            <Index Name="service_description_service_id">
+                <IndexColumn Name="service_id">
+                </IndexColumn>
+            </Index>
+        </TableCreate>
         <TableCreate Name="service_type">
             <Column Name="service_id" Required="true" Type="INTEGER"></Column>
             <Column Name="ticket_type_id" Required="false" Type="SMALLINT"></Column>
