@@ -435,6 +435,17 @@ sub Run {
         }
     }
 
+
+    # TODO: Names have to be translated somewhere for the breadcrumb, we need to prevent translation of those translated values
+    for my $ServiceID ( keys %ServiceList ) {
+        $ServiceList{$ServiceID}{NameShort} = $LayoutObject->Output(
+            Template => '[%  Translate(Data.Name) | html %]',
+            Data     => {
+                Name => $ServiceList{$ServiceID}{NameShort},
+            },
+        );
+    }
+
     # Show all first level services, sorted by the name.
     my %ParentIDs;
     SERVICELIST:
