@@ -2,9 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ServiceCatalog\n"
 "POT-Creation-Date: 2024-05-16 08:28+0000\n"
-"PO-Revision-Date: 2024-05-17 08:13+0000\n"
-"Last-Translator: Markus Hlinka <mah@rother-oss.com>\n"
-"Language-Team: German <http://weblate.otobo.org/projects/opm-packages/servicecatalog/de/>\n"
+"PO-Revision-Date: 2024-07-08 08:13+0000\n"
+"Last-Translator: Grit Rother <mr@otobo.de>\n"
+"Language-Team: German <http://weblate.otobo.org/projects/opm-packages/"
+"servicecatalog/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -174,7 +175,7 @@ msgstr ""
 
 #. Perl Module: Kernel/Modules/AgentITSMServiceZoom.pm
 msgid "operational"
-msgstr "Operativ"
+msgstr "operativ"
 
 #. Perl Module: Kernel/Modules/AgentITSMServiceZoom.pm
 msgid "warning"
@@ -619,4 +620,3 @@ msgstr "Benutzer, die rw-Berechtigungen in einer dieser Gruppen haben, dürfen F
 #. SysConfig
 msgid "Users who have rw permissions in one of these groups are permitted to manage projects. Additionally the members have administration permissions to the git management."
 msgstr "Benutzer die über rw-Berechtigungen in einer dieser Gruppen verfügen, können Projekte verwalten. Zusätzlich haben die Mitglieder Administrationsberechtigungen für die Git-Verwaltung."
-
