@@ -85,7 +85,7 @@ sub Data {
     # Perl Module: Kernel/Modules/AgentITSMServiceZoom.pm
     $Self->{Translation}->{'No ServiceID is given!'} = '';
     $Self->{Translation}->{'ServiceID %s not found in database!'} = '';
-    $Self->{Translation}->{'operational'} = 'Operativ';
+    $Self->{Translation}->{'operational'} = 'operativ';
     $Self->{Translation}->{'warning'} = 'Warnung';
     $Self->{Translation}->{'incident'} = 'Vorfall';
 
