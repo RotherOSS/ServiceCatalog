@@ -96,7 +96,11 @@ sub Data {
     # SysConfig
     $Self->{Translation}->{'Additional settings for the service catalog.'} = '';
     $Self->{Translation}->{'CustomerTileServiceCatalog AJAX Module.'} = '';
+    $Self->{Translation}->{'Defines if parent-child translations for queues and services should be generated automatically.'} =
+        '';
     $Self->{Translation}->{'Defines the initial height for the rich text editor component in pixels.'} =
+        '';
+    $Self->{Translation}->{'Defines the initial height in pixels for the rich text editor component for this screen.'} =
         '';
     $Self->{Translation}->{'Dynamic fields shown in the service catalog screen of the customer interface.'} =
         '';
