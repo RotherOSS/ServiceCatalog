@@ -358,7 +358,7 @@
 
                     <dt>[% Translate("Add more service catalog fields") | html %]:</dt>
                     <dd>
-                        [% Translate("You have the option of adding further fields here in the service catalogue at any time. To do this, please go to \"Admin -> DynamicFields\" and create the new field of the object type \"Service\". You can then activate the field for the customer dashboard under \"Admin -> DynamicField Screens\" by assigning it under \"CustomerDashboardTile ServiceCatalog\".") | html %]
+                        [% Translate("You have the option of adding further fields here in the service catalog at any time. To do this, please go to \"Admin -> DynamicFields\" and create the new field of the object type \"Service\". You can then activate the field for the customer dashboard under \"Admin -> DynamicField Screens\" by assigning it under \"CustomerDashboardTile ServiceCatalog\".") | html %]
                     </dd>
 
                 </dl>

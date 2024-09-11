@@ -77,7 +77,7 @@ msgid "Add more service catalog fields"
 msgstr ""
 
 #. Template: AdminService
-msgid "You have the option of adding further fields here in the service catalogue at any time. To do this, please go to \"Admin -> DynamicFields\" and create the new field of the object type \"Service\". You can then activate the field for the customer dashboard under \"Admin -> DynamicField Screens\" by assigning it under \"CustomerDashboardTile ServiceCatalog\"."
+msgid "You have the option of adding further fields here in the service catalog at any time. To do this, please go to \"Admin -> DynamicFields\" and create the new field of the object type \"Service\". You can then activate the field for the customer dashboard under \"Admin -> DynamicField Screens\" by assigning it under \"CustomerDashboardTile ServiceCatalog\"."
 msgstr ""
 
 #. Template: AgentITSMSLAZoom
@@ -225,7 +225,7 @@ msgid "This option allows you to automatically generate ACLs for different inter
 msgstr ""
 
 #. SysConfig
-msgid "This option makes it possible to preconfigure the automatically generated ACLs. The aim is to only display the services that have also been assigned to the service in the service catalogue. To use this function, please first enable the \"ServiceCatalog::CreateTypeServiceRelatedAcls\" option. \"GenerateInitalACLToDisableAllServices\" generates an ACL that initially hides all services. The value \"Possible\" or \"PossibleAdd\" can be set for the key \"ConfigChange\". The \"DeployNewACL\" key decides whether the changed ACL should also be deployed immediately. \"ACLValidID\" (1, 2, 3) sets the ACLs to valid, invalid or temporarily invalid."
+msgid "This option makes it possible to preconfigure the automatically generated ACLs. The aim is to only display the services that have also been assigned to the service in the service catalog. To use this function, please first enable the \"ServiceCatalog::CreateTypeServiceRelatedAcls\" option. \"GenerateInitalACLToDisableAllServices\" generates an ACL that initially hides all services. The value \"Possible\" or \"PossibleAdd\" can be set for the key \"ConfigChange\". The \"DeployNewACL\" key decides whether the changed ACL should also be deployed immediately. \"ACLValidID\" (1, 2, 3) sets the ACLs to valid, invalid or temporarily invalid."
 msgstr ""
 
 #. Template: AdminService
