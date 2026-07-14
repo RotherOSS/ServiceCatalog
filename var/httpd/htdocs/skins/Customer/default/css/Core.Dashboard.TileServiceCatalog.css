@@ -384,7 +384,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 .oooDescriptionBody { 
-    overflow: hidden; */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
