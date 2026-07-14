@@ -64,7 +64,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 .oooParentServiceList > li.oooServiceMore:hover {
     border: 2px solid var(--colMainLight);
-} 
+}
 
 .oooServiceMore:hover > .oooServiceMoreSearch > span,
 .oooServiceMore:hover > .oooServiceMoreInfo {
@@ -270,7 +270,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 /* Special styling within subservice list in detailed view */
-.oooDetailedSubservices > .oooServiceContainer .oooServiceName, 
+.oooDetailedSubservices > .oooServiceContainer .oooServiceName,
 .oooDetailedSubservices > .oooServiceContainer .oooSubservices,
 .oooDetailedSubservices > .oooServiceContainer .oooServiceInformation {
     font-size: 12px;
@@ -376,14 +376,14 @@ ul.oooBreadcrumbServiceList > li:first-child {
     background: var(--colBGLight);
     color: var(--colMainLight);
     cursor: pointer;
-} 
+}
 
 /* Apply border-bottom to the last element with the class .oooServiceActionCreate in the list */
 .oooServiceActionSubservices {
     border-top: 0.6px solid #E5E5EB;
 }
 
-.oooDescriptionBody { 
+.oooDescriptionBody {
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -416,7 +416,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     color: var(--colTextLight);
 }
 
-.oooServiceInformation { 
+.oooServiceInformation {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -435,7 +435,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     color: #ffffff;
 }
 
-.oooCreate { 
+.oooCreate {
     grid-area: 3 / 2 / 5 / 3;
 }
 
@@ -456,7 +456,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     padding: 8px;
 }
 
-.oooSubservices { 
+.oooSubservices {
     text-decoration-line: underline;
     color: var(--colTextLight);
     font-size: 16px;
@@ -603,7 +603,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
     display: flex;
     flex-direction: row;
     align-items: center;
-} 
+}
 
 .oooDetailedAccordion i.ooofo-arrow_d, .oooDetailedAccordion i.ooofo-arrow_u {
     position: absolute;
@@ -739,7 +739,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 .ooofo-bang::before {
     content: '!';
     font-weight: bold;
-} 
+}
 
 .Dialog {
     max-height: calc(100vh - 50px);
@@ -917,7 +917,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 
     .oooScrollLeft {
         left: 114px;
-    } 
+    }
 
     .oooParentServiceList {
         max-width: 864px;
@@ -925,7 +925,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 @media only screen and (min-width: 768px) and (max-width: 879px) {
-    
+
     .oooParentServiceList {
         flex-direction: row;
         align-items: flex-start;
@@ -956,7 +956,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 
     .oooScrollLeft {
         left: 114px;
-    } 
+    }
 }
 
 @media only screen and (max-width: 1279px) {
@@ -1113,7 +1113,7 @@ ul.oooBreadcrumbServiceList > li:first-child {
 }
 
 @media only screen and (max-width: 435px) {
-    
+
     .oooParentServiceList {
         max-width: 360px;
         padding: 3px;
