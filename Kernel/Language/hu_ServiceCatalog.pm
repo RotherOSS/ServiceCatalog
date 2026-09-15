@@ -104,6 +104,7 @@ sub Data {
     $Self->{Translation}->{'operational'} = 'üzemképes';
     $Self->{Translation}->{'warning'} = 'figyelmeztetés';
     $Self->{Translation}->{'incident'} = 'incidens';
+    $Self->{Translation}->{'unknown'} = '';
 
     # JS File: Core.Agent.Admin.Service
     $Self->{Translation}->{'Do you really want to delete this service description language?'} =
